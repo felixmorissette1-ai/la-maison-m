@@ -1,0 +1,102 @@
+{{ 'configurateur.css' | asset_url | stylesheet_tag }}
+
+{% render 'cfg-progress', etape_active: 1 %}
+
+<div class="lmm-cfg-wrap">
+  <div>
+    <div class="lmm-cfg__header">
+      <p class="lmm-cfg__step-label">Sur mesure — Étape 1 sur 7</p>
+      <h1 class="lmm-cfg__title">{{ section.settings.titre }}</h1>
+      <p class="lmm-cfg__sub">{{ section.settings.sous_titre }}</p>
+    </div>
+
+    <div class="lmm-cfg__grid">
+      {% for entry in shop.metaobjects.style_complet.values %}
+        <div class="lmm-cfg__card"
+             data-id="{{ entry.id }}"
+             data-nom="{{ entry.nom.value | escape }}"
+             onclick="selectStyle(this)">
+          <div class="lmm-cfg__card-check">
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          {% if entry.photo.value %}
+            <img class="lmm-cfg__card-img" src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <div class="lmm-cfg__card-img-placeholder">Photo à venir</div>
+          {% endif %}
+          <div class="lmm-cfg__card-body">
+            <p class="lmm-cfg__card-name">{{ entry.nom.value }}</p>
+            {% if entry.description.value %}<p class="lmm-cfg__card-desc">{{ entry.description.value }}</p>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+
+      <div class="lmm-cfg__card" data-id="custom" data-nom="{{ section.settings.custom_label | escape }}" onclick="selectStyle(this)">
+        <div class="lmm-cfg__card-check">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        {% if section.settings.custom_photo %}
+          <img class="lmm-cfg__card-img" src="{{ section.settings.custom_photo | image_url: width: 600 }}" alt="{{ section.settings.custom_label }}">
+        {% else %}
+          <div class="lmm-cfg__card-img-placeholder">✦</div>
+        {% endif %}
+        <div class="lmm-cfg__card-body">
+          <p class="lmm-cfg__card-name">{{ section.settings.custom_label }}</p>
+          <p class="lmm-cfg__card-desc">{{ section.settings.custom_desc }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="lmm-cfg__nav">
+      <button class="lmm-cfg__btn-next" id="cfg-next" onclick="goNext()">Continuer</button>
+    </div>
+  </div>
+
+  <div class="lmm-cfg__panel">
+    <div class="lmm-cfg__panel-box">
+      <p class="lmm-cfg__panel-label">Aperçu de votre complet</p>
+      <div class="lmm-cfg__panel-img">
+        <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;">Votre complet</span>
+      </div>
+      <div class="lmm-cfg__panel-rows">
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Style</span><span class="lmm-cfg__panel-val" id="panel-style"><span class="lmm-cfg__panel-val--empty">À choisir</span></span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Tissu</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Lining</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Boutons</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Construction</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var selectedStyle = null;
+  function selectStyle(el) {
+    document.querySelectorAll('.lmm-cfg__card').forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedStyle = { id: el.dataset.id, nom: el.dataset.nom };
+    document.getElementById('panel-style').textContent = el.dataset.nom;
+    document.getElementById('cfg-next').classList.add('active');
+  }
+  function goNext() {
+    if (!selectedStyle) return;
+    var params = new URLSearchParams(window.location.search);
+    params.set('style', selectedStyle.nom);
+    window.location.href = '/pages/configurateur-tissu?' + params.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Configurateur — Style",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre style" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Le style détermine la silhouette générale de votre complet." },
+    { "type": "header", "content": "Option personnalisée" },
+    { "type": "text", "id": "custom_label", "label": "Nom", "default": "Style personnalisé" },
+    { "type": "textarea", "id": "custom_desc", "label": "Description", "default": "Décrivez votre style idéal lors de votre rendez-vous avec notre couturière." },
+    { "type": "image_picker", "id": "custom_photo", "label": "Photo" }
+  ],
+  "presets": [{ "name": "Configurateur — Style" }]
+}
+{% endschema %}

@@ -1,0 +1,488 @@
+{% comment %} Page produit — La Maison M. {% endcomment %}
+
+<script>window.scrollTo(0, 0);</script>
+
+<div class="lmm-product full-width">
+  <div class="lmm-product__inner">
+
+    <a href="/collections/all" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;text-decoration:none;padding:0;margin-bottom:20px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Retour
+    </a>
+
+    {% comment %} Breadcrumb {% endcomment %}
+    <div class="lmm-breadcrumb">
+      <a href="/">Accueil</a>
+      <span>/</span>
+      <a href="/collections/all">Collection</a>
+      <span>/</span>
+      <span>{{ product.title }}</span>
+    </div>
+
+    <div class="lmm-product__grid">
+
+      {% comment %} Photo {% endcomment %}
+      <div class="lmm-product__visual">
+        <div class="lmm-product__photo">
+          {% if product.featured_image %}
+            {{ product.featured_image | image_url: width: 900 | image_tag: alt: product.title }}
+          {% else %}
+            <div class="lmm-photo-placeholder lmm-photo-placeholder--large">
+              <span>Photo à venir</span>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      {% comment %} Infos {% endcomment %}
+      <div class="lmm-product__info">
+
+        {% for tag in product.tags %}
+          {% if tag == 'Prestige' or tag == 'Contemporain' or tag == 'Décontracté' %}
+            <p class="lmm-label" style="color:#C9A96E; margin-bottom:16px;">Collection {{ tag }}</p>
+          {% endif %}
+        {% endfor %}
+
+        <h1 class="lmm-product__title">{{ product.title }}</h1>
+        <p class="lmm-product__subtitle">{{ product.metafields.custom.subtitle }}</p>
+
+        <div class="lmm-divider-gold"></div>
+
+        <div class="lmm-product__price-row">
+          <span class="lmm-product__price">{{ product.price | money_without_trailing_zeros }} CAD</span>
+          <span class="lmm-product__delivery">Livraison en {{ product.metafields.custom.delai | default: '6–8' }} semaines</span>
+        </div>
+
+        <div class="lmm-product__desc">
+          {{ product.description }}
+        </div>
+
+        {% comment %} Tissu swatch {% endcomment %}
+        <div class="lmm-product__tissu">
+          <p class="lmm-product__section-label">Tissu</p>
+          <div class="lmm-product__tissu-row">
+            <div class="lmm-product__tissu-swatch">
+              <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch-lg"><span>Photo</span></div>
+            </div>
+            <div>
+              <p class="lmm-product__tissu-name">{{ product.metafields.custom.tissu | default: product.type }}</p>
+              <p class="lmm-product__tissu-origine">{{ product.metafields.custom.origine }}</p>
+            </div>
+          </div>
+        </div>
+
+        {% comment %} Caractéristiques {% endcomment %}
+        {% if product.metafields.custom.caracteristiques %}
+          <div class="lmm-product__features">
+            <p class="lmm-product__section-label">Caractéristiques</p>
+            <div class="lmm-product__features-grid">
+              {% assign feats = product.metafields.custom.caracteristiques | split: ',' %}
+              {% for feat in feats %}
+                <div class="lmm-product__feature">
+                  <span class="lmm-dot"></span>
+                  <span>{{ feat | strip }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="lmm-product__table">
+          <div class="lmm-product__table-row">
+            <span>Tissu</span>
+            <span>{{ product.metafields.custom.tissu | default: '—' }}</span>
+          </div>
+          <div class="lmm-product__table-row">
+            <span>Origine</span>
+            <span>{{ product.metafields.custom.origine | default: '—' }}</span>
+          </div>
+          <div class="lmm-product__table-row">
+            <span>Délai</span>
+            <span>{{ product.metafields.custom.delai | default: '6–8' }} semaines</span>
+          </div>
+          <div class="lmm-product__table-row">
+            <span>Retouches</span>
+            <span>Incluses</span>
+          </div>
+        </div>
+
+        <div class="lmm-product__ctas">
+          <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}" class="lmm-product__cta-primary">
+            <span>Commander ce complet</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="/pages/configurateur" class="lmm-product__cta-secondary">
+            Personnaliser ce modèle
+          </a>
+        </div>
+
+        <div class="lmm-product__trust">
+          <div class="lmm-trust-item"><span>🧵</span><p>Cousu main</p></div>
+          <div class="lmm-trust-item"><span>📏</span><p>Sur mesure</p></div>
+          <div class="lmm-trust-item"><span>✂️</span><p>Retouches offertes</p></div>
+        </div>
+
+      </div>
+    </div>
+
+    {% comment %} Complets similaires {% endcomment %}
+    {% assign related = collections.all.products %}
+    {% if related.size > 1 %}
+      <div class="lmm-related">
+        <h2 class="lmm-related__title">Vous aimerez aussi</h2>
+        <div class="lmm-related__grid">
+          {% assign count = 0 %}
+          {% for p in related %}
+            {% unless p.handle == product.handle %}
+              {% if count < 3 %}
+                <a href="{{ p.url }}" class="lmm-related__card">
+                  <div class="lmm-related__photo">
+                    {% if p.featured_image %}
+                      {{ p.featured_image | image_url: width: 300 | image_tag: alt: p.title }}
+                    {% else %}
+                      <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
+                    {% endif %}
+                  </div>
+                  <div class="lmm-related__info">
+                    <h3>{{ p.title }}</h3>
+                    <p>{{ p.price | money_without_trailing_zeros }} CAD</p>
+                  </div>
+                </a>
+                {% assign count = count | plus: 1 %}
+              {% endif %}
+            {% endunless %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .lmm-product__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 32px 80px;
+  }
+
+  .lmm-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: #8C7B6E;
+    margin-bottom: 40px;
+  }
+
+  .lmm-breadcrumb a { text-decoration: none; color: #8C7B6E; transition: color 0.2s; }
+  .lmm-breadcrumb a:hover { color: #1C1C1C; }
+
+  .lmm-product__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-bottom: 80px;
+  }
+
+  .lmm-product__visual { position: sticky; top: 100px; }
+
+  .lmm-product__photo {
+    background: #EDE8E3;
+    border: 1px solid rgba(28,28,28,0.08);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 520px;
+  }
+
+  .lmm-photo-placeholder--large {
+    width: 100%;
+    min-height: 420px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lmm-photo-placeholder--large span {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+  }
+
+  .lmm-product__title {
+    font-family: Georgia, serif;
+    font-size: 40px;
+    font-weight: 400;
+    color: #1C1C1C;
+    margin-bottom: 8px;
+  }
+
+  .lmm-product__subtitle {
+    font-size: 16px;
+    color: #8C7B6E;
+    font-weight: 300;
+    margin-bottom: 24px;
+  }
+
+  .lmm-divider-gold {
+    height: 1px;
+    background: #C9A96E;
+    width: 48px;
+    margin-bottom: 24px;
+  }
+
+  .lmm-product__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .lmm-product__price {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    color: #1C1C1C;
+  }
+
+  .lmm-product__delivery {
+    font-size: 13px;
+    color: #8C7B6E;
+    font-weight: 300;
+  }
+
+  .lmm-product__desc {
+    font-size: 14px;
+    color: rgba(28,28,28,0.7);
+    font-weight: 300;
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+
+  .lmm-product__section-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+    margin-bottom: 12px;
+  }
+
+  .lmm-product__tissu { margin-bottom: 28px; }
+
+  .lmm-product__tissu-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .lmm-product__tissu-swatch {
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(28,28,28,0.12);
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .lmm-photo-placeholder--swatch-lg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E8E2DB;
+  }
+
+  .lmm-photo-placeholder--swatch-lg span {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+  }
+
+  .lmm-product__tissu-name { font-size: 14px; font-weight: 500; color: #1C1C1C; }
+  .lmm-product__tissu-origine { font-size: 12px; color: #8C7B6E; }
+
+  .lmm-product__features { margin-bottom: 28px; }
+
+  .lmm-product__features-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .lmm-product__feature {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: #8C7B6E;
+  }
+
+  .lmm-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #C9A96E;
+    flex-shrink: 0;
+  }
+
+  .lmm-product__table {
+    background: #EDE8E3;
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    border: 1px solid rgba(28,28,28,0.06);
+  }
+
+  .lmm-product__table-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(28,28,28,0.06);
+  }
+
+  .lmm-product__table-row:last-child { border-bottom: none; }
+
+  .lmm-product__table-row span:first-child {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+  }
+
+  .lmm-product__table-row span:last-child { font-weight: 500; color: #1C1C1C; }
+
+  .lmm-product__ctas {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .lmm-product__cta-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    background: #1C1C1C;
+    color: #F5F0EB;
+    text-decoration: none;
+    padding: 20px 36px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background 0.25s, gap 0.25s;
+    box-sizing: border-box;
+  }
+
+  .lmm-product__cta-primary:hover {
+    background: #C9A96E;
+    color: #1C1C1C;
+    gap: 18px;
+  }
+
+  .lmm-product__cta-secondary {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    color: #8C7B6E;
+    text-decoration: none;
+    padding: 14px 36px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(28,28,28,0.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+    box-sizing: border-box;
+  }
+
+  .lmm-product__cta-secondary:hover {
+    border-color: #1C1C1C;
+    color: #1C1C1C;
+  }
+
+  .lmm-product__trust {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    text-align: center;
+  }
+
+  .lmm-trust-item span { font-size: 20px; display: block; margin-bottom: 6px; }
+  .lmm-trust-item p { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+
+  .lmm-related {
+    border-top: 1px solid rgba(28,28,28,0.08);
+    padding-top: 64px;
+  }
+
+  .lmm-related__title {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 32px;
+    color: #1C1C1C;
+  }
+
+  .lmm-related__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .lmm-related__card {
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    background: #fff;
+    padding: 20px;
+    border: 1px solid rgba(28,28,28,0.06);
+  }
+
+  .lmm-related__photo {
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #EDE8E3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lmm-related__photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .lmm-related__info h3 {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: #1C1C1C;
+    margin-bottom: 4px;
+  }
+
+  .lmm-related__info p { font-size: 13px; font-weight: 500; color: #1C1C1C; }
+
+  @media (max-width: 768px) {
+    .lmm-product__grid { grid-template-columns: 1fr; gap: 40px; }
+    .lmm-related__grid { grid-template-columns: 1fr; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Produit",
+  "settings": [],
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  }
+}
+{% endschema %}

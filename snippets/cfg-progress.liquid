@@ -1,0 +1,23 @@
+{% comment %}
+  Usage: {% render 'cfg-progress', etape_active: 1 %}
+  etape_active: 1=Style, 2=Tissu, 3=Lining, 4=Boutons, 5=Construction, 6=Pantalon, 7=Résumé
+{% endcomment %}
+
+{% assign etapes = 'Style,Tissu,Lining,Boutons,Construction,Pantalon,Résumé' | split: ',' %}
+
+<div class="lmm-cfg-progress">
+  <div class="lmm-cfg-progress__steps">
+    {% for e in etapes %}
+      {% assign idx = forloop.index %}
+      <div class="lmm-cfg-progress__step {% if idx < etape_active %}done{% elsif idx == etape_active %}active{% endif %}">
+        <div class="lmm-cfg-progress__dot">
+          {% if idx < etape_active %}✓{% else %}{{ idx }}{% endif %}
+        </div>
+        <span class="lmm-cfg-progress__label">{{ e }}</span>
+      </div>
+      {% unless forloop.last %}
+        <div class="lmm-cfg-progress__connector {% if idx < etape_active %}done{% endif %}"></div>
+      {% endunless %}
+    {% endfor %}
+  </div>
+</div>

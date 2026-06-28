@@ -1,0 +1,771 @@
+{% comment %} Page générique — La Maison M. {% endcomment %}
+
+<script>
+if (history.scrollRestoration) history.scrollRestoration = 'manual';
+window.scrollTo(0, 0);
+document.addEventListener('DOMContentLoaded', function() {
+  var observer = new MutationObserver(function(mutations) {
+    mutations.forEach(function(m) {
+      var el = m.target;
+      if (el.closest && el.closest('.lmm-canva__card')) {
+        if (el.style.transform) el.style.transform = 'none';
+        if (el.style.scale) el.style.scale = '';
+      }
+    });
+  });
+  document.querySelectorAll('.lmm-canva__card, .lmm-canva__card *').forEach(function(el) {
+    observer.observe(el, { attributes: true, attributeFilter: ['style'] });
+  });
+});
+</script>
+
+<style>
+  .shopify-section:has(.lmm-canva-wrap) { display: block !important; }
+  .lmm-canva-wrap { grid-column: 1 / -1; width: 100%; height: calc(100vh - 72px); display: flex; flex-direction: column; padding: 32px 48px 24px; box-sizing: border-box; }
+  .lmm-canva__header { margin-bottom: 24px; flex-shrink: 0; }
+  .lmm-canva__title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
+  .lmm-canva__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.6; }
+  .lmm-canva__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; flex: 1; min-height: 0; margin-bottom: 20px; padding-top: 14px; }
+  .lmm-canva__card { background: #fff; border: 2px solid rgba(28,28,28,0.1); padding: 0; cursor: pointer; position: relative; transition: border-color 0.2s; display: flex; flex-direction: column; overflow: visible; transform: none !important; }
+  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); transform: none !important; }
+  .lmm-canva__card *, .lmm-canva__card *:hover { transform: none !important; }
+  .lmm-canva__card img, .lmm-canva__card img:hover { transform: none !important; transition: none !important; }
+  .lmm-canva__card--selected,
+  .lmm-canva__card--selected:hover { border-color: #1C1C1C; }
+  .lmm-canva__card--recommended { border-color: #C9A96E; }
+  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: #C9A96E; color: #1C1C1C; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; z-index: 1; }
+  .lmm-canva__card-photo { width: 100%; flex: 1; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 0; }
+  .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; transform: none !important; transition: none !important; }
+  .lmm-canva__card-photo-placeholder { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-align: center; padding: 4px; }
+  .lmm-canva__card-bottom { padding: 16px 20px 20px; flex-shrink: 0; }
+  .lmm-canva__name { font-family: Georgia, serif; font-size: 18px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-canva__prix { position: absolute; top: -10px; right: 20px; background: #E8E2DB; color: #8C7B6E; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; z-index: 1; margin: 0; }
+  .lmm-canva__prix--recommande { background: #C9A96E; color: #1C1C1C; }
+  .lmm-canva__textbox { font-size: 12px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
+  .lmm-canva__hint { font-size: 12px; color: #8C7B6E; margin-top: 12px; }
+  #canva-next { opacity: 0.4; pointer-events: none; }
+  #canva-next.active { opacity: 1; pointer-events: auto; }
+  #pantalon-next { opacity: 0.4; pointer-events: none; }
+  #pantalon-next.active { opacity: 1; pointer-events: auto; }
+  #ourlet-next { opacity: 0.4; pointer-events: none; }
+  #ourlet-next.active { opacity: 1; pointer-events: auto; }
+  .lmm-back-btn { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-decoration: none; background: none; border: none; cursor: pointer; padding: 0; flex-shrink: 0; }
+  .lmm-back-btn:hover { color: #1C1C1C; }
+  .lmm-back-btn svg { width: 14px; height: 14px; }
+  .lmm-stepper-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; flex-shrink: 0; padding: 6px 0; margin-bottom: 10px; }
+  .lmm-stepper { display: flex; align-items: center; gap: 0; }
+  .lmm-stepper__step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .lmm-stepper__dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #C8BBB0; background: transparent; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: #C8BBB0; transition: all 0.2s; }
+  .lmm-stepper__step--done .lmm-stepper__dot { background: #1C1C1C; border-color: #1C1C1C; color: #fff; }
+  .lmm-stepper__step--active .lmm-stepper__dot { background: #C9A96E; border-color: #C9A96E; color: #fff; }
+  .lmm-stepper__label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #C8BBB0; white-space: nowrap; }
+  .lmm-stepper__step--done .lmm-stepper__label { color: #8C7B6E; }
+  .lmm-stepper__step--done { cursor: pointer; }
+  .lmm-stepper__step--done:hover .lmm-stepper__dot { background: #C9A96E; border-color: #C9A96E; }
+  .lmm-stepper__step--done:hover .lmm-stepper__label { color: #1C1C1C; }
+  .lmm-stepper__step--active .lmm-stepper__label { color: #1C1C1C; font-weight: 600; }
+  .lmm-stepper__line { width: 120px; height: 1px; background: #C8BBB0; margin-bottom: 15px; flex-shrink: 0; }
+  .lmm-stepper__line--done { background: #1C1C1C; }
+</style>
+
+{% if page.handle == 'configurateur' %}
+
+{% assign recommended = section.settings.recommended %}
+
+<div class="lmm-canva-wrap full-width">
+    <div class="lmm-stepper-bar">
+      <button class="lmm-back-btn" onclick="goBackCanva()">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Retour
+      </button>
+      <div class="lmm-stepper">
+        <div class="lmm-stepper__step lmm-stepper__step--active">
+          <div class="lmm-stepper__dot">1</div>
+          <span class="lmm-stepper__label">Construction</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">2</div>
+          <span class="lmm-stepper__label">Pantalon</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">3</div>
+          <span class="lmm-stepper__label">Ourlet</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">4</div>
+          <span class="lmm-stepper__label">Récapitulatif</span>
+        </div>
+      </div>
+    </div>
+    <div class="lmm-canva__header">
+      <h1 class="lmm-canva__title">{{ section.settings.titre }}</h1>
+      <p class="lmm-canva__sub">{{ section.settings.sous_titre }}</p>
+    </div>
+
+    <div class="lmm-canva__grid">
+      <div class="lmm-canva__card" id="card-c1" data-desc="{{ section.settings.c1_desc }}" data-label="{{ section.settings.c1_nom }}" onclick="selectCanva(this, 'c1')">
+        <span class="lmm-badge-recommended" id="badge-c1" style="display:none">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c1_photo %}<img src="{{ section.settings.c1_photo | image_url: width: 600 }}" alt="{{ section.settings.c1_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <p class="lmm-canva__prix" id="prix-c1" style="display:none"></p>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.c1_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.c1_desc }}</div>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card" id="card-c2" data-desc="{{ section.settings.c2_desc }}" data-label="{{ section.settings.c2_nom }}" onclick="selectCanva(this, 'c2')">
+        <span class="lmm-badge-recommended" id="badge-c2" style="display:none">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c2_photo %}<img src="{{ section.settings.c2_photo | image_url: width: 600 }}" alt="{{ section.settings.c2_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <p class="lmm-canva__prix" id="prix-c2" style="display:none"></p>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.c2_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.c2_desc }}</div>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card" id="card-c3" data-desc="{{ section.settings.c3_desc }}" data-label="{{ section.settings.c3_nom }}" onclick="selectCanva(this, 'c3')">
+        <span class="lmm-badge-recommended" id="badge-c3" style="display:none">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c3_photo %}<img src="{{ section.settings.c3_photo | image_url: width: 600 }}" alt="{{ section.settings.c3_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <p class="lmm-canva__prix" id="prix-c3" style="display:none"></p>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.c3_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.c3_desc }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; flex-shrink:0;">
+      <button class="lmm-btn-primary" id="canva-next" onclick="goNext()">Continuer</button>
+      <p class="lmm-canva__hint" id="canva-hint">Sélectionnez une construction pour continuer</p>
+    </div>
+</div>
+
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+
+    // Prix
+    [['p1','prix-c1'],['p2','prix-c2'],['p3','prix-c3']].forEach(function(pair) {
+      var val = params.get(pair[0]);
+      var el = document.getElementById(pair[1]);
+      if (val && el) { el.textContent = decodeURIComponent(val); el.style.display = ''; }
+    });
+
+    // Recommandé
+    var recMap = { 'Thermocollé': 'c1', 'Demi canva': 'c2', 'Canva plein': 'c3' };
+    var recRaw = params.get('rec') ? decodeURIComponent(params.get('rec')) : '';
+    var rec = recMap[recRaw] || '{{ section.settings.recommended }}';
+    if (rec) {
+      var card = document.getElementById('card-' + rec);
+      var badge = document.getElementById('badge-' + rec);
+      if (card) card.classList.add('lmm-canva__card--recommended');
+      if (badge) badge.style.display = '';
+      var prixRec = document.getElementById('prix-' + rec);
+      if (prixRec) prixRec.classList.add('lmm-canva__prix--recommande');
+    }
+  })();
+
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var steps = document.querySelectorAll('.lmm-stepper__step');
+    var lines = document.querySelectorAll('.lmm-stepper__line');
+    var dests = [null, '/pages/configurateur-pantalon', '/pages/configurateur-ourlet', '/pages/recapitulatif'];
+    var params = ['canva', 'pantalon', 'ourlet'];
+    params.forEach(function(param, i) {
+      if (p.get(param)) {
+        var step = steps[i + 1];
+        step.classList.add('lmm-stepper__step--done');
+        step.querySelector('.lmm-stepper__dot').textContent = '✓';
+        lines[i].classList.add('lmm-stepper__line--done');
+        step.style.cursor = 'pointer';
+        step.onclick = (function(dest) { return function() { window.location.href = dest + '?' + p.toString(); }; })(dests[i + 1]);
+      }
+    });
+  })();
+
+  var selectedCanva = null;
+  var preCanva = new URLSearchParams(window.location.search).get('canva');
+  if (preCanva) { var preEl = document.getElementById('card-' + preCanva); if (preEl) selectCanva(preEl, preCanva); }
+  function selectCanva(el, type) {
+    document.querySelectorAll('.lmm-canva__card').forEach(function(c) { c.classList.remove('lmm-canva__card--selected'); });
+    el.classList.add('lmm-canva__card--selected');
+    selectedCanva = type;
+    document.getElementById('canva-next').classList.add('active');
+    document.getElementById('canva-hint').style.visibility = 'hidden';
+  }
+  function goNext() {
+    if (!selectedCanva) return;
+    var params = new URLSearchParams(window.location.search);
+    params.set('canva', selectedCanva);
+    window.location.href = '/pages/configurateur-pantalon?' + params.toString();
+  }
+  function goBackCanva() {
+    var modele = new URLSearchParams(window.location.search).get('modele');
+    window.location.href = modele ? '/products/' + modele : '/collections/all';
+  }
+</script>
+
+{% elsif page.handle == 'configurateur-pantalon' %}
+
+<div class="lmm-canva-wrap full-width">
+    <div class="lmm-stepper-bar">
+      <button class="lmm-back-btn" onclick="goBackPantalon()">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Retour
+      </button>
+      <div class="lmm-stepper">
+        <div class="lmm-stepper__step lmm-stepper__step--done" onclick="goBackPantalon()">
+          <div class="lmm-stepper__dot">✓</div>
+          <span class="lmm-stepper__label">Construction</span>
+        </div>
+        <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+        <div class="lmm-stepper__step lmm-stepper__step--active">
+          <div class="lmm-stepper__dot">2</div>
+          <span class="lmm-stepper__label">Pantalon</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">3</div>
+          <span class="lmm-stepper__label">Ourlet</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">4</div>
+          <span class="lmm-stepper__label">Récapitulatif</span>
+        </div>
+      </div>
+    </div>
+    <div class="lmm-canva__header">
+      <h1 class="lmm-canva__title">{{ section.settings.p_titre }}</h1>
+      <p class="lmm-canva__sub">{{ section.settings.p_sous_titre }}</p>
+    </div>
+
+    <div class="lmm-canva__grid">
+      <div class="lmm-canva__card" data-label="{{ section.settings.p1_nom }}" onclick="selectPantalon(this, 'p1')">
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.p1_photo %}<img src="{{ section.settings.p1_photo | image_url: width: 600 }}" alt="{{ section.settings.p1_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.p1_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.p1_desc }}</div>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card" data-label="{{ section.settings.p2_nom }}" onclick="selectPantalon(this, 'p2')">
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.p2_photo %}<img src="{{ section.settings.p2_photo | image_url: width: 600 }}" alt="{{ section.settings.p2_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.p2_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.p2_desc }}</div>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card" data-label="{{ section.settings.p3_nom }}" onclick="selectPantalon(this, 'p3')">
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.p3_photo %}<img src="{{ section.settings.p3_photo | image_url: width: 600 }}" alt="{{ section.settings.p3_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.p3_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.p3_desc }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; flex-shrink:0;">
+      <button class="lmm-btn-primary" id="pantalon-next" onclick="goNextPantalon()">Continuer</button>
+      <p class="lmm-canva__hint" id="pantalon-hint">Sélectionnez une coupe pour continuer</p>
+    </div>
+</div>
+
+<script>
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var steps = document.querySelectorAll('.lmm-stepper__step');
+    var lines = document.querySelectorAll('.lmm-stepper__line');
+    if (p.get('ourlet')) {
+      steps[2].classList.add('lmm-stepper__step--done');
+      steps[2].querySelector('.lmm-stepper__dot').textContent = '✓';
+      lines[2].classList.add('lmm-stepper__line--done');
+      steps[2].style.cursor = 'pointer';
+      steps[2].onclick = function() { window.location.href = '/pages/configurateur-ourlet?' + p.toString(); };
+    }
+    if (p.get('ourlet') && p.get('canva') && p.get('pantalon')) {
+      steps[3].classList.add('lmm-stepper__step--done');
+      steps[3].querySelector('.lmm-stepper__dot').textContent = '✓';
+      lines[3] && lines[3].classList.add('lmm-stepper__line--done');
+      steps[3].style.cursor = 'pointer';
+      steps[3].onclick = function() { window.location.href = '/pages/recapitulatif?' + p.toString(); };
+    }
+  })();
+
+  var selectedPantalon = null;
+  var prePantalon = new URLSearchParams(window.location.search).get('pantalon');
+  if (prePantalon) { var preCards = document.querySelectorAll('.lmm-canva__card'); preCards.forEach(function(c, i) { if (['p1','p2','p3'][i] === prePantalon) selectPantalon(c, prePantalon); }); }
+  function selectPantalon(el, type) {
+    document.querySelectorAll('.lmm-canva__card').forEach(function(c) { c.classList.remove('lmm-canva__card--selected'); });
+    el.classList.add('lmm-canva__card--selected');
+    selectedPantalon = type;
+    document.getElementById('pantalon-next').classList.add('active');
+    document.getElementById('pantalon-hint').style.visibility = 'hidden';
+  }
+  function goNextPantalon() {
+    if (!selectedPantalon) return;
+    var params = new URLSearchParams(window.location.search);
+    params.set('pantalon', selectedPantalon);
+    window.location.href = '/pages/configurateur-ourlet?' + params.toString();
+  }
+  function goBackPantalon() {
+    var params = new URLSearchParams(window.location.search);
+    window.location.href = '/pages/configurateur?' + params.toString();
+  }
+</script>
+
+{% elsif page.handle == 'configurateur-ourlet' %}
+
+<div class="lmm-canva-wrap full-width">
+    <div class="lmm-stepper-bar">
+      <button class="lmm-back-btn" onclick="goBackOurlet()">
+        <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Retour
+      </button>
+      <div class="lmm-stepper">
+        <div class="lmm-stepper__step lmm-stepper__step--done" onclick="var p=new URLSearchParams(window.location.search); window.location.href='/pages/configurateur?'+p.toString()">
+          <div class="lmm-stepper__dot">✓</div>
+          <span class="lmm-stepper__label">Construction</span>
+        </div>
+        <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+        <div class="lmm-stepper__step lmm-stepper__step--done" onclick="goBackOurlet()">
+          <div class="lmm-stepper__dot">✓</div>
+          <span class="lmm-stepper__label">Pantalon</span>
+        </div>
+        <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+        <div class="lmm-stepper__step lmm-stepper__step--active">
+          <div class="lmm-stepper__dot">3</div>
+          <span class="lmm-stepper__label">Ourlet</span>
+        </div>
+        <div class="lmm-stepper__line"></div>
+        <div class="lmm-stepper__step">
+          <div class="lmm-stepper__dot">4</div>
+          <span class="lmm-stepper__label">Récapitulatif</span>
+        </div>
+      </div>
+    </div>
+    <div class="lmm-canva__header">
+      <h1 class="lmm-canva__title">{{ section.settings.o_titre }}</h1>
+      <p class="lmm-canva__sub">{{ section.settings.o_sous_titre }}</p>
+    </div>
+
+    <div class="lmm-canva__grid" style="grid-template-columns: repeat(2, 1fr);">
+      <div class="lmm-canva__card" data-label="{{ section.settings.o1_nom }}" onclick="selectOurlet(this, 'o1')">
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.o1_photo %}<img src="{{ section.settings.o1_photo | image_url: width: 600 }}" alt="{{ section.settings.o1_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.o1_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.o1_desc }}</div>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card" data-label="{{ section.settings.o2_nom }}" onclick="selectOurlet(this, 'o2')">
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.o2_photo %}<img src="{{ section.settings.o2_photo | image_url: width: 600 }}" alt="{{ section.settings.o2_nom }}">
+          {% else %}<span class="lmm-canva__card-photo-placeholder">Photo à venir</span>{% endif %}
+        </div>
+        <div class="lmm-canva__card-bottom">
+          <h2 class="lmm-canva__name">{{ section.settings.o2_nom }}</h2>
+          <div class="lmm-canva__textbox">{{ section.settings.o2_desc }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center; flex-shrink:0;">
+      <button class="lmm-btn-primary" id="ourlet-next" onclick="goNextOurlet()">Continuer</button>
+      <p class="lmm-canva__hint" id="ourlet-hint">Sélectionnez un ourlet pour continuer</p>
+    </div>
+</div>
+
+<script>
+  (function() {
+    var p = new URLSearchParams(window.location.search);
+    var steps = document.querySelectorAll('.lmm-stepper__step');
+    var lines = document.querySelectorAll('.lmm-stepper__line');
+    if (p.get('canva') && p.get('pantalon') && p.get('ourlet')) {
+      steps[3].classList.add('lmm-stepper__step--done');
+      steps[3].querySelector('.lmm-stepper__dot').textContent = '✓';
+      lines[3] && lines[3].classList.add('lmm-stepper__line--done');
+      steps[3].style.cursor = 'pointer';
+      steps[3].onclick = function() { window.location.href = '/pages/recapitulatif?' + p.toString(); };
+    }
+  })();
+
+  var selectedOurlet = null;
+  var preOurlet = new URLSearchParams(window.location.search).get('ourlet');
+  if (preOurlet) { var preOurletCards = document.querySelectorAll('.lmm-canva__card'); preOurletCards.forEach(function(c, i) { if (['o1','o2'][i] === preOurlet) selectOurlet(c, preOurlet); }); }
+  function selectOurlet(el, type) {
+    document.querySelectorAll('.lmm-canva__card').forEach(function(c) { c.classList.remove('lmm-canva__card--selected'); });
+    el.classList.add('lmm-canva__card--selected');
+    selectedOurlet = type;
+    document.getElementById('ourlet-next').classList.add('active');
+    document.getElementById('ourlet-hint').style.visibility = 'hidden';
+  }
+  function goNextOurlet() {
+    if (!selectedOurlet) return;
+    var params = new URLSearchParams(window.location.search);
+    params.set('ourlet', selectedOurlet);
+    window.location.href = '/pages/recapitulatif?' + params.toString();
+  }
+  function goBackOurlet() {
+    var params = new URLSearchParams(window.location.search);
+    window.location.href = '/pages/configurateur-pantalon?' + params.toString();
+  }
+</script>
+
+{% elsif page.handle == 'recapitulatif' %}
+
+<style>
+  .lmm-recap-wrap { grid-column: 1 / -1; width: 100%; min-height: calc(100vh - 72px); display: flex; flex-direction: column; padding: 32px 48px 24px; box-sizing: border-box; }
+  .lmm-recap__body { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; flex: 1; padding-top: 16px; align-items: start; max-width: 960px; margin: 0 auto; width: 100%; }
+  .lmm-recap__title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
+  .lmm-recap__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; margin-bottom: 32px; }
+  .lmm-recap__rows { display: flex; flex-direction: column; gap: 0; }
+  .lmm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(28,28,28,0.08); }
+  .lmm-recap__row:first-child { border-top: 1px solid rgba(28,28,28,0.08); }
+  .lmm-recap__key { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-recap__val { font-family: Georgia, serif; font-size: 16px; color: #1C1C1C; }
+  .lmm-recap__val--empty { color: #C8BBB0; font-style: italic; font-size: 13px; font-family: inherit; }
+  .lmm-recap__price-row { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-top: 8px; }
+  .lmm-recap__price-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-recap__price-val { font-family: Georgia, serif; font-size: 22px; color: #1C1C1C; }
+  .lmm-recap__price-note { font-size: 10px; color: #8C7B6E; margin-top: 4px; text-align: right; }
+  .lmm-recap__cta { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
+  .lmm-recap__btn-pay { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; background: #1C1C1C; color: #F5F0EB; text-decoration: none; padding: 22px 36px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; transition: background 0.25s, gap 0.25s; box-sizing: border-box; border: none; cursor: pointer; }
+  .lmm-recap__btn-pay:hover { background: #C9A96E; color: #1C1C1C; gap: 20px; }
+  .lmm-recap__btn-modify { display: block; text-align: center; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-decoration: none; padding: 12px; transition: color 0.2s; }
+  .lmm-recap__btn-modify:hover { color: #1C1C1C; }
+  .lmm-recap__divider { width: 40px; height: 1px; background: #C9A96E; margin: 20px 0; }
+  .lmm-recap__note { font-size: 11px; color: #8C7B6E; line-height: 1.8; }
+  .lmm-recap__note strong { color: #1C1C1C; font-weight: 500; }
+  .lmm-recap__visual { display: flex; flex-direction: column; gap: 16px; }
+  .lmm-recap__photo-frame { width: 100%; height: 220px; background: #F5F0EB; overflow: hidden; position: relative; }
+  .lmm-recap__photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .lmm-recap__photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .lmm-recap__photo-placeholder svg { opacity: 0.2; }
+  .lmm-recap__alert { background: #FDF8F0; border-left: 3px solid #C9A96E; padding: 12px 16px; margin-bottom: 4px; }
+  .lmm-recap__alert p { font-size: 11px; color: #8C7B6E; line-height: 1.7; margin: 0; }
+  .lmm-recap__alert p strong { color: #1C1C1C; }
+  .lmm-recap__couturiere-card { border: 1px solid rgba(28,28,28,0.12); padding: 14px 16px; margin-top: 12px; display: none; }
+  .lmm-recap__couturiere-card-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; margin-bottom: 6px; }
+  .lmm-recap__couturiere-card-nom { font-family: Georgia, serif; font-size: 16px; color: #1C1C1C; margin-bottom: 2px; }
+  .lmm-recap__couturiere-card-detail { font-size: 11px; color: #8C7B6E; }
+  .lmm-recap__couturieres-list { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .lmm-recap__couturiere-option { border: 1px solid rgba(28,28,28,0.1); padding: 12px 14px; cursor: pointer; transition: border-color 0.2s; text-align: left; background: #fff; width: 100%; }
+  .lmm-recap__couturiere-option:hover { border-color: #1C1C1C; }
+  .lmm-recap__couturiere-option-nom { font-family: Georgia, serif; font-size: 14px; color: #1C1C1C; }
+  .lmm-recap__couturiere-option-ville { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; margin-top: 2px; }
+  .lmm-recap__geo-loading { font-size: 11px; color: #8C7B6E; padding: 12px 0; display: none; }
+  #cal-embed-container { display: none; margin-top: 16px; }
+  #cal-embed { min-height: 500px; }
+  .lmm-recap__status { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F5F0EB; margin-bottom: 4px; }
+  .lmm-recap__status-dot { width: 8px; height: 8px; border-radius: 50%; background: #7DAF7D; flex-shrink: 0; }
+  .lmm-recap__status p { font-size: 11px; color: #1C1C1C; margin: 0; }
+  .lmm-recap__btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; background: transparent; color: #1C1C1C; border: 1.5px solid #1C1C1C; padding: 16px 24px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-decoration: none; transition: background 0.2s, color 0.2s; cursor: pointer; box-sizing: border-box; }
+  .lmm-recap__btn-secondary:hover { background: #1C1C1C; color: #F5F0EB; }
+  .lmm-recap__btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+  .lmm-recap__modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,28,28,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .lmm-recap__modal-overlay.open { display: flex; }
+  .lmm-recap__modal { background: #fff; padding: 40px; max-width: 420px; width: 90%; }
+  .lmm-recap__modal h3 { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: #1C1C1C; margin-bottom: 10px; }
+  .lmm-recap__modal p { font-size: 12px; color: #8C7B6E; line-height: 1.8; margin-bottom: 28px; }
+  .lmm-recap__modal-btns { display: flex; flex-direction: column; gap: 10px; }
+</style>
+
+<div class="lmm-recap-wrap full-width">
+  <div class="lmm-stepper-bar">
+    <button class="lmm-back-btn" onclick="goBackRecap()">
+      <svg viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Retour
+    </button>
+    <div class="lmm-stepper">
+      <div class="lmm-stepper__step lmm-stepper__step--done" onclick="var p=new URLSearchParams(window.location.search); window.location.href='/pages/configurateur?'+p.toString()">
+        <div class="lmm-stepper__dot">✓</div>
+        <span class="lmm-stepper__label">Construction</span>
+      </div>
+      <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+      <div class="lmm-stepper__step lmm-stepper__step--done" onclick="var p=new URLSearchParams(window.location.search); window.location.href='/pages/configurateur-pantalon?'+p.toString()">
+        <div class="lmm-stepper__dot">✓</div>
+        <span class="lmm-stepper__label">Pantalon</span>
+      </div>
+      <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+      <div class="lmm-stepper__step lmm-stepper__step--done" onclick="goBackRecap()">
+        <div class="lmm-stepper__dot">✓</div>
+        <span class="lmm-stepper__label">Ourlet</span>
+      </div>
+      <div class="lmm-stepper__line lmm-stepper__line--done"></div>
+      <div class="lmm-stepper__step lmm-stepper__step--active">
+        <div class="lmm-stepper__dot">4</div>
+        <span class="lmm-stepper__label">Récapitulatif</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="lmm-recap__body">
+    <div>
+      <h1 class="lmm-recap__title">Votre commande sur mesure</h1>
+      <p class="lmm-recap__sub">Vérifiez vos choix avant de confirmer.</p>
+
+      <div class="lmm-recap__rows">
+        <div class="lmm-recap__row">
+          <span class="lmm-recap__key">Modèle</span>
+          <span class="lmm-recap__val" id="recap-modele"><span class="lmm-recap__val--empty">—</span></span>
+        </div>
+        <div class="lmm-recap__row">
+          <span class="lmm-recap__key">Construction</span>
+          <span class="lmm-recap__val" id="recap-canva"><span class="lmm-recap__val--empty">—</span></span>
+        </div>
+        <div class="lmm-recap__row">
+          <span class="lmm-recap__key">Coupe de pantalon</span>
+          <span class="lmm-recap__val" id="recap-pantalon"><span class="lmm-recap__val--empty">—</span></span>
+        </div>
+        <div class="lmm-recap__row">
+          <span class="lmm-recap__key">Ourlet</span>
+          <span class="lmm-recap__val" id="recap-ourlet"><span class="lmm-recap__val--empty">—</span></span>
+        </div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <div class="lmm-recap__price-row" style="border-top: 1px solid rgba(28,28,28,0.08);">
+          <span class="lmm-recap__price-label">Prix du modèle</span>
+          <span class="lmm-recap__price-note" id="recap-prix-base" style="font-size:14px; color:#1C1C1C;">—</span>
+        </div>
+        <div class="lmm-recap__price-row" id="recap-row-surcharge" style="display:none; border-top: 1px solid rgba(28,28,28,0.05);">
+          <span class="lmm-recap__price-label" id="recap-surcharge-label">Supplément construction</span>
+          <span class="lmm-recap__price-note" id="recap-prix-surcharge" style="font-size:14px; color:#1C1C1C;">—</span>
+        </div>
+        <div class="lmm-recap__price-row" style="border-top: 2px solid #1C1C1C; margin-top: 4px;">
+          <span class="lmm-recap__price-label" style="color:#1C1C1C; font-weight:600;">Sous-total</span>
+          <span class="lmm-recap__price-val" id="recap-total">—</span>
+        </div>
+        <p style="font-size:10px; color:#8C7B6E; margin-top:8px; text-align:right;">Taxes calculées au paiement</p>
+      </div>
+    </div>
+
+    <div class="lmm-recap__cta">
+      <div class="lmm-recap__visual">
+        <div class="lmm-recap__photo-frame" id="recap-photo-frame">
+          <div class="lmm-recap__photo-placeholder">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="8" width="32" height="32" rx="2" stroke="#1C1C1C" stroke-width="1.5"/><path d="M8 32L16 22L22 30L30 18L40 32" stroke="#1C1C1C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="18" cy="18" r="3" stroke="#1C1C1C" stroke-width="1.5"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="lmm-recap__divider"></div>
+
+      <div class="lmm-recap__btn-group">
+        <a href="#" class="lmm-recap__btn-pay" onclick="event.preventDefault(); ajouterAuPanierEtRediriger('/cart')">
+          Ajouter au panier
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a class="lmm-recap__btn-modify" onclick="goBackRecap()">Modifier mes choix</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+
+    var canvaMap = { 'c1': '{{ section.settings.c1_nom | default: "Thermocollé" }}', 'c2': '{{ section.settings.c2_nom | default: "Mi-entoilé" }}', 'c3': '{{ section.settings.c3_nom | default: "Pleine entoilure" }}' };
+    var pantalonMap = { 'p1': '{{ section.settings.p1_nom | default: "Taille basse" }}', 'p2': '{{ section.settings.p2_nom | default: "Taille haute" }}', 'p3': '{{ section.settings.p3_nom | default: "Taille haute pincé" }}' };
+    var ourletMap = { 'o1': '{{ section.settings.o1_nom | default: "Ourlet droit" }}', 'o2': '{{ section.settings.o2_nom | default: "Ourlet retourné" }}' };
+    var prixMap = { 'c1': params.get('p1'), 'c2': params.get('p2'), 'c3': params.get('p3') };
+
+    var modele = params.get('modele');
+    var canva = params.get('canva');
+    var pantalon = params.get('pantalon');
+    var ourlet = params.get('ourlet');
+
+    if (modele) document.getElementById('recap-modele').textContent = modele.replace(/-/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+    if (canva) document.getElementById('recap-canva').textContent = canvaMap[canva] || canva;
+    if (pantalon) document.getElementById('recap-pantalon').textContent = pantalonMap[pantalon] || pantalon;
+    if (ourlet) document.getElementById('recap-ourlet').textContent = ourletMap[ourlet] || ourlet;
+
+    // Fetch product photo
+    if (modele) {
+      fetch('/products/' + modele + '.js')
+        .then(function(r) { return r.json(); })
+        .then(function(product) {
+          var img = product.featured_image || (product.images && product.images[0]);
+          if (img) {
+            var frame = document.getElementById('recap-photo-frame');
+            frame.innerHTML = '<img src="' + img + '" alt="' + (product.title || '') + '">';
+          }
+        })
+        .catch(function() {});
+    }
+
+    // Calcul des prix
+    var fmt = function(n) { return n.toLocaleString('fr-CA', { style: 'currency', currency: 'CAD', minimumFractionDigits: 2 }); };
+    var parseNum = function(str) { if (!str) return 0; var m = decodeURIComponent(str).replace(/\s/g,'').match(/[\d.,]+/); return m ? parseFloat(m[0].replace(',','.')) : 0; };
+
+    var prixBase = params.get('prix') ? parseFloat(params.get('prix')) / 100 : 0;
+    var surchargeRaw = canva && prixMap[canva] ? prixMap[canva] : null;
+    var surchargeVal = surchargeRaw ? parseNum(surchargeRaw) : 0;
+    var sousTotal = prixBase + surchargeVal;
+    var tps = sousTotal * 0.05;
+    var tvq = sousTotal * 0.09975;
+    var total = sousTotal + tps + tvq;
+
+    if (prixBase) document.getElementById('recap-prix-base').textContent = fmt(prixBase);
+
+    if (surchargeVal && surchargeRaw) {
+      document.getElementById('recap-row-surcharge').style.display = '';
+      document.getElementById('recap-prix-surcharge').textContent = '+ ' + fmt(surchargeVal);
+    }
+
+    if (sousTotal) {
+      document.getElementById('recap-total').textContent = fmt(sousTotal);
+    }
+  })();
+
+  function sauvegarderDraft() {
+    localStorage.setItem('lmm_draft', window.location.pathname + window.location.search);
+  }
+
+  function ajouterAuPanierEtRediriger(destination) {
+    sauvegarderDraft();
+    var params = new URLSearchParams(window.location.search);
+    var modele = params.get('modele');
+    if (!modele) { window.location.href = destination; return; }
+
+    var canvaMap = { 'c1': '{{ section.settings.c1_nom | default: "Thermocollé" }}', 'c2': '{{ section.settings.c2_nom | default: "Mi-entoilé" }}', 'c3': '{{ section.settings.c3_nom | default: "Pleine entoilure" }}' };
+    var pantalonMap = { 'p1': '{{ section.settings.p1_nom | default: "Taille basse" }}', 'p2': '{{ section.settings.p2_nom | default: "Taille haute" }}', 'p3': '{{ section.settings.p3_nom | default: "Taille haute pincé" }}' };
+    var ourletMap = { 'o1': '{{ section.settings.o1_nom | default: "Ourlet droit" }}', 'o2': '{{ section.settings.o2_nom | default: "Ourlet retourné" }}' };
+
+    fetch('/products/' + modele + '.js')
+      .then(function(r) { return r.json(); })
+      .then(function(product) {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: product.variants[0].id,
+            quantity: 1,
+            properties: {
+              'Construction': canvaMap[params.get('canva')] || params.get('canva') || '',
+              'Coupe de pantalon': pantalonMap[params.get('pantalon')] || params.get('pantalon') || '',
+              'Ourlet': ourletMap[params.get('ourlet')] || params.get('ourlet') || ''
+            }
+          })
+        });
+      })
+      .catch(function() {})
+      .finally(function() {
+        window.location.href = destination;
+      });
+  }
+
+  function goBackRecap() {
+    var params = new URLSearchParams(window.location.search);
+    window.location.href = '/pages/configurateur-ourlet?' + params.toString();
+  }
+
+
+</script>
+
+{% else %}
+
+<div class="lmm-page">
+  <div class="lmm-page__inner">
+    <h1 class="lmm-page__title">{{ page.title }}</h1>
+    <div class="lmm-page__content">{{ page.content }}</div>
+  </div>
+</div>
+
+{% endif %}
+
+{% stylesheet %}
+  .lmm-page__inner { max-width: 800px; margin: 0 auto; padding: 64px 32px; }
+  .lmm-page__title { font-family: Georgia, serif; font-size: 40px; font-weight: 400; color: #1C1C1C; margin-bottom: 32px; }
+  .lmm-page__content { font-size: 15px; color: rgba(28,28,28,0.7); line-height: 1.8; }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": [
+    { "type": "header", "content": "— Étape 1 : Construction —" },
+    { "type": "text", "id": "etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 1" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre construction" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et le prix de votre complet." },
+    { "type": "text", "id": "badge_recommande", "label": "Texte du badge", "default": "Recommandé" },
+    { "type": "select", "id": "recommended", "label": "Construction recommandée", "options": [
+      { "value": "c1", "label": "Construction 1" },
+      { "value": "c2", "label": "Construction 2" },
+      { "value": "c3", "label": "Construction 3" }
+    ], "default": "c2" },
+    { "type": "header", "content": "Construction 1" },
+    { "type": "text", "id": "c1_nom", "label": "Nom", "default": "Thermocollé" },
+    { "type": "image_picker", "id": "c1_photo", "label": "Photo" },
+    { "type": "text", "id": "c1_prix", "label": "Prix supplémentaire (ex: +300 $)" },
+    { "type": "textarea", "id": "c1_desc", "label": "Description", "default": "Idéal pour le meilleur prix. Construction légère et moderne, parfaite pour un usage quotidien." },
+    { "type": "header", "content": "Construction 2" },
+    { "type": "text", "id": "c2_nom", "label": "Nom", "default": "Mi-entoilé" },
+    { "type": "image_picker", "id": "c2_photo", "label": "Photo" },
+    { "type": "text", "id": "c2_prix", "label": "Prix supplémentaire (ex: +300 $)" },
+    { "type": "textarea", "id": "c2_desc", "label": "Description", "default": "Idéal pour une bonne durabilité et un bon prix. La construction préférée des tailleurs classiques." },
+    { "type": "header", "content": "Construction 3" },
+    { "type": "text", "id": "c3_nom", "label": "Nom", "default": "Pleine entoilure" },
+    { "type": "image_picker", "id": "c3_photo", "label": "Photo" },
+    { "type": "text", "id": "c3_prix", "label": "Prix supplémentaire (ex: +300 $)" },
+    { "type": "textarea", "id": "c3_desc", "label": "Description", "default": "Idéal pour la longévité maximale. Le summum de l'artisanat tailleur." },
+    { "type": "header", "content": "— Étape 2 : Pantalon —" },
+    { "type": "text", "id": "p_etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 2" },
+    { "type": "text", "id": "p_titre", "label": "Titre", "default": "Choisissez votre coupe de pantalon" },
+    { "type": "textarea", "id": "p_sous_titre", "label": "Sous-titre", "default": "La coupe et la taille du pantalon définissent le style général de votre complet." },
+    { "type": "header", "content": "Pantalon 1" },
+    { "type": "text", "id": "p1_nom", "label": "Nom", "default": "Taille basse" },
+    { "type": "image_picker", "id": "p1_photo", "label": "Photo" },
+    { "type": "textarea", "id": "p1_desc", "label": "Description", "default": "Coupe contemporaine et moderne. Convient aux silhouettes élancées et aux styles décontractés." },
+    { "type": "header", "content": "Pantalon 2" },
+    { "type": "text", "id": "p2_nom", "label": "Nom", "default": "Taille haute" },
+    { "type": "image_picker", "id": "p2_photo", "label": "Photo" },
+    { "type": "textarea", "id": "p2_desc", "label": "Description", "default": "Coupe classique et élégante. La taille haute allonge la silhouette et s'accorde avec tous les styles de veston." },
+    { "type": "header", "content": "Pantalon 3" },
+    { "type": "text", "id": "p3_nom", "label": "Nom", "default": "Taille haute pincé" },
+    { "type": "image_picker", "id": "p3_photo", "label": "Photo" },
+    { "type": "textarea", "id": "p3_desc", "label": "Description", "default": "Le summum du classicisme tailleur. Le pli pincé à la taille haute évoque les grands complets italiens des années 40-50." },
+    { "type": "header", "content": "— Étape 3 : Ourlet —" },
+    { "type": "text", "id": "o_etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 3" },
+    { "type": "text", "id": "o_titre", "label": "Titre", "default": "Choisissez votre ourlet de pantalon" },
+    { "type": "textarea", "id": "o_sous_titre", "label": "Sous-titre", "default": "L'ourlet est le détail final qui définit le caractère de votre pantalon." },
+    { "type": "header", "content": "Ourlet 1" },
+    { "type": "text", "id": "o1_nom", "label": "Nom", "default": "Ourlet droit" },
+    { "type": "image_picker", "id": "o1_photo", "label": "Photo" },
+    { "type": "textarea", "id": "o1_desc", "label": "Description", "default": "Classique et épuré. L'ourlet droit s'adapte à tous les styles et toutes les hauteurs de taille." },
+    { "type": "header", "content": "Ourlet 2" },
+    { "type": "text", "id": "o2_nom", "label": "Nom", "default": "Ourlet retourné" },
+    { "type": "image_picker", "id": "o2_photo", "label": "Photo" },
+    { "type": "textarea", "id": "o2_desc", "label": "Description", "default": "Revers de bas de pantalon typique du style britannique et italien. Ajoute du poids et du mouvement à la jambe." },
+    { "type": "header", "content": "— Récapitulatif —" },
+    { "type": "url", "id": "calendly_url", "label": "Lien Calendly (prise de rendez-vous)" }
+  ]
+}
+{% endschema %}

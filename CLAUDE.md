@@ -1,0 +1,1 @@
+/Users/felixmorissette/la-maison-m/AGENTS.md

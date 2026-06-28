@@ -1,0 +1,134 @@
+{% comment %} Pantalon — Collection La Maison M. {% endcomment %}
+{% render 'fil-ariane-collection', etape_active: 2 %}
+
+<style>
+  .lmm-pant-wrap {
+    width: 90%; margin: 0 auto; padding: 28px 0 20px;
+    display: flex; flex-direction: column; box-sizing: border-box;
+  }
+  .lmm-pant__header { margin-bottom: 16px; flex-shrink: 0; }
+  .lmm-pant__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
+  .lmm-pant__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-pant__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-pant__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; flex: 1; min-height: 0; margin-bottom: 16px;
+  }
+  .lmm-pant__card {
+    background: #fff; border: 1px solid rgba(28,28,28,0.1);
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; overflow: hidden; min-height: 0;
+  }
+  .lmm-pant__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-pant__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-pant__card-photo {
+    width: 100%; flex: 1; min-height: 0;
+    background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .lmm-pant__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-pant__card:hover .lmm-pant__card-photo img { transform: scale(1.04); }
+  .lmm-pant__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-pant__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
+  .lmm-pant__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
+  .lmm-pant__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 0; }
+  .lmm-pant__nav { display: flex; justify-content: center; flex-shrink: 0; }
+  #pant-next { opacity: 0.4; pointer-events: none; }
+  #pant-next.active { opacity: 1; pointer-events: auto; }
+  @media (max-width: 860px) {
+    .lmm-pant-wrap { height: auto; width: 92%; }
+    .lmm-pant__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="lmm-pant-wrap">
+
+  <div class="lmm-pant__header">
+    <p class="lmm-pant__label">Collection — Étape 2 sur 4</p>
+    <h1 class="lmm-pant__title">Hauteur du pantalon</h1>
+    <p class="lmm-pant__sub">Choisissez la hauteur de votre pantalon.</p>
+  </div>
+
+  <div class="lmm-pant__grid" id="hauteur-grid">
+
+    <div class="lmm-pant__card" data-val="Taille basse" onclick="selectCard(this, 'Taille basse')">
+      <div class="lmm-pant__card-photo">
+        <span class="lmm-pant__card-photo-placeholder">Photo à venir</span>
+      </div>
+      <div class="lmm-pant__card-body">
+        <h2 class="lmm-pant__name">Taille basse</h2>
+        <p class="lmm-pant__desc">Coupe contemporaine et moderne. Convient aux silhouettes élancées et aux styles décontractés.</p>
+      </div>
+    </div>
+
+    <div class="lmm-pant__card" data-val="Taille haute" onclick="selectCard(this, 'Taille haute')">
+      <div class="lmm-pant__card-photo">
+        <span class="lmm-pant__card-photo-placeholder">Photo à venir</span>
+      </div>
+      <div class="lmm-pant__card-body">
+        <h2 class="lmm-pant__name">Taille haute</h2>
+        <p class="lmm-pant__desc">Coupe classique et élégante. La taille haute allonge la silhouette et s'accorde avec tous les styles de veston.</p>
+      </div>
+    </div>
+
+    <div class="lmm-pant__card" data-val="Taille haute pincé" onclick="selectCard(this, 'Taille haute pincé')">
+      <div class="lmm-pant__card-photo">
+        <span class="lmm-pant__card-photo-placeholder">Photo à venir</span>
+      </div>
+      <div class="lmm-pant__card-body">
+        <h2 class="lmm-pant__name">Taille haute pincé</h2>
+        <p class="lmm-pant__desc">Le summum du classicisme tailleur. Le pli pincé à la taille haute évoque les grands complets italiens des années 40-50.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lmm-pant__nav">
+    <button class="lmm-btn-primary" id="pant-next" onclick="goNext()">Continuer →</button>
+  </div>
+
+</div>
+
+<script>
+  function ajusterHauteur() {
+    var wrap = document.querySelector('.lmm-pant-wrap');
+    if (!wrap) return;
+    var top = wrap.getBoundingClientRect().top + window.scrollY;
+    wrap.style.height = (window.innerHeight - top - 8) + 'px';
+  }
+  ajusterHauteur();
+  window.addEventListener('resize', ajusterHauteur);
+
+  var selected = null;
+
+  // Restaurer la sélection si on revient en arrière
+  var savedHauteur = new URLSearchParams(window.location.search).get('hauteur');
+  if (savedHauteur) {
+    var savedHauteurCard = document.querySelector('#hauteur-grid [data-val="' + savedHauteur + '"]');
+    if (savedHauteurCard) selectCard(savedHauteurCard, savedHauteur);
+  }
+
+  function selectCard(el, val) {
+    document.querySelectorAll('#hauteur-grid .lmm-pant__card').forEach(function(c) { c.classList.remove('lmm-pant__card--selected'); });
+    el.classList.add('lmm-pant__card--selected');
+    selected = val;
+    document.getElementById('pant-next').classList.add('active');
+    var _p = new URLSearchParams(window.location.search);
+    _p.set('hauteur', val);
+    history.replaceState(null, '', '?' + _p.toString());
+  }
+
+  function goNext() {
+    if (!selected) return;
+    var p = new URLSearchParams(window.location.search);
+    p.set('hauteur', selected);
+    window.location.href = '/pages/configurateur-ourlet?' + p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection — Pantalon",
+  "settings": [],
+  "presets": [{ "name": "Collection — Pantalon" }]
+}
+{% endschema %}

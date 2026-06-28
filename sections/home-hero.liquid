@@ -1,0 +1,180 @@
+<section class="lmm-hero full-width">
+  <div class="lmm-hero__inner">
+    <p class="lmm-label">{{ section.settings.label }}</p>
+    <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
+    <p class="lmm-hero__sub">{{ section.settings.subtitle }}</p>
+    <div class="lmm-hero__ctas">
+      <a href="{{ section.settings.cta1_url }}" class="lmm-btn-primary">{{ section.settings.cta1_label }}</a>
+      <a href="{{ section.settings.cta2_url }}" class="lmm-btn-outline">{{ section.settings.cta2_label }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="lmm-trust full-width">
+  <div class="lmm-trust__inner">
+    <div class="lmm-trust__item">
+      <p class="lmm-trust__num">{{ section.settings.stat1_num }}</p>
+      <p class="lmm-trust__desc">{{ section.settings.stat1_label }}</p>
+    </div>
+    <div class="lmm-divider-v"></div>
+    <div class="lmm-trust__item">
+      <p class="lmm-trust__num">{{ section.settings.stat2_num }}</p>
+      <p class="lmm-trust__desc">{{ section.settings.stat2_label }}</p>
+    </div>
+    <div class="lmm-divider-v"></div>
+    <div class="lmm-trust__item">
+      <p class="lmm-trust__num">{{ section.settings.stat3_num }}</p>
+      <p class="lmm-trust__desc">{{ section.settings.stat3_label }}</p>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .lmm-hero {
+    background: #1C1C1C;
+    min-height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    padding: 80px 32px;
+  }
+
+  .lmm-hero__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .lmm-label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #C9A96E;
+    margin-bottom: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-hero__title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(48px, 7vw, 96px);
+    font-weight: 400;
+    color: #F5F0EB;
+    line-height: 1.05;
+    margin-bottom: 28px;
+    max-width: 800px;
+  }
+
+  .lmm-hero__sub {
+    font-size: 16px;
+    color: rgba(245, 240, 235, 0.55);
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 48px;
+  }
+
+  .lmm-hero__ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .lmm-btn-primary {
+    display: inline-block;
+    background: #F5F0EB;
+    color: #1C1C1C;
+    text-decoration: none;
+    padding: 16px 36px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .lmm-btn-primary:hover {
+    background: #C9A96E;
+    color: #1C1C1C;
+  }
+
+  .lmm-btn-outline {
+    display: inline-block;
+    background: transparent;
+    color: #F5F0EB;
+    text-decoration: none;
+    padding: 15px 36px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid rgba(245, 240, 235, 0.3);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .lmm-btn-outline:hover {
+    border-color: #F5F0EB;
+    color: #F5F0EB;
+  }
+
+  .lmm-trust {
+    background: #F5F0EB;
+    border-bottom: 1px solid rgba(28, 28, 28, 0.08);
+    padding: 40px 32px;
+  }
+
+  .lmm-trust__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 64px;
+  }
+
+  .lmm-trust__item {
+    text-align: center;
+  }
+
+  .lmm-trust__num {
+    font-family: Georgia, serif;
+    font-size: 28px;
+    color: #1C1C1C;
+    margin-bottom: 4px;
+  }
+
+  .lmm-trust__desc {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+  }
+
+  .lmm-divider-v {
+    width: 1px;
+    height: 48px;
+    background: rgba(28,28,28,0.12);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hero — Accueil",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Étiquette", "default": "Artisanat québécois" },
+    { "type": "text", "id": "title", "label": "Titre", "default": "L'élégance\ntaillée pour vous" },
+    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "Complets sur mesure et collection permanente. Chaque pièce est confectionnée à la main par notre artisane." },
+    { "type": "text", "id": "cta1_label", "label": "Bouton 1 — texte", "default": "Voir la collection" },
+    { "type": "url", "id": "cta1_url", "label": "Bouton 1 — lien" },
+    { "type": "text", "id": "cta2_label", "label": "Bouton 2 — texte", "default": "Configurateur sur mesure" },
+    { "type": "url", "id": "cta2_url", "label": "Bouton 2 — lien" },
+    { "type": "text", "id": "stat1_num", "label": "Stat 1 — chiffre", "default": "12+" },
+    { "type": "text", "id": "stat1_label", "label": "Stat 1 — texte", "default": "Années d'expérience" },
+    { "type": "text", "id": "stat2_num", "label": "Stat 2 — chiffre", "default": "100%" },
+    { "type": "text", "id": "stat2_label", "label": "Stat 2 — texte", "default": "Cousu main" },
+    { "type": "text", "id": "stat3_num", "label": "Stat 3 — chiffre", "default": "4–8" },
+    { "type": "text", "id": "stat3_label", "label": "Stat 3 — texte", "default": "Semaines de livraison" }
+  ],
+  "presets": [
+    { "name": "Hero — Accueil" }
+  ]
+}
+{% endschema %}

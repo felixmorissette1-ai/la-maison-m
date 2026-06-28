@@ -1,0 +1,101 @@
+{% comment %} Paramètre: etape_active (1-4) {% endcomment %}
+<style>
+  .lmm-fil { background: #F5F0EB; border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 5%; }
+  .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; }
+  .lmm-fil__step {
+    display: flex; align-items: center; gap: 10px; padding: 0 20px;
+    text-decoration: none; color: #C8BBB0; font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; border-bottom: 2px solid transparent;
+    cursor: default; white-space: nowrap;
+  }
+  .lmm-fil__step:first-child { padding-left: 0; }
+  .lmm-fil__step--active { color: #1C1C1C; border-bottom-color: #C9A96E; }
+  .lmm-fil__step--done { color: #8C7B6E; cursor: pointer; text-decoration: none; }
+  .lmm-fil__step--done:hover { color: #1C1C1C; }
+  .lmm-fil__num {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #E8E2DA; color: #8C7B6E; font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-weight: 600;
+  }
+  .lmm-fil__step--active .lmm-fil__num { background: #C9A96E; color: #fff; }
+  .lmm-fil__step--done .lmm-fil__num { background: #1C1C1C; color: #fff; }
+  .lmm-fil__sep { color: #E8E2DA; font-size: 14px; display: flex; align-items: center; }
+</style>
+<nav class="lmm-fil">
+  <div class="lmm-fil__inner">
+    {% if etape_active > 1 %}
+      <a href="/pages/configurateur" class="lmm-fil__step lmm-fil__step--done">
+        <span class="lmm-fil__num">✓</span>Construction
+      </a>
+    {% else %}
+      <span class="lmm-fil__step lmm-fil__step--active">
+        <span class="lmm-fil__num">1</span>Construction
+      </span>
+    {% endif %}
+    <span class="lmm-fil__sep">›</span>
+    {% if etape_active > 2 %}
+      <a href="/pages/configurateur-pantalon" class="lmm-fil__step lmm-fil__step--done" id="fil-step-2">
+        <span class="lmm-fil__num">✓</span>Pantalon
+      </a>
+    {% elsif etape_active == 2 %}
+      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-2">
+        <span class="lmm-fil__num">2</span>Pantalon
+      </span>
+    {% else %}
+      <span class="lmm-fil__step" id="fil-step-2">
+        <span class="lmm-fil__num">2</span>Pantalon
+      </span>
+    {% endif %}
+    <span class="lmm-fil__sep">›</span>
+    {% if etape_active > 3 %}
+      <a href="/pages/configurateur-ourlet" class="lmm-fil__step lmm-fil__step--done" id="fil-step-3">
+        <span class="lmm-fil__num">✓</span>Ourlet
+      </a>
+    {% elsif etape_active == 3 %}
+      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-3">
+        <span class="lmm-fil__num">3</span>Ourlet
+      </span>
+    {% else %}
+      <span class="lmm-fil__step" id="fil-step-3">
+        <span class="lmm-fil__num">3</span>Ourlet
+      </span>
+    {% endif %}
+    <span class="lmm-fil__sep">›</span>
+    {% if etape_active == 4 %}
+      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-4">
+        <span class="lmm-fil__num">4</span>Récapitulatif
+      </span>
+    {% else %}
+      <span class="lmm-fil__step" id="fil-step-4">
+        <span class="lmm-fil__num">4</span>Récapitulatif
+      </span>
+    {% endif %}
+  </div>
+</nav>
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var pages = { 2: '/pages/configurateur-pantalon', 3: '/pages/configurateur-ourlet' };
+    var completed = { 2: !!params.get('hauteur'), 3: !!params.get('bas') };
+
+    // Mettre à jour les étapes déjà complétées (même si elles sont "futures" sur cette page)
+    [2, 3].forEach(function(step) {
+      var el = document.getElementById('fil-step-' + step);
+      if (!el) return;
+      if (completed[step] && !el.classList.contains('lmm-fil__step--active') && !el.classList.contains('lmm-fil__step--done')) {
+        el.classList.add('lmm-fil__step--done');
+        el.querySelector('.lmm-fil__num').textContent = '✓';
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', function() {
+          window.location.href = pages[step] + window.location.search;
+        });
+      }
+    });
+
+    // Mettre à jour les hrefs des étapes déjà done avec les params actuels
+    document.querySelectorAll('.lmm-fil__step--done[href]').forEach(function(link) {
+      link.setAttribute('href', link.getAttribute('href').split('?')[0] + window.location.search);
+    });
+  })();
+</script>

@@ -1,0 +1,257 @@
+{% comment %} Choix de canevas — La Maison M. {% endcomment %}
+
+{% comment %} recommended vient du param URL ?rec=c1/c2/c3 passé par le produit {% endcomment %}
+
+<style>
+
+  /* ── Layout principal — tout dans le viewport ── */
+  .lmm-canva-wrap {
+    width: 90%;
+    margin: 0 auto;
+    padding: 28px 0 20px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+  .lmm-canva__header { margin-bottom: 16px; flex-shrink: 0; }
+  .lmm-canva__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
+  .lmm-canva__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-canva__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+
+  /* ── 3 cartes côte à côte, photos qui remplissent ── */
+  .lmm-canva__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    margin-bottom: 16px;
+  }
+  .lmm-canva__card {
+    background: #fff;
+    border: 1px solid rgba(28,28,28,0.1);
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-canva__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-canva__card--recommended { border-color: #C9A96E; }
+  .lmm-badge-recommended {
+    position: absolute;
+    top: 12px; left: 12px;
+    background: #C9A96E;
+    color: #1C1C1C;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    font-weight: 600;
+    z-index: 1;
+  }
+  .lmm-canva__card-photo {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    background: #E8E2DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-canva__card:hover .lmm-canva__card-photo img { transform: scale(1.04); }
+  .lmm-canva__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-canva__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
+  .lmm-canva__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
+  .lmm-canva__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 0; }
+  .lmm-canva__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; margin-top: 10px; padding-top: 10px; border-top: 1px solid #E8E2DA; }
+
+  /* ── Navigation ── */
+  .lmm-canva__nav { display: flex; align-items: center; justify-content: center; gap: 16px; flex-shrink: 0; }
+  .lmm-canva__hint { font-size: 12px; color: #B0A49A; }
+  #canva-next { opacity: 0.4; pointer-events: none; }
+  #canva-next.active { opacity: 1; pointer-events: auto; }
+
+  @media (max-width: 860px) {
+    .lmm-canva-wrap { height: auto; width: 92%; }
+    .lmm-canva__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+{% render 'fil-ariane-collection', etape_active: 1 %}
+
+<div class="lmm-canva-wrap">
+
+    <div class="lmm-canva__header">
+      <p class="lmm-canva__label">{{ section.settings.etape_label }}</p>
+      <h1 class="lmm-canva__title">{{ section.settings.titre }}</h1>
+      <p class="lmm-canva__sub">{{ section.settings.sous_titre }}</p>
+    </div>
+
+    <div class="lmm-canva__grid">
+
+      {% comment %} Carte 1 {% endcomment %}
+      <div class="lmm-canva__card" id="card-c1"
+           data-desc="{{ section.settings.c1_desc }}"
+           data-label="{{ section.settings.c1_nom }}"
+           onclick="selectCanva(this, 'c1')">
+        <span class="lmm-badge-recommended" id="badge-c1" style="display:none;">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c1_photo %}
+            <img src="{{ section.settings.c1_photo | image_url: width: 600 }}" alt="{{ section.settings.c1_nom }}">
+          {% else %}
+            <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">{{ section.settings.c1_nom }}</h2>
+          <p class="lmm-canva__desc">{{ section.settings.c1_desc }}</p>
+          <p class="lmm-canva__prix" id="prix-c1"></p>
+        </div>
+      </div>
+
+      {% comment %} Carte 2 {% endcomment %}
+      <div class="lmm-canva__card" id="card-c2"
+           data-desc="{{ section.settings.c2_desc }}"
+           data-label="{{ section.settings.c2_nom }}"
+           onclick="selectCanva(this, 'c2')">
+        <span class="lmm-badge-recommended" id="badge-c2" style="display:none;">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c2_photo %}
+            <img src="{{ section.settings.c2_photo | image_url: width: 600 }}" alt="{{ section.settings.c2_nom }}">
+          {% else %}
+            <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">{{ section.settings.c2_nom }}</h2>
+          <p class="lmm-canva__desc">{{ section.settings.c2_desc }}</p>
+          <p class="lmm-canva__prix" id="prix-c2"></p>
+        </div>
+      </div>
+
+      {% comment %} Carte 3 {% endcomment %}
+      <div class="lmm-canva__card" id="card-c3"
+           data-desc="{{ section.settings.c3_desc }}"
+           data-label="{{ section.settings.c3_nom }}"
+           onclick="selectCanva(this, 'c3')">
+        <span class="lmm-badge-recommended" id="badge-c3" style="display:none;">{{ section.settings.badge_recommande }}</span>
+        <div class="lmm-canva__card-photo">
+          {% if section.settings.c3_photo %}
+            <img src="{{ section.settings.c3_photo | image_url: width: 600 }}" alt="{{ section.settings.c3_nom }}">
+          {% else %}
+            <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">{{ section.settings.c3_nom }}</h2>
+          <p class="lmm-canva__desc">{{ section.settings.c3_desc }}</p>
+          <p class="lmm-canva__prix" id="prix-c3"></p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="lmm-canva__nav">
+      <button class="lmm-btn-primary" id="canva-next" onclick="goNext()">Continuer</button>
+    </div>
+
+</div>
+
+<script>
+  // Ajuste la hauteur du wrap pour que tout rentre sans scroll
+  function ajusterHauteur() {
+    var wrap = document.querySelector('.lmm-canva-wrap');
+    if (!wrap) return;
+    var top = wrap.getBoundingClientRect().top + window.scrollY;
+    var disponible = window.innerHeight - top - 8;
+    wrap.style.height = disponible + 'px';
+  }
+  ajusterHauteur();
+  window.addEventListener('resize', ajusterHauteur);
+
+  var selectedCanva = null;
+
+  var _p = new URLSearchParams(window.location.search);
+
+  // Afficher les prix depuis les metafields produit (p1, p2, p3)
+  var prix = { 'c1': _p.get('p1') || '', 'c2': _p.get('p2') || '', 'c3': _p.get('p3') || '' };
+  ['c1','c2','c3'].forEach(function(k) {
+    var el = document.getElementById('prix-' + k);
+    if (el && prix[k]) el.textContent = prix[k];
+  });
+
+  // Appliquer le badge "Recommandé" depuis ?rec=NomConstruction
+  var rec = _p.get('rec');
+  if (rec) {
+    ['c1','c2','c3'].forEach(function(k) {
+      var card = document.getElementById('card-' + k);
+      if (card && card.getAttribute('data-label') === rec) {
+        card.classList.add('lmm-canva__card--recommended');
+        document.getElementById('badge-' + k).style.display = '';
+      }
+    });
+  }
+
+  // Restaurer la sélection si on revient en arrière
+  var savedCanvaParam = _p.get('canva');
+  if (savedCanvaParam) {
+    var savedCard = document.getElementById('card-' + savedCanvaParam);
+    if (savedCard) selectCanva(savedCard, savedCanvaParam);
+  }
+
+  function selectCanva(el, type) {
+    document.querySelectorAll('.lmm-canva__card').forEach(function(c) {
+      c.classList.remove('lmm-canva__card--selected');
+    });
+    el.classList.add('lmm-canva__card--selected');
+    selectedCanva = type;
+    document.getElementById('canva-next').classList.add('active');
+    _p.set('canva', type);
+    history.replaceState(null, '', '?' + _p.toString());
+  }
+  function goNext() {
+    if (!selectedCanva) return;
+    _p.set('canva', selectedCanva);
+    window.location.href = '/pages/configurateur-pantalon?' + _p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Choix de construction",
+  "settings": [
+    { "type": "header", "content": "Textes" },
+    { "type": "text", "id": "etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 1 sur 4" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre construction" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et le prix de votre complet." },
+    { "type": "text", "id": "badge_recommande", "label": "Texte du badge recommandé", "default": "Recommandé" },
+    { "type": "paragraph", "content": "Le 'Recommandé' se configure dans le metafield 'cava_recommande' de chaque produit (c1, c2 ou c3)." },
+
+    { "type": "header", "content": "Construction 1" },
+    { "type": "text", "id": "c1_nom", "label": "Nom", "default": "Thermocollé" },
+    { "type": "image_picker", "id": "c1_photo", "label": "Photo" },
+    { "type": "text", "id": "c1_avantages", "label": "Avantages (séparés par ·)", "default": "Prix accessible · Entretien facile · Coupe nette" },
+    { "type": "textarea", "id": "c1_desc", "label": "Description au clic", "default": "Idéal pour le meilleur prix. Construction légère et moderne, parfaite pour un usage quotidien." },
+
+    { "type": "header", "content": "Construction 2" },
+    { "type": "text", "id": "c2_nom", "label": "Nom", "default": "Mi-entoilé" },
+    { "type": "image_picker", "id": "c2_photo", "label": "Photo" },
+    { "type": "text", "id": "c2_avantages", "label": "Avantages (séparés par ·)", "default": "Bon rapport qualité/prix · Durabilité accrue · Tombé naturel" },
+    { "type": "textarea", "id": "c2_desc", "label": "Description au clic", "default": "Idéal pour une bonne durabilité et un bon prix. La construction préférée des tailleurs classiques." },
+
+    { "type": "header", "content": "Construction 3" },
+    { "type": "text", "id": "c3_nom", "label": "Nom", "default": "Pleine entoilure" },
+    { "type": "image_picker", "id": "c3_photo", "label": "Photo" },
+    { "type": "text", "id": "c3_avantages", "label": "Avantages (séparés par ·)", "default": "Longévité maximale · S'adapte au corps · Artisanat supérieur" },
+    { "type": "textarea", "id": "c3_desc", "label": "Description au clic", "default": "Idéal pour la longévité maximale. Le summum de l'artisanat tailleur, le complet s'adapte au corps avec le temps." },
+
+  ],
+  "presets": [{ "name": "Choix de construction" }]
+}
+{% endschema %}

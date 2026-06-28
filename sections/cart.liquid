@@ -1,0 +1,356 @@
+<style>
+  .lmm-cart {
+    max-width: 1100px;
+    margin: 64px auto;
+    padding: 0 48px 120px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1C1C1C;
+  }
+
+  .lmm-cart__title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    margin-bottom: 48px;
+    color: #1C1C1C;
+  }
+
+  .lmm-cart__empty {
+    text-align: center;
+    padding: 80px 0;
+    color: #8C7B6E;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+  }
+
+  .lmm-cart__empty a {
+    display: inline-block;
+    margin-top: 24px;
+    color: #C9A96E;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .lmm-cart__items {
+    border-top: 1px solid #E8E2DA;
+  }
+
+  .lmm-cart__item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    align-items: start;
+    padding: 28px 0;
+    border-bottom: 1px solid #E8E2DA;
+  }
+
+  .lmm-cart__item-img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    background: #F0EBE3;
+    display: block;
+  }
+
+  .lmm-cart__item-img-placeholder {
+    width: 100px;
+    height: 120px;
+    background: #F0EBE3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lmm-cart__item-details {
+    padding-top: 4px;
+  }
+
+  .lmm-cart__item-name {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0 0 10px;
+    color: #1C1C1C;
+  }
+
+  .lmm-cart__item-props {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+
+  .lmm-cart__item-props li {
+    font-size: 12px;
+    color: #8C7B6E;
+    letter-spacing: 0.04em;
+    line-height: 1.8;
+  }
+
+  .lmm-cart__item-props span {
+    color: #1C1C1C;
+  }
+
+  .lmm-cart__item-remove {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: #8C7B6E;
+    text-decoration: none;
+    text-transform: uppercase;
+    border-bottom: 1px solid #E8E2DA;
+  }
+
+  .lmm-cart__item-remove:hover {
+    color: #1C1C1C;
+    border-color: #1C1C1C;
+  }
+
+  .lmm-cart__item-right {
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  .lmm-cart__item-price {
+    font-size: 16px;
+    font-family: Georgia, serif;
+    color: #1C1C1C;
+    margin-bottom: 16px;
+  }
+
+  .lmm-cart__qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  .lmm-cart__qty-btn {
+    background: none;
+    border: 1px solid #E8E2DA;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #1C1C1C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
+
+  .lmm-cart__qty-btn:hover {
+    border-color: #1C1C1C;
+  }
+
+  .lmm-cart__qty-num {
+    font-size: 14px;
+    min-width: 20px;
+    text-align: center;
+  }
+
+  .lmm-cart__body {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .lmm-cart__footer {
+    position: sticky;
+    top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: #F5F0EB;
+    padding: 32px;
+  }
+
+  .lmm-cart__subtotal {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: #8C7B6E;
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(28,28,28,0.12);
+  }
+
+  .lmm-cart__subtotal-amount {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    color: #1C1C1C;
+    letter-spacing: 0.02em;
+  }
+
+  .lmm-cart__note {
+    font-size: 11px;
+    color: #8C7B6E;
+    letter-spacing: 0.04em;
+  }
+
+  .lmm-cart__checkout-btn {
+    background: #1C1C1C;
+    color: #F5F0EB;
+    border: none;
+    padding: 16px 40px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background 0.2s;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .lmm-cart__checkout-btn:hover {
+    background: #C9A96E;
+  }
+
+  .lmm-cart__continue {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+    text-decoration: none;
+  }
+
+  .lmm-cart__continue:hover {
+    color: #1C1C1C;
+  }
+</style>
+
+<div class="lmm-cart">
+  <h1 class="lmm-cart__title">Votre commande</h1>
+
+  {% if cart.item_count == 0 %}
+    <div class="lmm-cart__empty">
+      <p>Votre panier est vide.</p>
+      <a href="/collections/all">Découvrir nos modèles →</a>
+    </div>
+  {% else %}
+    <form action="{{ routes.cart_url }}" method="post" id="cart-form">
+      <div class="lmm-cart__body">
+      <div class="lmm-cart__items">
+        {% for item in cart.items %}
+          <div class="lmm-cart__item">
+
+            <div>
+              {% if item.image %}
+                <img class="lmm-cart__item-img" src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}" loading="lazy">
+              {% else %}
+                <div class="lmm-cart__item-img-placeholder">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="1" stroke="#C9A96E" stroke-width="1.2"/><path d="M11 4v4a5 5 0 0010 0V4" stroke="#C9A96E" stroke-width="1.2"/></svg>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="lmm-cart__item-details">
+              <p class="lmm-cart__item-name">{{ item.product.title }}</p>
+              {% if item.properties.size > 0 %}
+                <ul class="lmm-cart__item-props">
+                  {% for p in item.properties %}
+                    {% unless p.last == blank %}
+                      <li>{{ p.first }} : <span>{{ p.last }}</span></li>
+                    {% endunless %}
+                  {% endfor %}
+                </ul>
+              {% endif %}
+              <a href="{{ item.url_to_remove }}" class="lmm-cart__item-remove">Retirer</a>
+            </div>
+
+            <div class="lmm-cart__item-right">
+              <p class="lmm-cart__item-price">{{ item.final_line_price | money }}</p>
+              <div class="lmm-cart__qty">
+                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})">−</button>
+                <span class="lmm-cart__qty-num">{{ item.quantity }}</span>
+                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+              </div>
+            </div>
+
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="lmm-cart__footer">
+        <h2 style="font-family:Georgia,serif; font-size:18px; font-weight:400; color:#1C1C1C; margin:0 0 8px;">Résumé</h2>
+        <div class="lmm-cart__subtotal">
+          <span>Sous-total</span>
+          <span class="lmm-cart__subtotal-amount">{{ cart.total_price | money }}</span>
+        </div>
+        <p class="lmm-cart__note">Taxes et livraison calculées à la commande</p>
+
+        <div style="width:100%; min-height:120px; display:flex; flex-direction:column; gap:8px;">
+          {% unless customer %}
+            <a href="/account/login" class="lmm-cart__checkout-btn">
+              Se connecter pour continuer
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="/account/register" class="lmm-cart__continue" style="text-align:center; display:block;">Créer un compte</a>
+
+          {% elsif customer.metafields.custom.mensurations %}
+            <div style="display:flex; align-items:center; gap:10px; background:#F5F0EB; padding:10px 14px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#7DAF7D; flex-shrink:0;"></div>
+              <p style="font-size:11px; color:#1C1C1C; margin:0; letter-spacing:0.04em;">Mensurations enregistrées au dossier</p>
+            </div>
+            <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
+              Procéder au paiement
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+          {% assign now_ts = 'now' | date: '%s' %}
+          {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
+          {% elsif customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+            <div style="display:flex; align-items:center; gap:10px; background:#F5F0EB; padding:10px 14px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#C9A96E; flex-shrink:0;"></div>
+              <p style="font-size:11px; color:#1C1C1C; margin:0; letter-spacing:0.04em;">Rendez-vous confirmé</p>
+            </div>
+            <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
+              Procéder au paiement
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+
+          {% else %}
+            <div style="background:#FDF8F0; border-left:3px solid #C9A96E; padding:12px 16px;">
+              <p style="font-size:11px; color:#8C7B6E; line-height:1.7; margin:0;"><strong style="color:#1C1C1C;">Rendez-vous requis.</strong> Prenez rendez-vous pour vos mensurations avant de procéder au paiement.</p>
+            </div>
+            <button type="button" class="lmm-cart__checkout-btn" onclick="ouvrirCalModal()">
+              Prise de rendez-vous
+              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          {% endunless %}
+        </div>
+
+        <a href="/collections/all" class="lmm-cart__continue">← Continuer mes achats</a>
+      </div>
+      </div>
+    </form>
+  {% endif %}
+</div>
+
+<script>
+  function updateQty(key, qty) {
+    if (qty < 0) qty = 0;
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: qty })
+    }).then(function() { window.location.reload(); });
+  }
+
+</script>
+
+{% schema %}
+{
+  "name": "Panier",
+  "settings": []
+}
+{% endschema %}

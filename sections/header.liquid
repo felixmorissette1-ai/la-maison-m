@@ -1,0 +1,693 @@
+<header class="lmm-header full-width">
+  <div class="lmm-header__inner">
+    <a href="{{ routes.root_url }}" class="lmm-header__logo">
+      <span class="lmm-logo-main">La Maison M.</span>
+    </a>
+
+    <nav class="lmm-header__nav">
+      {% for link in section.settings.menu.links %}
+        <a href="{{ link.url }}" class="lmm-nav-link{% if request.path == link.url %} lmm-nav-link--active{% endif %}">
+          {{ link.title }}
+        </a>
+      {% endfor %}
+    </nav>
+
+    <a href="/pages/sur-mesure" class="lmm-header__rdv-btn" style="margin-right:8px;">Configurateur</a>
+
+    {% assign now_ts = 'now' | date: '%s' %}
+    {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
+    {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+      <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion des rendez-vous</a>
+    {% else %}
+      <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prise de rendez-vous</a>
+    {% endif %}
+
+    <div class="lmm-header__icons">
+      {% if shop.customer_accounts_enabled %}
+        <shopify-account menu="{{ section.settings.customer_account_menu }}" class="lmm-icon-btn">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </shopify-account>
+      {% endif %}
+
+      <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
+        {{ 'icon-cart.svg' | inline_asset_content }}
+        {% if cart.item_count > 0 %}
+          <span class="lmm-cart-count">{{ cart.item_count }}</span>
+        {% endif %}
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="lmm-cal-modal" id="lmm-localisation-modal" onclick="if(event.target===this) fermerLocalisationModal()">
+  <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:600px; width:90vw; max-height:90vh; display:flex; flex-direction:column;">
+    <button class="lmm-cal-modal__close" onclick="fermerLocalisationModal()">×</button>
+    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:#1C1C1C; margin:0 0 8px;">Votre couturière</h2>
+    <p style="font-size:12px; color:#8C7B6E; letter-spacing:0.04em; margin:0 0 20px; line-height:1.7;">Nous trouvons la couturière la plus près de vous.</p>
+
+    <div id="lmm-loc-auto" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+      <button onclick="localiserAuto()" style="background:#1C1C1C; color:#F5F0EB; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:10px;">
+        Utiliser ma localisation
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+      </button>
+      <p style="text-align:center; font-size:11px; color:#C0B8B0; margin:0;">— ou —</p>
+      <div style="display:flex; gap:8px;">
+        <input id="lmm-code-postal" type="text" placeholder="Code postal (ex: G6V 1A1)" style="flex:1; border:1px solid #E8E2DA; padding:12px; font-family:inherit; font-size:13px; color:#1C1C1C;">
+        <button onclick="localiserParCodePostal()" style="background:#C9A96E; color:#1C1C1C; border:none; padding:12px 20px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+          OK
+        </button>
+      </div>
+    </div>
+
+    <div id="lmm-loc-loading" style="display:none; text-align:center; padding:20px 0;">
+      <p style="font-size:12px; color:#8C7B6E; letter-spacing:0.08em;">Recherche en cours...</p>
+    </div>
+
+    <div id="lmm-loc-resultat" style="display:none; flex-direction:column; gap:12px; flex:1; min-height:0;">
+      <div id="lmm-map" style="width:100%; height:200px; background:#E8E2DA; flex-shrink:0;"></div>
+
+      <div id="lmm-couturieres-liste" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; min-height:0;"></div>
+
+      <div style="flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding-top:4px;">
+        <button onclick="confirmerCouturiereEtOuvrirCal()" style="background:#1C1C1C; color:#F5F0EB; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+          Prendre rendez-vous
+        </button>
+        <button onclick="afficherLocAuto()" style="background:none; border:1px solid #E8E2DA; color:#8C7B6E; padding:12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+          Changer de localisation
+        </button>
+      </div>
+    </div>
+
+    <p id="lmm-loc-erreur" style="color:#c0392b; font-size:12px; margin:12px 0 0; display:none;">Impossible de trouver votre localisation. Essayez avec un code postal.</p>
+  </div>
+</div>
+
+<div class="lmm-cal-modal" id="lmm-annulation-modal" onclick="if(event.target===this) fermerAnnulationModal()">
+  <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:480px;">
+    <button class="lmm-cal-modal__close" onclick="fermerAnnulationModal()">×</button>
+    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:#1C1C1C; margin:0 0 8px;">Annuler le rendez-vous</h2>
+    <p style="font-size:12px; color:#8C7B6E; letter-spacing:0.04em; margin:0 0 24px;">Veuillez indiquer la raison de votre annulation.</p>
+    <textarea id="lmm-annulation-raison" placeholder="Raison de l'annulation..." style="width:100%; height:100px; border:1px solid #E8E2DA; padding:12px; font-family:inherit; font-size:13px; color:#1C1C1C; resize:none; box-sizing:border-box; margin-bottom:16px;"></textarea>
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      <button onclick="confirmerAnnulation()" style="background:#1C1C1C; color:#F5F0EB; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        Confirmer l'annulation
+      </button>
+      <button onclick="fermerAnnulationModal()" style="background:none; border:1px solid #E8E2DA; color:#8C7B6E; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        Retour
+      </button>
+    </div>
+    <p id="lmm-annulation-erreur" style="color:#c0392b; font-size:12px; margin:12px 0 0; display:none;">Une erreur est survenue. Veuillez réessayer.</p>
+  </div>
+</div>
+
+<div class="lmm-cal-modal" id="lmm-signup-modal">
+  <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:480px;">
+    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:#1C1C1C; margin:0 0 8px;">Rendez-vous confirmé ✓</h2>
+    <p style="font-size:13px; color:#8C7B6E; margin:0 0 24px; line-height:1.6;">Connectez-vous pour accéder au paiement et que vos mensurations soient enregistrées à votre nom.</p>
+    <a id="lmm-signup-link" href="/account/login" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#C9A96E; color:#1C1C1C; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; font-family:inherit; margin-bottom:10px;">
+      Se connecter
+      <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="/account/register" style="display:block; text-align:center; font-size:11px; letter-spacing:0.08em; color:#8C7B6E; text-decoration:none; margin-bottom:16px;">
+      Créer un compte
+    </a>
+    <input type="hidden" id="lmm-signup-email" value="">
+    <button onclick="document.getElementById('lmm-signup-modal').classList.remove('open'); window.location.href='/cart';" style="background:none; border:none; color:#C0B8B0; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%; padding:10px;">
+      Continuer sans compte
+    </button>
+  </div>
+</div>
+
+<div id="lmm-booking-overlay" style="display:none; position:fixed; inset:0; background:#1C1C1C; z-index:99999; flex-direction:column; align-items:center; justify-content:center; gap:20px;">
+  <p style="font-family:Georgia,serif; font-size:22px; color:#F5F0EB; letter-spacing:0.04em;">Rendez-vous confirmé</p>
+  <p style="font-size:12px; color:#C9A96E; letter-spacing:0.12em; text-transform:uppercase;">Redirection vers votre panier...</p>
+  <div style="width:40px; height:2px; background:#C9A96E; animation:lmm-progress 3s linear forwards;"></div>
+</div>
+
+<div class="lmm-cal-modal" id="lmm-reschedule-modal" onclick="if(event.target===this) fermerRescheduleModal()">
+  <div class="lmm-cal-modal__inner">
+    <button class="lmm-cal-modal__close" onclick="fermerRescheduleModal()">×</button>
+    <iframe id="lmm-reschedule-iframe" src="" frameborder="0" allow="camera; microphone; fullscreen" style="width:100%; min-height:600px; display:block;"></iframe>
+  </div>
+</div>
+
+<div class="lmm-cal-modal" id="lmm-cal-modal" onclick="if(event.target===this) fermerCalModal()">
+  <div class="lmm-cal-modal__inner">
+    <button class="lmm-cal-modal__close" onclick="fermerCalModal()">×</button>
+    <iframe id="lmm-cal-iframe" src="" frameborder="0" allow="camera; microphone; fullscreen" style="width:100%; min-height:600px; display:block;"></iframe>
+  </div>
+</div>
+
+<div class="lmm-cal-modal" id="lmm-gestion-modal" onclick="if(event.target===this) fermerGestionModal()">
+  <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:480px;">
+    <button class="lmm-cal-modal__close" onclick="fermerGestionModal()">×</button>
+    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:#1C1C1C; margin:0 0 24px;">Votre rendez-vous</h2>
+
+    {% if customer and customer.metafields.custom.rdv_date_heure != blank %}
+      <div style="background:#F5F0EB; padding:20px 24px; margin-bottom:28px;">
+        <p style="font-size:11px; color:#8C7B6E; letter-spacing:0.1em; text-transform:uppercase; margin:0 0 6px;">Date et heure</p>
+        <p style="font-family:Georgia,serif; font-size:18px; color:#1C1C1C; margin:0;">
+          {{ customer.metafields.custom.rdv_date_heure | date: "%A %d %B %Y" | capitalize }}
+        </p>
+        <p style="font-size:14px; color:#8C7B6E; margin:4px 0 0;">
+          {{ customer.metafields.custom.rdv_date_heure | date: "%H:%M" }}
+        </p>
+      </div>
+    {% endif %}
+
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      {% if customer and customer.metafields.custom.rdv_uid != blank %}
+        <button onclick="ouvrirRescheduleModal()" style="display:flex; align-items:center; justify-content:center; gap:10px; background:#1C1C1C; color:#F5F0EB; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+          Modifier le rendez-vous
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="ouvrirAnnulationModal()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid #E8E2DA; color:#8C7B6E; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+          Annuler le rendez-vous
+        </button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script>
+  // === Localisation / Couturière ===
+  var tunnelUrl = 'https://lmm-backend.vercel.app';
+
+  function ouvrirLocalisationModal() {
+    afficherLocAuto();
+    document.getElementById('lmm-localisation-modal').classList.add('open');
+  }
+
+  function fermerLocalisationModal() {
+    document.getElementById('lmm-localisation-modal').classList.remove('open');
+    document.getElementById('lmm-loc-erreur').style.display = 'none';
+  }
+
+  function afficherLocAuto() {
+    document.getElementById('lmm-loc-auto').style.display = 'flex';
+    document.getElementById('lmm-loc-loading').style.display = 'none';
+    document.getElementById('lmm-loc-resultat').style.display = 'none';
+    document.getElementById('lmm-code-postal').value = '';
+    document.getElementById('lmm-loc-erreur').style.display = 'none';
+    lmmMap = null;
+    document.getElementById('lmm-map').innerHTML = '';
+    document.getElementById('lmm-couturieres-liste').innerHTML = '';
+  }
+
+  function afficherLoading() {
+    document.getElementById('lmm-loc-auto').style.display = 'none';
+    document.getElementById('lmm-loc-loading').style.display = 'block';
+    document.getElementById('lmm-loc-resultat').style.display = 'none';
+    document.getElementById('lmm-loc-erreur').style.display = 'none';
+  }
+
+  var lmmLienCalChoisi = '';
+  var lmmMap = null;
+  var lmmMapCharge = false;
+
+  function chargerGoogleMaps(callback) {
+    if (window.google && window.google.maps) { callback(); return; }
+    window._lmmMapCallback = callback;
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyCyzVI3XFE-f8ir2aE4QTjUB0haaJRyhig&callback=_lmmMapCallback';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+
+  function afficherResultat(couturieres) {
+    lmmLienCalChoisi = couturieres[0].lien_cal || '';
+    document.getElementById('lmm-loc-loading').style.display = 'none';
+    document.getElementById('lmm-loc-resultat').style.display = 'flex';
+
+    // Liste triée
+    var liste = document.getElementById('lmm-couturieres-liste');
+    liste.innerHTML = '';
+    couturieres.forEach(function(c, i) {
+      var card = document.createElement('div');
+      card.id = 'lmm-card-' + i;
+      card.setAttribute('onclick', 'selectionnerCouturiere(' + i + ')');
+      card.style.cssText = 'background:#fff; border:1px solid #E8E2DA; padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;';
+      card.innerHTML = '<div style="flex:1;">' +
+        (i === 0 ? '<p style="font-size:10px;color:#C9A96E;letter-spacing:0.1em;text-transform:uppercase;margin:0 0 4px;">La plus proche</p>' : '') +
+        '<p style="font-family:Georgia,serif;font-size:15px;color:#1C1C1C;margin:0 0 2px;">' + c.nom + '</p>' +
+        '<p style="font-size:11px;color:#8C7B6E;margin:0;">' + c.adresse + '</p>' +
+        '</div>' +
+        '<p id="lmm-btn-' + i + '" style="font-size:12px;color:#C9A96E;margin:0;flex-shrink:0;margin-left:12px;">' + c.distance + '</p>';
+      liste.appendChild(card);
+    });
+    selectionnerCouturiere(0);
+
+    // Map
+    chargerGoogleMaps(function() {
+      var mapEl = document.getElementById('lmm-map');
+      var center = { lat: couturieres[0].lat, lng: couturieres[0].lng };
+      lmmMap = new google.maps.Map(mapEl, {
+        center: center,
+        zoom: couturieres.length > 1 ? 3 : 12,
+        disableDefaultUI: true,
+        zoomControl: true,
+        styles: [{ featureType: 'all', elementType: 'geometry', stylers: [{ color: '#F5F0EB' }] }, { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#E8E2DA' }] }, { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#fff' }] }]
+      });
+      var bounds = new google.maps.LatLngBounds();
+      couturieres.forEach(function(c, i) {
+        var pos = { lat: c.lat, lng: c.lng };
+        new google.maps.Marker({
+          position: pos,
+          map: lmmMap,
+          title: c.nom,
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: i === 0 ? 10 : 7,
+            fillColor: i === 0 ? '#C9A96E' : '#1C1C1C',
+            fillOpacity: 1,
+            strokeColor: '#fff',
+            strokeWeight: 2
+          }
+        });
+        bounds.extend(pos);
+      });
+      if (couturieres.length > 1) lmmMap.fitBounds(bounds);
+    });
+  }
+
+  var lmmDernierResultat = [];
+  var lmmIndexChoisi = 0;
+
+  function selectionnerCouturiere(index) {
+    lmmIndexChoisi = index;
+    lmmLienCalChoisi = lmmDernierResultat[index].lien_cal || '';
+    var n = lmmDernierResultat.length;
+    for (var j = 0; j < n; j++) {
+      var card = document.getElementById('lmm-card-' + j);
+      var btn = document.getElementById('lmm-btn-' + j);
+      if (!card || !btn) continue;
+      if (j === index) {
+        card.style.background = '#F5F0EB';
+        card.style.borderColor = '#C9A96E';
+        btn.style.background = '#1C1C1C';
+        btn.style.color = '#F5F0EB';
+      } else {
+        card.style.background = '#fff';
+        card.style.borderColor = '#E8E2DA';
+        btn.style.background = '#E8E2DA';
+        btn.style.color = '#8C7B6E';
+      }
+    }
+  }
+
+  function localiserAuto() {
+    if (!navigator.geolocation) {
+      document.getElementById('lmm-loc-erreur').style.display = 'block';
+      return;
+    }
+    afficherLoading();
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        fetch(tunnelUrl + '/api/couturiere', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.success) {
+            lmmDernierResultat = data.couturieres;
+            afficherResultat(data.couturieres);
+          } else {
+            afficherLocAuto();
+            document.getElementById('lmm-loc-erreur').style.display = 'block';
+          }
+        })
+        .catch(function() {
+          afficherLocAuto();
+          document.getElementById('lmm-loc-erreur').style.display = 'block';
+        });
+      },
+      function() {
+        afficherLocAuto();
+        document.getElementById('lmm-loc-erreur').style.display = 'block';
+      }
+    );
+  }
+
+  function localiserParCodePostal() {
+    var cp = document.getElementById('lmm-code-postal').value.trim();
+    if (!cp) return;
+    afficherLoading();
+    fetch(tunnelUrl + '/api/couturiere', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ codePostal: cp })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        lmmDernierResultat = data.couturieres;
+        afficherResultat(data.couturieres);
+      } else {
+        afficherLocAuto();
+        document.getElementById('lmm-loc-erreur').textContent = data.error || 'Code postal invalide.';
+        document.getElementById('lmm-loc-erreur').style.display = 'block';
+      }
+    })
+    .catch(function() {
+      afficherLocAuto();
+      document.getElementById('lmm-loc-erreur').style.display = 'block';
+    });
+  }
+
+  function confirmerCouturiereEtOuvrirCal() {
+    fermerLocalisationModal();
+    calCharge = false;
+    ouvrirCalModal(lmmLienCalChoisi);
+  }
+  // === Fin Localisation ===
+
+  var calCharge = false;
+  function ouvrirCalModal(lienCal) {
+    document.getElementById('lmm-cal-modal').classList.add('open');
+    if (!calCharge) {
+      calCharge = true;
+      var lien = lienCal || 'felix-morissette-cf6pjb/test-site';
+      var calUrl = 'https://cal.com/' + lien;
+      {% if customer %}
+        calUrl += '?email={{ customer.email | url_encode }}';
+        {% assign full_name = customer.first_name | append: ' ' | append: customer.last_name | strip %}
+        {% if full_name != blank %}
+          calUrl += '&name={{ full_name | url_encode }}';
+        {% endif %}
+      {% endif %}
+      document.getElementById('lmm-cal-iframe').src = calUrl;
+    }
+  }
+  function fermerCalModal() {
+    document.getElementById('lmm-cal-modal').classList.remove('open');
+  }
+
+  var rescheduleCharge = false;
+  function ouvrirRescheduleModal() {
+    fermerGestionModal();
+    document.getElementById('lmm-reschedule-modal').classList.add('open');
+    if (!rescheduleCharge) {
+      rescheduleCharge = true;
+      document.getElementById('lmm-reschedule-iframe').src = 'https://cal.com/reschedule/{{ customer.metafields.custom.rdv_uid }}';
+    }
+  }
+  function fermerRescheduleModal() {
+    document.getElementById('lmm-reschedule-modal').classList.remove('open');
+    rescheduleCharge = false;
+    document.getElementById('lmm-reschedule-iframe').src = '';
+  }
+
+  function ouvrirGestionModal() {
+    document.getElementById('lmm-gestion-modal').classList.add('open');
+  }
+
+  function fermerGestionModal() {
+    document.getElementById('lmm-gestion-modal').classList.remove('open');
+  }
+
+  function ouvrirAnnulationModal() {
+    fermerGestionModal();
+    document.getElementById('lmm-annulation-modal').classList.add('open');
+  }
+
+  function fermerAnnulationModal() {
+    document.getElementById('lmm-annulation-modal').classList.remove('open');
+    document.getElementById('lmm-annulation-raison').value = '';
+    document.getElementById('lmm-annulation-erreur').style.display = 'none';
+  }
+
+  function confirmerAnnulation() {
+    var raison = document.getElementById('lmm-annulation-raison').value;
+    var uid = '{{ customer.metafields.custom.rdv_uid }}';
+
+    // Afficher l'overlay immédiatement
+    fermerAnnulationModal();
+    var overlay = document.getElementById('lmm-booking-overlay');
+    overlay.querySelector('p:first-child').textContent = 'Annulation en cours...';
+    overlay.style.display = 'flex';
+
+    fetch(tunnelUrl + '/api/cal-cancel', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid: uid, reason: raison })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        overlay.querySelector('p:first-child').textContent = 'Rendez-vous annulé';
+        setTimeout(function() { window.location.reload(); }, 2000);
+      } else {
+        overlay.style.display = 'none';
+        document.getElementById('lmm-annulation-modal').classList.add('open');
+        document.getElementById('lmm-annulation-erreur').style.display = 'block';
+      }
+    })
+    .catch(function() {
+      document.getElementById('lmm-annulation-erreur').style.display = 'block';
+    });
+  }
+
+  var emailRdv = '';
+
+  window.addEventListener('message', function(e) {
+    if (!e.data) return;
+    var data = e.data.data || e.data;
+    var type = e.data.type || (e.data.data && e.data.data.type) || '';
+
+    // Capter l'email depuis les données Cal.com
+    if (data && data.booking && data.booking.attendees && data.booking.attendees[0]) {
+      emailRdv = data.booking.attendees[0].email || '';
+    }
+    if (data && data.email) emailRdv = data.email;
+
+    if (type === 'bookingSuccessful' || type === '__cal__bookingSuccessful' || type === 'booking_successful' || String(type).toLowerCase().includes('booking')) {
+      afficherConfirmation();
+    }
+  });
+
+  document.getElementById('lmm-cal-iframe').addEventListener('load', function() {
+    try {
+      var iframeUrl = this.contentWindow.location.href;
+      if (iframeUrl && (iframeUrl.includes('/booking/') || iframeUrl.includes('confirmed') || iframeUrl.includes('success'))) {
+        afficherConfirmation();
+      }
+    } catch(e) {}
+  });
+
+  function afficherConfirmation() {
+    fermerCalModal();
+    {% unless customer %}
+      // Sauvegarder le booking en localStorage pour synchronisation après connexion
+      if (emailRdv) {
+        document.getElementById('lmm-signup-email').value = emailRdv;
+        document.getElementById('lmm-signup-link').href = '/account/login';
+      }
+      // Stocker les infos RDV pour les appliquer après connexion
+      localStorage.setItem('lmm_rdv_pending', JSON.stringify({ email: emailRdv, ts: Date.now() }));
+      document.getElementById('lmm-signup-modal').classList.add('open');
+    {% else %}
+      var overlay = document.getElementById('lmm-booking-overlay');
+      overlay.querySelector('p:first-child').textContent = 'Rendez-vous confirmé';
+      overlay.style.display = 'flex';
+      setTimeout(function() { window.location.href = '/cart'; }, 3000);
+    {% endunless %}
+  }
+</script>
+
+{% stylesheet %}
+  .lmm-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: #1C1C1C;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    height: 72px;
+  }
+
+  .lmm-header__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .lmm-header__logo {
+    text-decoration: none;
+  }
+
+  .lmm-logo-main {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #F5F0EB;
+    letter-spacing: 0.04em;
+  }
+
+  .lmm-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .lmm-nav-link {
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 235, 0.65);
+    transition: color 0.2s;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-nav-link:hover,
+  .lmm-nav-link--active {
+    color: #F5F0EB;
+  }
+
+  .lmm-header__icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .lmm-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(245, 240, 235, 0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .lmm-icon-btn:hover {
+    color: #F5F0EB;
+  }
+
+  .lmm-icon-btn svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .lmm-cart-count {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #C9A96E;
+    color: #1C1C1C;
+    font-size: 9px;
+    font-weight: 600;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  body {
+    padding-top: 72px;
+    background: #F5F0EB;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: #1C1C1C;
+  }
+
+  .lmm-header__rdv-btn {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #1C1C1C;
+    background: #C9A96E;
+    padding: 9px 18px;
+    text-decoration: none;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .lmm-header__rdv-btn:hover {
+    background: #F5F0EB;
+  }
+
+  .lmm-cal-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28,28,28,0.7);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .lmm-cal-modal.open {
+    display: flex;
+  }
+
+  .lmm-cal-modal__inner {
+    background: #fff;
+    width: 90%;
+    max-width: 820px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+  }
+
+  .lmm-cal-modal__close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #8C7B6E;
+    z-index: 1;
+    line-height: 1;
+  }
+
+  .lmm-cal-modal__close:hover {
+    color: #1C1C1C;
+  }
+
+  #lmm-cal-embed {
+    min-height: 600px;
+  }
+
+  @keyframes lmm-progress {
+    from { width: 0px; }
+    to { width: 200px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "En-tête",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu principal",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "customer_account_menu",
+      "label": "Menu compte client",
+      "default": "customer-account-main-menu"
+    },
+    {
+      "type": "text",
+      "id": "backend_url",
+      "label": "URL du backend",
+      "default": "http://localhost:3000"
+    }
+  ]
+}
+{% endschema %}

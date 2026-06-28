@@ -1,0 +1,95 @@
+{% comment %} Récapitulatif — Collection La Maison M. {% endcomment %}
+{% render 'fil-ariane-collection', etape_active: 4 %}
+
+<style>
+  .lmm-recap-wrap { width: 90%; max-width: 900px; margin: 0 auto; padding: 40px 0 60px; }
+  .lmm-recap__header { margin-bottom: 48px; }
+  .lmm-recap__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: #1C1C1C; margin-bottom: 12px; }
+  .lmm-recap__sub { font-size: 14px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
+  .lmm-recap__table { border-top: 1px solid #E8E2DA; margin-bottom: 48px; }
+  .lmm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #E8E2DA; }
+  .lmm-recap__key { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-recap__val { font-size: 15px; color: #1C1C1C; font-family: Georgia, serif; }
+  .lmm-recap__total { display: flex; justify-content: space-between; align-items: baseline; background: #F5F0EB; padding: 20px 24px; margin-bottom: 32px; }
+  .lmm-recap__total-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #1C1C1C; }
+  .lmm-recap__total-price { font-family: Georgia, serif; font-size: 32px; color: #1C1C1C; }
+  .lmm-recap__nav { display: flex; gap: 12px; align-items: center; }
+  .lmm-recap__btn-back { color: #8C7B6E; font-size: 13px; text-decoration: none; padding: 14px 0; letter-spacing: 0.04em; }
+  .lmm-recap__btn-add { background: #1C1C1C; color: #fff; border: none; padding: 16px 40px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .lmm-recap__btn-add:hover { background: #333; }
+  .lmm-recap__error { color: #c0392b; font-size: 12px; margin-top: 12px; display: none; }
+</style>
+
+<div class="lmm-recap-wrap">
+  <div class="lmm-recap__header">
+    <p class="lmm-label" style="color:#C9A96E; margin-bottom:12px;">Sur mesure — Récapitulatif</p>
+    <h1 class="lmm-recap__title">Votre commande</h1>
+    <p class="lmm-recap__sub">Vérifiez vos choix avant d'ajouter au panier.</p>
+  </div>
+
+  <div class="lmm-recap__table">
+    <div class="lmm-recap__row"><span class="lmm-recap__key">Modèle</span><span class="lmm-recap__val" id="r-modele">—</span></div>
+    <div class="lmm-recap__row"><span class="lmm-recap__key">Construction</span><span class="lmm-recap__val" id="r-canva">—</span></div>
+    <div class="lmm-recap__row"><span class="lmm-recap__key">Bas de pantalon</span><span class="lmm-recap__val" id="r-bas">—</span></div>
+    <div class="lmm-recap__row"><span class="lmm-recap__key">Hauteur du pantalon</span><span class="lmm-recap__val" id="r-hauteur">—</span></div>
+  </div>
+
+  <div class="lmm-recap__total">
+    <span class="lmm-recap__total-label">Prix de base</span>
+    <span class="lmm-recap__total-price" id="r-prix">—</span>
+  </div>
+
+  <div class="lmm-recap__nav">
+    <button class="lmm-recap__btn-add" onclick="ajouterAuPanier()">Ajouter au panier</button>
+  </div>
+  <p class="lmm-recap__error" id="recap-erreur">Une erreur est survenue. Veuillez réessayer.</p>
+</div>
+
+<script>
+  var params = new URLSearchParams(window.location.search);
+  var canvaLabels = { c1: params.get('p1') || 'Thermocollé', c2: params.get('p2') || 'Mi-entoilé', c3: params.get('p3') || 'Pleine entoilure' };
+  var canvaChoisi = params.get('canva');
+
+  document.getElementById('r-modele').textContent = params.get('modele') || '—';
+  document.getElementById('r-canva').textContent = canvaChoisi ? (canvaLabels[canvaChoisi] || canvaChoisi) : '—';
+  document.getElementById('r-bas').textContent = params.get('bas') || '—';
+  document.getElementById('r-hauteur').textContent = params.get('hauteur') || '—';
+  var prixCents = parseInt(params.get('prix') || '0');
+  var prixFormate = prixCents ? '$' + (prixCents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
+  document.getElementById('r-prix').textContent = prixFormate;
+
+  function ajouterAuPanier() {
+    var variantId = parseInt(params.get('variant') || '0');
+    if (!variantId) {
+      alert('Variant introuvable. Recommencez depuis la page produit.');
+      return;
+    }
+    var props = {
+      'Modèle': params.get('modele') || '',
+      'Construction': document.getElementById('r-canva').textContent,
+      'Bas de pantalon': params.get('bas') || '',
+      'Hauteur du pantalon': params.get('hauteur') || ''
+    };
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1, properties: props })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.id) { window.location.href = '/cart'; }
+      else { document.getElementById('recap-erreur').style.display = 'block'; }
+    })
+    .catch(function() { document.getElementById('recap-erreur').style.display = 'block'; });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection — Recap",
+  "settings": [
+    { "type": "number", "id": "variant_id", "label": "Variant ID du produit Shopify par défaut" }
+  ],
+  "presets": [{ "name": "Collection — Récapitulatif" }]
+}
+{% endschema %}

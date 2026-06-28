@@ -1,0 +1,155 @@
+{% comment %} Choix de canevas — snippet {% endcomment %}
+
+{% assign recommended = 'half' %}
+{% assign fused_desc = 'Idéal pour le meilleur prix. Construction légère et moderne, parfaite pour un usage quotidien.' %}
+{% assign half_desc = 'Idéal pour une bonne durabilité et un bon prix. La construction préférée des tailleurs classiques.' %}
+{% assign full_desc = "Idéal pour la longévité maximale. Le summum de l'artisanat tailleur, le complet s'adapte au corps avec le temps." %}
+
+<style>
+  .lmm-canva-wrap { display: grid; grid-template-columns: 1fr 380px; gap: 48px; max-width: 1280px; margin: 0 auto; padding: 64px 32px 80px; align-items: start; }
+  .lmm-canva__header { margin-bottom: 40px; }
+  .lmm-canva__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: #1C1C1C; margin-bottom: 12px; }
+  .lmm-canva__sub { font-size: 14px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
+  .lmm-canva__grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+  .lmm-canva__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); padding: 24px; cursor: pointer; position: relative; transition: border-color 0.2s; display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center; }
+  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); }
+  .lmm-canva__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-canva__card--recommended { border-color: #C9A96E; }
+  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: #C9A96E; color: #1C1C1C; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; }
+  .lmm-canva__card-photo { width: 80px; height: 80px; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; }
+  .lmm-canva__card-photo-placeholder { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-align: center; padding: 4px; }
+  .lmm-canva__card-body {}
+  .lmm-canva__name { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: #1C1C1C; margin-bottom: 2px; }
+  .lmm-canva__tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; margin-bottom: 10px; }
+  .lmm-canva__feats-text { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
+  .lmm-canva__desc-box { background: #EDE8E3; border-left: 3px solid #C9A96E; padding: 16px 20px; margin-bottom: 32px; display: none; }
+  .lmm-canva__desc-text { font-size: 13px; color: #4A4440; font-style: italic; line-height: 1.7; }
+  .lmm-canva__footer {}
+  .lmm-canva__hint { font-size: 12px; color: #8C7B6E; margin-top: 12px; }
+  #canva-next { opacity: 0.4; pointer-events: none; }
+  #canva-next.active { opacity: 1; pointer-events: auto; }
+
+  /* Panneau droit — aperçu */
+  .lmm-canva__preview { position: sticky; top: 100px; }
+  .lmm-canva__preview-box { background: #EDE8E3; border: 1px solid rgba(28,28,28,0.08); padding: 32px 24px; }
+  .lmm-canva__preview-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8C7B6E; margin-bottom: 20px; }
+  .lmm-canva__preview-suit { width: 100%; aspect-ratio: 3/4; background: #E0DBD5; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+  .lmm-canva__preview-suit-placeholder { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-align: center; }
+  .lmm-canva__preview-summary { border-top: 1px solid rgba(28,28,28,0.08); padding-top: 20px; }
+  .lmm-canva__preview-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(28,28,28,0.05); }
+  .lmm-canva__preview-row:last-child { border-bottom: none; }
+  .lmm-canva__preview-key { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-canva__preview-val { font-size: 13px; font-weight: 500; color: #1C1C1C; }
+  .lmm-canva__preview-val--empty { color: #C8BBB0; font-weight: 400; font-style: italic; font-size: 12px; }
+
+  @media (max-width: 900px) { .lmm-canva-wrap { grid-template-columns: 1fr; } .lmm-canva__preview { display: none; } }
+</style>
+
+<div class="lmm-canva-wrap">
+
+  {% comment %} Colonne gauche — choix {% endcomment %}
+  <div>
+    <div class="lmm-canva__header">
+      <p class="lmm-label" style="color:#C9A96E; margin-bottom:12px;">Sur mesure — Étape 1</p>
+      <h1 class="lmm-canva__title">Choisissez votre construction</h1>
+      <p class="lmm-canva__sub">La construction intérieure détermine le tombé, la durabilité et le prix de votre complet.</p>
+    </div>
+
+    <div class="lmm-canva__grid">
+
+      <div class="lmm-canva__card{% if recommended == 'fused' %} lmm-canva__card--recommended{% endif %}" data-desc="{{ fused_desc }}" data-label="Thermocollé" onclick="selectCanva(this, 'fused')">
+        {% if recommended == 'fused' %}<span class="lmm-badge-recommended">Recommandé</span>{% endif %}
+        <div class="lmm-canva__card-photo">
+          <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">Thermocollé</h2>
+          <p class="lmm-canva__feats-text">Prix accessible · Entretien facile · Coupe nette</p>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card{% if recommended == 'half' %} lmm-canva__card--recommended{% endif %}" data-desc="{{ half_desc }}" data-label="Mi-entoilé" onclick="selectCanva(this, 'half')">
+        {% if recommended == 'half' %}<span class="lmm-badge-recommended">Recommandé</span>{% endif %}
+        <div class="lmm-canva__card-photo">
+          <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">Mi-entoilé</h2>
+          <p class="lmm-canva__feats-text">Bon rapport qualité/prix · Durabilité accrue · Tombé naturel</p>
+        </div>
+      </div>
+
+      <div class="lmm-canva__card{% if recommended == 'full' %} lmm-canva__card--recommended{% endif %}" data-desc="{{ full_desc }}" data-label="Pleine entoilure" onclick="selectCanva(this, 'full')">
+        {% if recommended == 'full' %}<span class="lmm-badge-recommended">Recommandé</span>{% endif %}
+        <div class="lmm-canva__card-photo">
+          <span class="lmm-canva__card-photo-placeholder">Photo à venir</span>
+        </div>
+        <div class="lmm-canva__card-body">
+          <h2 class="lmm-canva__name">Pleine entoilure</h2>
+          <p class="lmm-canva__feats-text">Longévité maximale · S'adapte au corps · Artisanat supérieur</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="lmm-canva__desc-box" id="canva-desc">
+      <p class="lmm-canva__desc-text" id="canva-desc-text"></p>
+    </div>
+
+    <div class="lmm-canva__footer">
+      <button class="lmm-btn-primary" id="canva-next" onclick="goNext()">Continuer</button>
+      <p class="lmm-canva__hint" id="canva-hint">Sélectionnez une construction pour continuer</p>
+    </div>
+  </div>
+
+  {% comment %} Colonne droite — aperçu {% endcomment %}
+  <div class="lmm-canva__preview">
+    <div class="lmm-canva__preview-box">
+      <p class="lmm-canva__preview-label">Aperçu de votre complet</p>
+
+      <div class="lmm-canva__preview-suit">
+        <span class="lmm-canva__preview-suit-placeholder">Photo du complet<br>à venir</span>
+      </div>
+
+      <div class="lmm-canva__preview-summary">
+        <div class="lmm-canva__preview-row">
+          <span class="lmm-canva__preview-key">Modèle</span>
+          <span class="lmm-canva__preview-val" id="preview-modele">
+            {% assign modele = 'modele' | param_from_url %}
+            {% if modele != blank %}{{ modele | replace: '-', ' ' | capitalize }}{% else %}<span class="lmm-canva__preview-val--empty">—</span>{% endif %}
+          </span>
+        </div>
+        <div class="lmm-canva__preview-row">
+          <span class="lmm-canva__preview-key">Construction</span>
+          <span class="lmm-canva__preview-val" id="preview-canva"><span class="lmm-canva__preview-val--empty">À choisir</span></span>
+        </div>
+        <div class="lmm-canva__preview-row">
+          <span class="lmm-canva__preview-key">Tissu</span>
+          <span class="lmm-canva__preview-val--empty lmm-canva__preview-val">Étape suivante</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var selectedCanva = null;
+  function selectCanva(el, type) {
+    document.querySelectorAll('.lmm-canva__card').forEach(function(c) { c.classList.remove('lmm-canva__card--selected'); });
+    el.classList.add('lmm-canva__card--selected');
+    selectedCanva = type;
+    document.getElementById('canva-desc-text').textContent = el.getAttribute('data-desc');
+    document.getElementById('canva-desc').style.display = 'block';
+    document.getElementById('canva-next').classList.add('active');
+    document.getElementById('canva-hint').style.display = 'none';
+    document.getElementById('preview-canva').innerHTML = el.getAttribute('data-label');
+  }
+  function goNext() {
+    if (!selectedCanva) return;
+    var params = new URLSearchParams(window.location.search);
+    params.set('canva', selectedCanva);
+    window.location.href = '/pages/configurateur-tissu?' + params.toString();
+  }
+</script>

@@ -1,0 +1,201 @@
+{{ 'configurateur.css' | asset_url | stylesheet_tag }}
+
+{% render 'cfg-progress', etape_active: 2 %}
+
+<div class="lmm-cfg-wrap">
+  <div>
+    <div class="lmm-cfg__header">
+      <p class="lmm-cfg__step-label">Sur mesure — Étape 2 sur 7</p>
+      <h1 class="lmm-cfg__title">{{ section.settings.titre }}</h1>
+      <p class="lmm-cfg__sub">{{ section.settings.sous_titre }}</p>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <button onclick="toggleFiltres(this)" style="background:none; border:1px solid #E8E2DA; color:#8C7B6E; padding:8px 18px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:8px;">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M3 6h6M5 9h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        Filtrer les tissus
+      </button>
+
+      <div id="lmm-filtres-panel" style="display:none; margin-top:14px; padding:18px; background:#F5F0EB; display:none; flex-direction:column; gap:14px;">
+        <div class="lmm-cfg__filtre-groupe">
+          <span class="lmm-cfg__filtre-label">Couleur</span>
+          <div class="lmm-cfg__filtre-row">
+            <button class="lmm-cfg__filtre-btn active" onclick="filtrer('couleur', null, this)">Toutes</button>
+            {% assign couleurs = '' %}
+            {% for entry in shop.metaobjects.tissu.values %}
+              {% if entry.couleur.value != blank %}
+                {% unless couleurs contains entry.couleur.value %}
+                  <button class="lmm-cfg__filtre-btn" onclick="filtrer('couleur', '{{ entry.couleur.value | escape }}', this)">{{ entry.couleur.value }}</button>
+                  {% assign couleurs = couleurs | append: entry.couleur.value | append: '|' %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="lmm-cfg__filtre-groupe">
+          <span class="lmm-cfg__filtre-label">Matière</span>
+          <div class="lmm-cfg__filtre-row">
+            <button class="lmm-cfg__filtre-btn active" onclick="filtrer('matiere', null, this)">Toutes</button>
+            {% assign matieres = '' %}
+            {% for entry in shop.metaobjects.tissu.values %}
+              {% if entry.matiere.value != blank %}
+                {% unless matieres contains entry.matiere.value %}
+                  <button class="lmm-cfg__filtre-btn" onclick="filtrer('matiere', '{{ entry.matiere.value | escape }}', this)">{{ entry.matiere.value }}</button>
+                  {% assign matieres = matieres | append: entry.matiere.value | append: '|' %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="lmm-cfg__filtre-groupe">
+          <span class="lmm-cfg__filtre-label">Motif</span>
+          <div class="lmm-cfg__filtre-row">
+            <button class="lmm-cfg__filtre-btn active" onclick="filtrer('motif', null, this)">Tous</button>
+            {% assign motifs = '' %}
+            {% for entry in shop.metaobjects.tissu.values %}
+              {% if entry.motif.value != blank %}
+                {% unless motifs contains entry.motif.value %}
+                  <button class="lmm-cfg__filtre-btn" onclick="filtrer('motif', '{{ entry.motif.value | escape }}', this)">{{ entry.motif.value }}</button>
+                  {% assign motifs = motifs | append: entry.motif.value | append: '|' %}
+                {% endunless %}
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        <div class="lmm-cfg__filtre-groupe">
+          <span class="lmm-cfg__filtre-label">Saison</span>
+          <div class="lmm-cfg__filtre-row">
+            <button class="lmm-cfg__filtre-btn active" onclick="filtrer('saison', null, this)">Toutes</button>
+            <button class="lmm-cfg__filtre-btn" onclick="filtrer('saison', 'ete', this)">Été</button>
+            <button class="lmm-cfg__filtre-btn" onclick="filtrer('saison', 'hiver', this)">Hiver</button>
+          </div>
+        </div>
+        <button onclick="reinitialiserFiltres()" style="background:none; border:none; color:#C9A96E; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; padding:0; text-align:left;">Réinitialiser les filtres</button>
+      </div>
+    </div>
+
+    <div class="lmm-cfg__tissu-grid" id="cfg-tissu-grid">
+      {% for entry in shop.metaobjects.tissu.values %}
+        <div class="lmm-cfg__tissu-card"
+             data-nom="{{ entry.nom.value | escape }}"
+             data-prix="{{ entry.prix_base.value }}"
+             data-couleur="{{ entry.couleur.value | escape }}"
+             data-matiere="{{ entry.matiere.value | escape }}"
+             data-motif="{{ entry.motif.value | escape }}"
+             data-laine-ete="{{ entry.laine_ete.value }}"
+             data-laine-hiver="{{ entry.laine_hiver.value }}"
+             onclick="selectTissu(this)">
+          <div class="lmm-cfg__card-check">
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          {% if entry.photo.value %}
+            <img class="lmm-cfg__tissu-img" src="{{ entry.photo.value | image_url: width: 400 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <div class="lmm-cfg__tissu-img-placeholder">Photo à venir</div>
+          {% endif %}
+          <div class="lmm-cfg__tissu-body">
+            <p class="lmm-cfg__tissu-nom">{{ entry.nom.value }}</p>
+            <p class="lmm-cfg__tissu-meta">{% if entry.origine.value %}{{ entry.origine.value }}{% endif %}{% if entry.grammage.value %} · {{ entry.grammage.value }}{% endif %}</p>
+            {% if entry.prix_base.value %}<p class="lmm-cfg__tissu-prix">${{ entry.prix_base.value }}</p>{% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <p id="cfg-aucun-resultat" style="display:none; font-size:13px; color:#8C7B6E; padding:20px 0;">Aucun tissu ne correspond à vos filtres.</p>
+
+    <div class="lmm-cfg__nav">
+      <a href="/pages/configurateur{{ request.search }}" class="lmm-cfg__btn-back">← Retour</a>
+      <button class="lmm-cfg__btn-next" id="cfg-next" onclick="goNext()">Continuer</button>
+    </div>
+  </div>
+
+  <div class="lmm-cfg__panel">
+    <div class="lmm-cfg__panel-box">
+      <p class="lmm-cfg__panel-label">Aperçu de votre complet</p>
+      <div class="lmm-cfg__panel-img"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;">Votre complet</span></div>
+      <div class="lmm-cfg__panel-rows">
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Style</span><span class="lmm-cfg__panel-val" id="panel-style">—</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Tissu</span><span class="lmm-cfg__panel-val" id="panel-tissu"><span class="lmm-cfg__panel-val--empty">À choisir</span></span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Lining</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Boutons</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+        <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Construction</span><span class="lmm-cfg__panel-val--empty lmm-cfg__panel-val">Étape suivante</span></div>
+      </div>
+      <div class="lmm-cfg__panel-total">
+        <span class="lmm-cfg__panel-total-label">Total estimé</span>
+        <span class="lmm-cfg__panel-total-price" id="panel-total">—</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var selectedTissu = null;
+  var filtresActifs = { couleur: null, matiere: null, motif: null, saison: null };
+  var params = new URLSearchParams(window.location.search);
+  document.getElementById('panel-style').textContent = params.get('style') || '—';
+
+  function selectTissu(el) {
+    document.querySelectorAll('.lmm-cfg__tissu-card').forEach(function(c) { c.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedTissu = { nom: el.dataset.nom, prix: parseFloat(el.dataset.prix) || 0 };
+    document.getElementById('panel-tissu').textContent = el.dataset.nom;
+    document.getElementById('panel-total').textContent = '$' + selectedTissu.prix.toLocaleString('fr-CA');
+    document.getElementById('cfg-next').classList.add('active');
+  }
+
+  function toggleFiltres(btn) {
+    var panel = document.getElementById('lmm-filtres-panel');
+    var ouvert = panel.style.display === 'flex';
+    panel.style.display = ouvert ? 'none' : 'flex';
+    btn.style.borderColor = ouvert ? '#E8E2DA' : '#1C1C1C';
+    btn.style.color = ouvert ? '#8C7B6E' : '#1C1C1C';
+  }
+
+  function reinitialiserFiltres() {
+    filtresActifs = { couleur: null, matiere: null, motif: null, saison: null };
+    document.querySelectorAll('.lmm-cfg__filtre-btn').forEach(function(b) {
+      b.classList.toggle('active', b.textContent === 'Toutes' || b.textContent === 'Tous' || b.textContent === 'Toutes');
+    });
+    document.querySelectorAll('.lmm-cfg__tissu-card').forEach(function(c) { c.style.display = ''; });
+    document.getElementById('cfg-aucun-resultat').style.display = 'none';
+  }
+
+  function filtrer(type, valeur, btn) {
+    filtresActifs[type] = valeur;
+    btn.parentElement.querySelectorAll('.lmm-cfg__filtre-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    var cartes = document.querySelectorAll('.lmm-cfg__tissu-card');
+    var visible = 0;
+    cartes.forEach(function(c) {
+      var ok = true;
+      if (filtresActifs.couleur && c.dataset.couleur !== filtresActifs.couleur) ok = false;
+      if (filtresActifs.matiere && c.dataset.matiere !== filtresActifs.matiere) ok = false;
+      if (filtresActifs.motif && c.dataset.motif !== filtresActifs.motif) ok = false;
+      if (filtresActifs.saison === 'ete' && c.dataset.laineEte !== 'true') ok = false;
+      if (filtresActifs.saison === 'hiver' && c.dataset.laineHiver !== 'true') ok = false;
+      c.style.display = ok ? '' : 'none';
+      if (ok) visible++;
+    });
+    document.getElementById('cfg-aucun-resultat').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  function goNext() {
+    if (!selectedTissu) return;
+    var p = new URLSearchParams(window.location.search);
+    p.set('tissu', selectedTissu.nom);
+    p.set('tissu_prix', selectedTissu.prix);
+    window.location.href = '/pages/configurateur-lining?' + p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Configurateur — Tissu",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre tissu" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Le tissu détermine le prix de base de votre complet." }
+  ],
+  "presets": [{ "name": "Configurateur — Tissu" }]
+}
+{% endschema %}

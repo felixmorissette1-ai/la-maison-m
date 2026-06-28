@@ -1,0 +1,335 @@
+{% comment %} Collection — La Maison M. {% endcomment %}
+
+<div class="lmm-collection full-width">
+
+  {% comment %} Header {% endcomment %}
+  <div class="lmm-collection__hero">
+    <div class="lmm-collection__hero-inner">
+      <p class="lmm-label">Collection permanente</p>
+      <h1 class="lmm-collection__title">
+        Le catalogue<br><em>La Maison M.</em>
+      </h1>
+      <p class="lmm-collection__sub">
+        Chaque modèle est un point de départ. Choisissez le tissu, la taille, puis prenez rendez-vous avec notre artisane pour les finitions sur mesure.
+      </p>
+    </div>
+  </div>
+
+  {% comment %} Filters + Sort {% endcomment %}
+  <div class="lmm-collection__toolbar">
+    <div class="lmm-collection__toolbar-inner">
+      <div class="lmm-filters">
+        <a href="{{ collection.url }}" class="lmm-filter-btn{% unless current_tags %} lmm-filter-btn--active{% endunless %}">Tous</a>
+        {% for tag in collection.all_tags %}
+          {% if collection.tags contains tag %}
+            <a href="{{ collection.url }}/{{ tag | handle }}" class="lmm-filter-btn lmm-filter-btn--active">{{ tag }}</a>
+          {% else %}
+            <a href="{{ collection.url }}/{{ tag | handle }}" class="lmm-filter-btn">{{ tag }}</a>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="lmm-sort">
+        <select onchange="window.location=this.value" class="lmm-sort-select">
+          <option value="{{ collection.url }}?sort_by=manual"{% if collection.sort_by == 'manual' %} selected{% endif %}>Ordre par défaut</option>
+          <option value="{{ collection.url }}?sort_by=price-ascending"{% if collection.sort_by == 'price-ascending' %} selected{% endif %}>Prix croissant</option>
+          <option value="{{ collection.url }}?sort_by=price-descending"{% if collection.sort_by == 'price-descending' %} selected{% endif %}>Prix décroissant</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  {% comment %} Product grid {% endcomment %}
+  <div class="lmm-collection__grid-wrap">
+    <div class="lmm-collection__grid">
+      {% paginate collection.products by 20 %}
+        {% assign has_products = false %}
+        {% for product in collection.products %}
+          {% assign has_products = true %}
+          <a href="{{ product.url }}" class="lmm-suit-card">
+            <div class="lmm-suit-card__image">
+              {% if product.featured_image %}
+                {{ product.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: product.title }}
+              {% else %}
+                <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
+              {% endif %}
+              <div class="lmm-suit-card__swatch">
+                <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch"><span>Tissu</span></div>
+              </div>
+              {% for tag in product.tags %}
+                {% if tag == 'Prestige' or tag == 'Contemporain' or tag == 'Décontracté' %}
+                  <span class="lmm-suit-card__badge">{{ tag }}</span>
+                {% endif %}
+              {% endfor %}
+            </div>
+            <div class="lmm-suit-card__info">
+              <h2 class="lmm-suit-card__name">{{ product.title }}</h2>
+              <p class="lmm-suit-card__sub">{{ product.metafields.custom.subtitle }}</p>
+              <p class="lmm-suit-card__price">{{ product.price | money_without_trailing_zeros }}</p>
+            </div>
+          </a>
+        {% endfor %}
+        {{ paginate | default_pagination }}
+      {% endpaginate %}
+
+      {% unless has_products %}
+        {% assign mock_suits = "Le Saphir,Collection Prestige,Laine bleue italienne,1 895 CAD|Le Minuit,Collection Prestige,Laine noire italienne,1 895 CAD|Le Riviera,Collection Décontractée,Lin Cavani,1 495 CAD|Le Brumeux,Collection Contemporaine,Flanelle grise,1 695 CAD|Le Cavani S130,Collection Prestige,Laine Super 130s Cavani,2 195 CAD|L'Estival,Collection Décontractée,Lin · Soie · Laine,1 795 CAD|Le Drago I,Collection Prestige,Laine Drago italienne,2 295 CAD|Le Drago II,Collection Prestige,Laine Drago italienne,2 395 CAD" | split: "|" %}
+        {% for suit in mock_suits %}
+          {% assign parts = suit | split: "," %}
+          <a href="/products/{{ parts[0] | handle }}" class="lmm-suit-card">
+            <div class="lmm-suit-card__image">
+              <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
+              <div class="lmm-suit-card__swatch">
+                <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch"><span>Tissu</span></div>
+              </div>
+              <span class="lmm-suit-card__badge">{{ parts[1] | split: " " | last }}</span>
+            </div>
+            <div class="lmm-suit-card__info">
+              <h2 class="lmm-suit-card__name">{{ parts[0] }}</h2>
+              <p class="lmm-suit-card__sub">{{ parts[1] }} · {{ parts[2] }}</p>
+              <p class="lmm-suit-card__price">{{ parts[3] }}</p>
+            </div>
+          </a>
+        {% endfor %}
+      {% endunless %}
+    </div>
+
+    {% comment %} CTA configurateur {% endcomment %}
+    <div class="lmm-collection__cta">
+      <p class="lmm-label" style="color:#C9A96E; margin-bottom:16px;">Vous ne trouvez pas ce que vous cherchez ?</p>
+      <h2 class="lmm-cta__title">Créez votre complet unique</h2>
+      <p class="lmm-cta__sub">Notre configurateur vous permet de concevoir un complet entièrement personnalisé — coupe, tissu, doublure — selon vos préférences exactes.</p>
+      <a href="/pages/configurateur" class="lmm-btn-primary">Lancer le configurateur</a>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .lmm-collection__hero {
+    background: #1C1C1C;
+    padding: 80px 32px;
+  }
+
+  .lmm-collection__hero-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .lmm-collection__title {
+    font-family: Georgia, serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 400;
+    color: #F5F0EB;
+    line-height: 1.1;
+    margin-bottom: 20px;
+  }
+
+  .lmm-collection__title em {
+    font-style: italic;
+  }
+
+  .lmm-collection__sub {
+    color: rgba(245,240,235,0.55);
+    font-size: 15px;
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 500px;
+  }
+
+  .lmm-collection__toolbar {
+    background: #F5F0EB;
+    border-bottom: 1px solid rgba(28,28,28,0.08);
+    position: sticky;
+    top: 72px;
+    z-index: 10;
+  }
+
+  .lmm-collection__toolbar-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 56px;
+  }
+
+  .lmm-filters {
+    display: flex;
+    gap: 32px;
+  }
+
+  .lmm-filter-btn {
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+    padding-bottom: 4px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .lmm-filter-btn:hover {
+    color: #1C1C1C;
+  }
+
+  .lmm-filter-btn--active {
+    color: #1C1C1C;
+    border-bottom-color: #C9A96E;
+  }
+
+  .lmm-sort-select {
+    font-size: 11px;
+    color: #8C7B6E;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    outline: none;
+  }
+
+  .lmm-collection__grid-wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 64px 32px;
+  }
+
+  .lmm-collection__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 96px;
+  }
+
+  .lmm-suit-card {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    background: #fff;
+  }
+
+  .lmm-suit-card__image {
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+    background: #EDE8E3;
+  }
+
+  .lmm-suit-card__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .lmm-suit-card:hover .lmm-suit-card__image img {
+    transform: scale(1.04);
+  }
+
+  .lmm-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #E8E2DB;
+  }
+
+  .lmm-photo-placeholder span {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+  }
+
+  .lmm-photo-placeholder--swatch {
+    width: 40px;
+    height: 40px;
+  }
+
+  .lmm-suit-card__swatch {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255,255,255,0.6);
+    overflow: hidden;
+  }
+
+  .lmm-suit-card__badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(28,28,28,0.7);
+    color: #F5F0EB;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+  }
+
+  .lmm-suit-card__info {
+    padding: 16px 20px 20px;
+  }
+
+  .lmm-suit-card__name {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #1C1C1C;
+    margin-bottom: 4px;
+  }
+
+  .lmm-suit-card__sub {
+    font-size: 12px;
+    color: #8C7B6E;
+    font-weight: 300;
+    margin-bottom: 8px;
+  }
+
+  .lmm-suit-card__price {
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1C1C;
+  }
+
+  .lmm-collection__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 80px 0;
+    color: #8C7B6E;
+    font-size: 14px;
+  }
+
+  .lmm-collection__cta {
+    background: #EDE8E3;
+    border: 1px solid rgba(28,28,28,0.08);
+    padding: 80px;
+    text-align: center;
+  }
+
+  .lmm-cta__title {
+    font-family: Georgia, serif;
+    font-size: 36px;
+    font-weight: 400;
+    color: #1C1C1C;
+    margin-bottom: 16px;
+  }
+
+  .lmm-cta__sub {
+    font-size: 14px;
+    color: #8C7B6E;
+    font-weight: 300;
+    line-height: 1.7;
+    max-width: 440px;
+    margin: 0 auto 32px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection",
+  "settings": []
+}
+{% endschema %}
