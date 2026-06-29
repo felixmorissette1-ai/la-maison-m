@@ -72,7 +72,8 @@
     var wrap = document.querySelector('.lmm-smp-wrap');
     if (!wrap) return;
     var top = wrap.getBoundingClientRect().top + window.scrollY;
-    wrap.style.height = (window.innerHeight - top - 8) + 'px';
+    var bottomOffset = window.innerWidth <= 860 ? 64 : 8;
+    wrap.style.height = (window.innerHeight - top - bottomOffset) + 'px';
   }
   ajusterHauteur();
   window.addEventListener('resize', ajusterHauteur);
