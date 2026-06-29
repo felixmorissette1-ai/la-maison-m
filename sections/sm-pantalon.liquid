@@ -1,5 +1,6 @@
 {% comment %} Pantalon — Configurateur Custom {% endcomment %}
 {% render 'fil-ariane-custom', etape_active: 6 %}
+{% render 'sm-preview' %}
 
 <style>
   .lmm-smp-wrap {
@@ -26,10 +27,11 @@
   #smp-next.active { opacity: 1; pointer-events: auto; }
   .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; }
   .lmm-sm-btn:hover { background: #C9A96E; }
+  @media (min-width: 861px) { .lmm-smp-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   @media (max-width: 860px) { .lmm-smp-wrap { height: auto; width: 92%; } .lmm-smp__grid { grid-template-columns: 1fr; } }
 </style>
 
-<div class="lmm-smp-wrap">
+<div class="lmm-smp-wrap lmm-sm-main">
   <div class="lmm-smp__header">
     <p class="lmm-smp__label">Configurateur custom — Étape 6 sur 8</p>
     <h1 class="lmm-smp__title">Hauteur du pantalon</h1>
@@ -91,6 +93,9 @@
     document.getElementById('smp-next').classList.add('active');
     _p.set('hauteur', val);
     history.replaceState(null, '', '?' + _p.toString());
+    // Preview temps réel
+    var valEl = document.getElementById('lmm-prev-hauteur');
+    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
   }
 
   function goNext() {

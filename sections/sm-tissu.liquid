@@ -1,11 +1,13 @@
 {% comment %} Tissu — Configurateur Custom {% endcomment %}
 {% render 'fil-ariane-custom', etape_active: 2 %}
+{% render 'sm-preview' %}
 
 <style>
   .lmm-sm-tissu-wrap {
     width: 90%; margin: 0 auto; padding: 28px 0 20px;
     display: flex; flex-direction: column; box-sizing: border-box;
   }
+  @media (min-width: 861px) { .lmm-sm-tissu-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   .lmm-sm-tissu__header { margin-bottom: 24px; }
   .lmm-sm-tissu__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
   .lmm-sm-tissu__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
@@ -24,23 +26,68 @@
   .lmm-sm-tissu__card-photo {
     width: 100%; aspect-ratio: 1/1;
     background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    position: relative;
   }
   .lmm-sm-tissu__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-sm-tissu__card:hover .lmm-sm-tissu__card-photo img { transform: scale(1.04); }
   .lmm-sm-tissu__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  /* Bouton zoom sur la photo */
+  .lmm-sm-tissu__zoom-btn {
+    position: absolute; bottom: 8px; right: 8px;
+    width: 28px; height: 28px;
+    background: rgba(28,28,28,0.65); color: #fff;
+    border: none; cursor: pointer; display: none;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+  .lmm-sm-tissu__card-photo:hover .lmm-sm-tissu__zoom-btn { display: flex; }
+  .lmm-sm-tissu__zoom-btn:hover { background: rgba(28,28,28,0.9); }
   .lmm-sm-tissu__card-body { padding: 12px 16px 16px; }
   .lmm-sm-tissu__name { font-family: Georgia, serif; font-size: 15px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
   .lmm-sm-tissu__meta { font-size: 11px; color: #8C7B6E; margin-bottom: 6px; }
   .lmm-sm-tissu__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
   .lmm-sm-tissu__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.4; pointer-events: none; }
-  .lmm-sm-btn:hover { background: #C9A96E; }
+  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn:hover { background: #333; }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
   @media (max-width: 860px) { .lmm-sm-tissu__grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 540px) { .lmm-sm-tissu__grid { grid-template-columns: 1fr; } .lmm-sm-tissu-wrap { width: 92%; } }
+
+  /* Lightbox */
+  .lmm-sm-lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(28,28,28,0.92); z-index: 9999;
+    align-items: center; justify-content: center;
+  }
+  .lmm-sm-lightbox.open { display: flex; }
+  .lmm-sm-lightbox__inner {
+    position: relative; max-width: 90vw; max-height: 90vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .lmm-sm-lightbox__img {
+    max-width: 90vw; max-height: 90vh;
+    object-fit: contain; display: block;
+    cursor: zoom-in;
+    transition: transform 0.3s ease;
+    transform-origin: center center;
+  }
+  .lmm-sm-lightbox__img.zoomed { cursor: zoom-out; transform: scale(2); }
+  .lmm-sm-lightbox__close {
+    position: fixed; top: 20px; right: 24px;
+    background: none; border: none; color: rgba(245,240,235,0.7);
+    font-size: 28px; cursor: pointer; line-height: 1;
+    transition: color 0.2s;
+  }
+  .lmm-sm-lightbox__close:hover { color: #F5F0EB; }
+  .lmm-sm-lightbox__name {
+    position: fixed; bottom: 28px; left: 0; right: 0;
+    text-align: center; font-family: Georgia, serif;
+    font-size: 16px; color: rgba(245,240,235,0.8);
+  }
 </style>
 
-<div class="lmm-sm-tissu-wrap">
+<div class="lmm-sm-tissu-wrap lmm-sm-main">
   <div class="lmm-sm-tissu__header">
     <p class="lmm-sm-tissu__label">Configurateur custom — Étape 2 sur 8</p>
     <h1 class="lmm-sm-tissu__title">{{ section.settings.titre }}</h1>
@@ -49,13 +96,21 @@
 
   <div class="lmm-sm-tissu__grid" id="tissu-grid">
     {% for entry in shop.metaobjects.tissu.values %}
+      {% assign photo_url = entry.photo.value | image_url: width: 1200 %}
+      {% assign photo_preview_url = entry.photo.value | image_url: width: 800 %}
       <div class="lmm-sm-tissu__card"
            data-val="{{ entry.nom.value | escape }}"
            data-prix="{{ entry.prix_base.value | default: 0 }}"
+           data-photo="{{ photo_preview_url | escape }}"
            onclick="selectTissu(this)">
         <div class="lmm-sm-tissu__card-photo">
           {% if entry.photo.value %}
             <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+            <button class="lmm-sm-tissu__zoom-btn"
+                    onclick="event.stopPropagation(); ouvrirLightbox('{{ photo_url | escape }}', '{{ entry.nom.value | escape }}')"
+                    title="Agrandir">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+            </button>
           {% else %}
             <span class="lmm-sm-tissu__card-photo-placeholder">Photo à venir</span>
           {% endif %}
@@ -72,6 +127,15 @@
   <div class="lmm-sm-tissu__nav">
     <button class="lmm-sm-btn" id="tissu-next" onclick="goNext()">Continuer</button>
   </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lmm-sm-lightbox" id="lmm-lightbox" onclick="if(event.target===this) fermerLightbox()">
+  <button class="lmm-sm-lightbox__close" onclick="fermerLightbox()">×</button>
+  <div class="lmm-sm-lightbox__inner">
+    <img class="lmm-sm-lightbox__img" id="lmm-lightbox-img" src="" alt="" onclick="toggleZoom(this)">
+  </div>
+  <p class="lmm-sm-lightbox__name" id="lmm-lightbox-name"></p>
 </div>
 
 <script>
@@ -93,13 +157,51 @@
     document.getElementById('tissu-next').classList.add('active');
     _p.set('tissu', selected);
     _p.set('tissu_prix', selectedPrix);
+    if (el.dataset.photo) _p.set('tissu_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
+
+    // Mettre à jour le preview en temps réel
+    var imgEl = document.getElementById('lmm-prev-tissu-img');
+    var emptyEl = document.getElementById('lmm-prev-empty');
+    var lblEl = document.getElementById('lmm-prev-tissu-label');
+    if (imgEl && el.dataset.photo) {
+      imgEl.src = el.dataset.photo;
+      imgEl.style.display = 'block';
+      if (emptyEl) emptyEl.style.display = 'none';
+      if (lblEl) { lblEl.textContent = selected; lblEl.style.display = 'block'; }
+    }
   }
 
   function goNext() {
     if (!selected) return;
     window.location.href = '/pages/sur-mesure-lining?' + _p.toString();
   }
+
+  // Lightbox
+  function ouvrirLightbox(url, nom) {
+    var lb = document.getElementById('lmm-lightbox');
+    var img = document.getElementById('lmm-lightbox-img');
+    var nameEl = document.getElementById('lmm-lightbox-name');
+    img.src = url;
+    img.classList.remove('zoomed');
+    nameEl.textContent = nom;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fermerLightbox() {
+    document.getElementById('lmm-lightbox').classList.remove('open');
+    document.getElementById('lmm-lightbox-img').classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+
+  function toggleZoom(img) {
+    img.classList.toggle('zoomed');
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') fermerLightbox();
+  });
 </script>
 
 {% schema %}

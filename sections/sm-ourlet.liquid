@@ -1,5 +1,6 @@
 {% comment %} Ourlet — Configurateur Custom {% endcomment %}
 {% render 'fil-ariane-custom', etape_active: 7 %}
+{% render 'sm-preview' %}
 
 <style>
   .lmm-smo-wrap {
@@ -26,10 +27,11 @@
   #smo-next.active { opacity: 1; pointer-events: auto; }
   .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; }
   .lmm-sm-btn:hover { background: #C9A96E; }
+  @media (min-width: 861px) { .lmm-smo-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   @media (max-width: 860px) { .lmm-smo-wrap { height: auto; width: 92%; } .lmm-smo__grid { grid-template-columns: 1fr; } }
 </style>
 
-<div class="lmm-smo-wrap">
+<div class="lmm-smo-wrap lmm-sm-main">
   <div class="lmm-smo__header">
     <p class="lmm-smo__label">Configurateur custom — Étape 7 sur 8</p>
     <h1 class="lmm-smo__title">Bas de pantalon</h1>
@@ -84,6 +86,9 @@
     document.getElementById('smo-next').classList.add('active');
     _p.set('bas', val);
     history.replaceState(null, '', '?' + _p.toString());
+    // Preview temps réel
+    var valEl = document.getElementById('lmm-prev-bas');
+    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
   }
 
   function goNext() {

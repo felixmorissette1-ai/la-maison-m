@@ -1,8 +1,10 @@
 {% comment %} Construction — Configurateur Custom {% endcomment %}
 {% render 'fil-ariane-custom', etape_active: 5 %}
+{% render 'sm-preview' %}
 
 <style>
   .lmm-sm-const-wrap { width: 90%; margin: 0 auto; padding: 28px 0 20px; display: flex; flex-direction: column; box-sizing: border-box; }
+  @media (min-width: 861px) { .lmm-sm-const-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   .lmm-sm-const__header { margin-bottom: 24px; }
   .lmm-sm-const__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
   .lmm-sm-const__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
@@ -20,14 +22,14 @@
   .lmm-sm-const__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 6px; }
   .lmm-sm-const__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
   .lmm-sm-const__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.4; pointer-events: none; }
-  .lmm-sm-btn:hover { background: #C9A96E; }
+  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn:hover { background: #333; }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
   @media (max-width: 860px) { .lmm-sm-const__grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 540px) { .lmm-sm-const__grid { grid-template-columns: 1fr; } .lmm-sm-const-wrap { width: 92%; } }
 </style>
 
-<div class="lmm-sm-const-wrap">
+<div class="lmm-sm-const-wrap lmm-sm-main">
   <div class="lmm-sm-const__header">
     <p class="lmm-sm-const__label">Configurateur custom — Étape 5 sur 8</p>
     <h1 class="lmm-sm-const__title">{{ section.settings.titre }}</h1>
@@ -39,6 +41,7 @@
       <div class="lmm-sm-const__card"
            data-val="{{ entry.nom.value | escape }}"
            data-prix="{{ entry.prix_addon.value | default: 0 }}"
+           data-photo="{{ entry.photo.value | image_url: width: 800 | escape }}"
            onclick="selectConst(this)">
         <div class="lmm-sm-const__card-photo">
           {% if entry.photo.value %}
@@ -84,7 +87,13 @@
     document.getElementById('const-next').classList.add('active');
     _p.set('construction', selected);
     _p.set('construction_prix', selectedPrix);
+    if (el.dataset.photo) _p.set('construction_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
+    // Preview temps réel
+    var imgEl = document.getElementById('lmm-prev-const-img');
+    var valEl = document.getElementById('lmm-prev-const-val');
+    if (imgEl && el.dataset.photo) { imgEl.src = el.dataset.photo; imgEl.classList.add('loaded'); }
+    if (valEl) { valEl.textContent = selected; valEl.classList.remove('lmm-sm-preview__swatch-val--empty'); }
   }
 
   function goNext() {
