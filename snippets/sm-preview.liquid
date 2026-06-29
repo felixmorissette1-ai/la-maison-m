@@ -207,6 +207,7 @@
       border-left: none;
       border-top: 1px solid #E8E2DA;
       z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .lmm-sm-preview__header { display: none; }
@@ -260,7 +261,7 @@
   }
   @media (max-width: 860px) {
     .lmm-sm-main {
-      padding-bottom: 72px !important;
+      padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
     }
   }
 </style>
