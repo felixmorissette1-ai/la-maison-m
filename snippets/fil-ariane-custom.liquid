@@ -1,0 +1,164 @@
+{% comment %} Paramètre: etape_active (1-8) — Configurateur Custom {% endcomment %}
+<style>
+  .lmm-filc { background: #F5F0EB; border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 4%; overflow-x: auto; }
+  .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
+  .lmm-filc__step {
+    display: flex; align-items: center; gap: 8px; padding: 0 10px;
+    text-decoration: none; color: #C8BBB0; font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; border-bottom: 2px solid transparent;
+    cursor: default; white-space: nowrap;
+  }
+  .lmm-filc__step:first-child { padding-left: 0; }
+  .lmm-filc__step--active { color: #1C1C1C; border-bottom-color: #C9A96E; }
+  .lmm-filc__step--done { color: #8C7B6E; cursor: pointer; text-decoration: none; }
+  .lmm-filc__step--done:hover { color: #1C1C1C; }
+  .lmm-filc__num {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: #E8E2DA; color: #8C7B6E; font-size: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-weight: 600;
+  }
+  .lmm-filc__step--active .lmm-filc__num { background: #C9A96E; color: #fff; }
+  .lmm-filc__step--done .lmm-filc__num { background: #1C1C1C; color: #fff; }
+  .lmm-filc__sep { color: #E8E2DA; font-size: 14px; display: flex; align-items: center; flex-shrink: 0; }
+</style>
+<nav class="lmm-filc">
+  <div class="lmm-filc__inner">
+
+    {% if etape_active > 1 %}
+      <a href="/pages/sur-mesure" class="lmm-filc__step lmm-filc__step--done">
+        <span class="lmm-filc__num">✓</span>Style
+      </a>
+    {% elsif etape_active == 1 %}
+      <span class="lmm-filc__step lmm-filc__step--active">
+        <span class="lmm-filc__num">1</span>Style
+      </span>
+    {% else %}
+      <span class="lmm-filc__step"><span class="lmm-filc__num">1</span>Style</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 2 %}
+      <a href="/pages/sur-mesure-tissu" class="lmm-filc__step lmm-filc__step--done" id="smc-step-2">
+        <span class="lmm-filc__num">✓</span>Tissu
+      </a>
+    {% elsif etape_active == 2 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-2">
+        <span class="lmm-filc__num">2</span>Tissu
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-2"><span class="lmm-filc__num">2</span>Tissu</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 3 %}
+      <a href="/pages/sur-mesure-lining" class="lmm-filc__step lmm-filc__step--done" id="smc-step-3">
+        <span class="lmm-filc__num">✓</span>Lining
+      </a>
+    {% elsif etape_active == 3 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-3">
+        <span class="lmm-filc__num">3</span>Lining
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-3"><span class="lmm-filc__num">3</span>Lining</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 4 %}
+      <a href="/pages/sur-mesure-boutons" class="lmm-filc__step lmm-filc__step--done" id="smc-step-4">
+        <span class="lmm-filc__num">✓</span>Boutons
+      </a>
+    {% elsif etape_active == 4 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-4">
+        <span class="lmm-filc__num">4</span>Boutons
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-4"><span class="lmm-filc__num">4</span>Boutons</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 5 %}
+      <a href="/pages/sur-mesure-construction" class="lmm-filc__step lmm-filc__step--done" id="smc-step-5">
+        <span class="lmm-filc__num">✓</span>Construction
+      </a>
+    {% elsif etape_active == 5 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-5">
+        <span class="lmm-filc__num">5</span>Construction
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-5"><span class="lmm-filc__num">5</span>Construction</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 6 %}
+      <a href="/pages/sur-mesure-pantalon" class="lmm-filc__step lmm-filc__step--done" id="smc-step-6">
+        <span class="lmm-filc__num">✓</span>Pantalon
+      </a>
+    {% elsif etape_active == 6 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-6">
+        <span class="lmm-filc__num">6</span>Pantalon
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-6"><span class="lmm-filc__num">6</span>Pantalon</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active > 7 %}
+      <a href="/pages/sur-mesure-ourlet" class="lmm-filc__step lmm-filc__step--done" id="smc-step-7">
+        <span class="lmm-filc__num">✓</span>Ourlet
+      </a>
+    {% elsif etape_active == 7 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-7">
+        <span class="lmm-filc__num">7</span>Ourlet
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-7"><span class="lmm-filc__num">7</span>Ourlet</span>
+    {% endif %}
+    <span class="lmm-filc__sep">›</span>
+
+    {% if etape_active == 8 %}
+      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-8">
+        <span class="lmm-filc__num">8</span>Récap
+      </span>
+    {% else %}
+      <span class="lmm-filc__step" id="smc-step-8"><span class="lmm-filc__num">8</span>Récap</span>
+    {% endif %}
+
+  </div>
+</nav>
+<script>
+  (function() {
+    var params = new URLSearchParams(window.location.search);
+    var pages = {
+      2: '/pages/sur-mesure-tissu',
+      3: '/pages/sur-mesure-lining',
+      4: '/pages/sur-mesure-boutons',
+      5: '/pages/sur-mesure-construction',
+      6: '/pages/sur-mesure-pantalon',
+      7: '/pages/sur-mesure-ourlet'
+    };
+    var completed = {
+      2: !!params.get('tissu'),
+      3: !!params.get('lining'),
+      4: !!params.get('bouton'),
+      5: !!params.get('construction'),
+      6: !!params.get('hauteur'),
+      7: !!params.get('bas')
+    };
+    [2, 3, 4, 5, 6, 7].forEach(function(step) {
+      var el = document.getElementById('smc-step-' + step);
+      if (!el) return;
+      if (completed[step] && !el.classList.contains('lmm-filc__step--active') && !el.classList.contains('lmm-filc__step--done')) {
+        el.classList.add('lmm-filc__step--done');
+        el.querySelector('.lmm-filc__num').textContent = '✓';
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', function() {
+          window.location.href = pages[step] + window.location.search;
+        });
+      }
+    });
+    document.querySelectorAll('.lmm-filc__step--done[href]').forEach(function(link) {
+      link.setAttribute('href', link.getAttribute('href').split('?')[0] + window.location.search);
+    });
+  })();
+</script>

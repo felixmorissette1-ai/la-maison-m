@@ -1,0 +1,110 @@
+{% comment %} Récapitulatif — Configurateur Custom {% endcomment %}
+{% render 'fil-ariane-custom', etape_active: 8 %}
+
+<style>
+  .lmm-sm-recap-wrap { width: 90%; max-width: 900px; margin: 0 auto; padding: 40px 0 60px; }
+  .lmm-sm-recap__header { margin-bottom: 48px; }
+  .lmm-sm-recap__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 12px; }
+  .lmm-sm-recap__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: #1C1C1C; margin-bottom: 12px; }
+  .lmm-sm-recap__sub { font-size: 14px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
+  .lmm-sm-recap__table { border-top: 1px solid #E8E2DA; margin-bottom: 48px; }
+  .lmm-sm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #E8E2DA; }
+  .lmm-sm-recap__key { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-sm-recap__val { font-size: 15px; color: #1C1C1C; font-family: Georgia, serif; }
+  .lmm-sm-recap__val--prix { font-size: 12px; color: #8C7B6E; margin-left: 8px; }
+  .lmm-sm-recap__total { display: flex; justify-content: space-between; align-items: baseline; background: #F5F0EB; padding: 20px 24px; margin-bottom: 32px; }
+  .lmm-sm-recap__total-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #1C1C1C; }
+  .lmm-sm-recap__total-price { font-family: Georgia, serif; font-size: 32px; color: #1C1C1C; }
+  .lmm-sm-recap__nav { display: flex; gap: 12px; align-items: center; }
+  .lmm-sm-recap__btn-confirm { background: #1C1C1C; color: #fff; border: none; padding: 16px 40px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .lmm-sm-recap__btn-confirm:hover { background: #333; }
+  .lmm-sm-recap__note { font-size: 12px; color: #8C7B6E; margin-top: 16px; line-height: 1.6; }
+</style>
+
+<div class="lmm-sm-recap-wrap">
+  <div class="lmm-sm-recap__header">
+    <p class="lmm-sm-recap__label">Configurateur custom — Récapitulatif</p>
+    <h1 class="lmm-sm-recap__title">Votre complet sur mesure</h1>
+    <p class="lmm-sm-recap__sub">Vérifiez vos choix avant de confirmer votre demande.</p>
+  </div>
+
+  <div class="lmm-sm-recap__table">
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Style</span>
+      <span class="lmm-sm-recap__val" id="r-style">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Tissu</span>
+      <span class="lmm-sm-recap__val" id="r-tissu">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Lining</span>
+      <span class="lmm-sm-recap__val" id="r-lining">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Boutons</span>
+      <span class="lmm-sm-recap__val" id="r-bouton">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Construction</span>
+      <span class="lmm-sm-recap__val" id="r-construction">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Hauteur du pantalon</span>
+      <span class="lmm-sm-recap__val" id="r-hauteur">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Bas de pantalon</span>
+      <span class="lmm-sm-recap__val" id="r-bas">—</span>
+    </div>
+  </div>
+
+  <div class="lmm-sm-recap__total">
+    <span class="lmm-sm-recap__total-label">Estimation de base</span>
+    <span class="lmm-sm-recap__total-price" id="r-total">—</span>
+  </div>
+
+  <div class="lmm-sm-recap__nav">
+    <button class="lmm-sm-recap__btn-confirm" onclick="confirmer()">Confirmer ma demande</button>
+  </div>
+  <p class="lmm-sm-recap__note">Un membre de notre équipe vous contactera dans les 48 heures pour finaliser votre commande sur mesure et organiser vos essayages.</p>
+</div>
+
+<script>
+  var params = new URLSearchParams(window.location.search);
+
+  document.getElementById('r-style').textContent = params.get('style') || '—';
+  document.getElementById('r-tissu').textContent = params.get('tissu') || '—';
+  document.getElementById('r-lining').textContent = params.get('lining') || '—';
+  document.getElementById('r-bouton').textContent = params.get('bouton') || '—';
+  document.getElementById('r-construction').textContent = params.get('construction') || '—';
+  document.getElementById('r-hauteur').textContent = params.get('hauteur') || '—';
+  document.getElementById('r-bas').textContent = params.get('bas') || '—';
+
+  var tissuPrix = parseFloat(params.get('tissu_prix') || '0');
+  var liningPrix = parseFloat(params.get('lining_prix') || '0');
+  var boutonPrix = parseFloat(params.get('bouton_prix') || '0');
+  var constPrix = parseFloat(params.get('construction_prix') || '0');
+  var total = tissuPrix + liningPrix + boutonPrix + constPrix;
+  document.getElementById('r-total').textContent = total > 0 ? '$' + total.toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
+
+  function confirmer() {
+    var rdvUrl = '/pages/rendez-vous?'
+      + 'style=' + encodeURIComponent(params.get('style') || '')
+      + '&tissu=' + encodeURIComponent(params.get('tissu') || '')
+      + '&lining=' + encodeURIComponent(params.get('lining') || '')
+      + '&bouton=' + encodeURIComponent(params.get('bouton') || '')
+      + '&construction=' + encodeURIComponent(params.get('construction') || '')
+      + '&hauteur=' + encodeURIComponent(params.get('hauteur') || '')
+      + '&bas=' + encodeURIComponent(params.get('bas') || '');
+    window.location.href = rdvUrl;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Custom — Récapitulatif",
+  "settings": [],
+  "presets": [{ "name": "Custom — Récapitulatif" }]
+}
+{% endschema %}

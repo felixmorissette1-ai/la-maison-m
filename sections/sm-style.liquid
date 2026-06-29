@@ -1,0 +1,129 @@
+{% comment %} Style — Configurateur Custom {% endcomment %}
+{% render 'fil-ariane-custom', etape_active: 1 %}
+
+<style>
+  .lmm-sm-style-wrap {
+    width: 90%; margin: 0 auto; padding: 28px 0 20px;
+    display: flex; flex-direction: column; box-sizing: border-box;
+  }
+  .lmm-sm-style__header { margin-bottom: 24px; }
+  .lmm-sm-style__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
+  .lmm-sm-style__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-sm-style__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-sm-style__grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-bottom: 24px;
+  }
+  .lmm-sm-style__card {
+    background: #fff; border: 1px solid rgba(28,28,28,0.1);
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .lmm-sm-style__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-sm-style__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-sm-style__card-photo {
+    width: 100%; aspect-ratio: 3/4;
+    background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .lmm-sm-style__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-sm-style__card:hover .lmm-sm-style__card-photo img { transform: scale(1.04); }
+  .lmm-sm-style__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-sm-style__card-body { padding: 14px 18px 18px; }
+  .lmm-sm-style__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
+  .lmm-sm-style__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
+  .lmm-sm-style__nav { display: flex; justify-content: center; }
+  .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.4; pointer-events: none; }
+  .lmm-sm-btn:hover { background: #C9A96E; }
+  .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
+  @media (max-width: 860px) {
+    .lmm-sm-style__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 540px) {
+    .lmm-sm-style__grid { grid-template-columns: 1fr; }
+    .lmm-sm-style-wrap { width: 92%; }
+  }
+</style>
+
+<div class="lmm-sm-style-wrap">
+  <div class="lmm-sm-style__header">
+    <p class="lmm-sm-style__label">Configurateur custom — Étape 1 sur 8</p>
+    <h1 class="lmm-sm-style__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-sm-style__sub">{{ section.settings.sous_titre }}</p>
+  </div>
+
+  <div class="lmm-sm-style__grid" id="style-grid">
+    {% for entry in shop.metaobjects.style_complet.values %}
+      <div class="lmm-sm-style__card" data-val="{{ entry.nom.value | escape }}" onclick="selectStyle(this, '{{ entry.nom.value | escape }}')">
+        <div class="lmm-sm-style__card-photo">
+          {% if entry.photo.value %}
+            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <span class="lmm-sm-style__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-sm-style__card-body">
+          <h2 class="lmm-sm-style__name">{{ entry.nom.value }}</h2>
+          {% if entry.description.value %}<p class="lmm-sm-style__desc">{{ entry.description.value }}</p>{% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="lmm-sm-style__card" data-val="{{ section.settings.custom_label | escape }}" onclick="selectStyle(this, '{{ section.settings.custom_label | escape }}')">
+      <div class="lmm-sm-style__card-photo">
+        {% if section.settings.custom_photo %}
+          <img src="{{ section.settings.custom_photo | image_url: width: 600 }}" alt="{{ section.settings.custom_label }}">
+        {% else %}
+          <span class="lmm-sm-style__card-photo-placeholder">✦</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-style__card-body">
+        <h2 class="lmm-sm-style__name">{{ section.settings.custom_label }}</h2>
+        <p class="lmm-sm-style__desc">{{ section.settings.custom_desc }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lmm-sm-style__nav">
+    <button class="lmm-sm-btn" id="style-next" onclick="goNext()">Continuer</button>
+  </div>
+</div>
+
+<script>
+  var selected = null;
+  var _p = new URLSearchParams(window.location.search);
+
+  var savedStyle = _p.get('style');
+  if (savedStyle) {
+    var savedCard = document.querySelector('#style-grid [data-val="' + savedStyle + '"]');
+    if (savedCard) selectStyle(savedCard, savedStyle);
+  }
+
+  function selectStyle(el, val) {
+    document.querySelectorAll('#style-grid .lmm-sm-style__card').forEach(function(c) { c.classList.remove('lmm-sm-style__card--selected'); });
+    el.classList.add('lmm-sm-style__card--selected');
+    selected = val;
+    document.getElementById('style-next').classList.add('active');
+    _p.set('style', val);
+    history.replaceState(null, '', '?' + _p.toString());
+  }
+
+  function goNext() {
+    if (!selected) return;
+    window.location.href = '/pages/sur-mesure-tissu?' + _p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Custom — Style",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre style" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Le style définit la coupe et la silhouette générale de votre complet." },
+    { "type": "header", "content": "Option personnalisée (6e carte)" },
+    { "type": "text", "id": "custom_label", "label": "Nom", "default": "Style personnalisé" },
+    { "type": "textarea", "id": "custom_desc", "label": "Description", "default": "Concevez votre propre style avec notre équipe." },
+    { "type": "image_picker", "id": "custom_photo", "label": "Photo" }
+  ],
+  "presets": [{ "name": "Custom — Style" }]
+}
+{% endschema %}

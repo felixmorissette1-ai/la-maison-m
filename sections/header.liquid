@@ -5,14 +5,10 @@
     </a>
 
     <nav class="lmm-header__nav">
-      {% for link in section.settings.menu.links %}
-        <a href="{{ link.url }}" class="lmm-nav-link{% if request.path == link.url %} lmm-nav-link--active{% endif %}">
-          {{ link.title }}
-        </a>
-      {% endfor %}
+      <a href="/" class="lmm-nav-link{% if request.path == '/' %} lmm-nav-link--active{% endif %}">Accueil</a>
+      <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections' %} lmm-nav-link--active{% endif %}">Collection</a>
+      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Personnalisé</a>
     </nav>
-
-    <a href="/pages/sur-mesure" class="lmm-header__rdv-btn" style="margin-right:8px;">Configurateur</a>
 
     {% assign now_ts = 'now' | date: '%s' %}
     {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
@@ -600,12 +596,12 @@
   }
 
   .lmm-header__rdv-btn {
-    font-size: 10px;
+    font-size: 12px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: #1C1C1C;
     background: #C9A96E;
-    padding: 9px 18px;
+    padding: 11px 22px;
     text-decoration: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     transition: background 0.2s, color 0.2s;
