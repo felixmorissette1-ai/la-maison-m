@@ -23,10 +23,9 @@
   .lmm-smp__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
   .lmm-smp__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
   .lmm-smp__nav { display: flex; justify-content: center; flex-shrink: 0; }
-  #smp-next { opacity: 0.4; pointer-events: none; }
-  #smp-next.active { opacity: 1; pointer-events: auto; }
-  .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; }
-  .lmm-sm-btn:hover { background: #C9A96E; }
+  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn:hover { background: #333; }
+  .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
   @media (min-width: 861px) { .lmm-smp-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   @media (max-width: 860px) { .lmm-smp-wrap { height: auto; width: 92%; } .lmm-smp__grid { grid-template-columns: 1fr; } }
 </style>
@@ -34,32 +33,28 @@
 <div class="lmm-smp-wrap lmm-sm-main">
   <div class="lmm-smp__header">
     <p class="lmm-smp__label">Configurateur custom — Étape 6 sur 8</p>
-    <h1 class="lmm-smp__title">Hauteur du pantalon</h1>
-    <p class="lmm-smp__sub">Choisissez la hauteur de votre pantalon.</p>
+    <h1 class="lmm-smp__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-smp__sub">{{ section.settings.sous_titre }}</p>
   </div>
 
   <div class="lmm-smp__grid" id="smp-grid">
-    <div class="lmm-smp__card" data-val="Taille basse" onclick="selectCard(this, 'Taille basse')">
-      <div class="lmm-smp__card-photo"><span class="lmm-smp__card-photo-placeholder">Photo à venir</span></div>
-      <div class="lmm-smp__card-body">
-        <h2 class="lmm-smp__name">Taille basse</h2>
-        <p class="lmm-smp__desc">Coupe contemporaine et moderne. Convient aux silhouettes élancées et aux styles décontractés.</p>
+    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
+      <div class="lmm-smp__card"
+           data-val="{{ entry.nom.value | escape }}"
+           onclick="selectCard(this, '{{ entry.nom.value | escape }}')">
+        <div class="lmm-smp__card-photo">
+          {% if entry.photo.value %}
+            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <span class="lmm-smp__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-smp__card-body">
+          <h2 class="lmm-smp__name">{{ entry.nom.value }}</h2>
+          {% if entry.description.value %}<p class="lmm-smp__desc">{{ entry.description.value }}</p>{% endif %}
+        </div>
       </div>
-    </div>
-    <div class="lmm-smp__card" data-val="Taille haute" onclick="selectCard(this, 'Taille haute')">
-      <div class="lmm-smp__card-photo"><span class="lmm-smp__card-photo-placeholder">Photo à venir</span></div>
-      <div class="lmm-smp__card-body">
-        <h2 class="lmm-smp__name">Taille haute</h2>
-        <p class="lmm-smp__desc">Coupe classique et élégante. La taille haute allonge la silhouette et s'accorde avec tous les styles de veston.</p>
-      </div>
-    </div>
-    <div class="lmm-smp__card" data-val="Taille haute pincé" onclick="selectCard(this, 'Taille haute pincé')">
-      <div class="lmm-smp__card-photo"><span class="lmm-smp__card-photo-placeholder">Photo à venir</span></div>
-      <div class="lmm-smp__card-body">
-        <h2 class="lmm-smp__name">Taille haute pincé</h2>
-        <p class="lmm-smp__desc">Le summum du classicisme tailleur. Le pli pincé à la taille haute évoque les grands complets italiens des années 40-50.</p>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
   <div class="lmm-smp__nav">
@@ -94,7 +89,6 @@
     document.getElementById('smp-next').classList.add('active');
     _p.set('hauteur', val);
     history.replaceState(null, '', '?' + _p.toString());
-    // Preview temps réel
     var valEl = document.getElementById('lmm-prev-hauteur');
     if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
   }
@@ -108,7 +102,10 @@
 {% schema %}
 {
   "name": "Custom — Pantalon",
-  "settings": [],
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Hauteur du pantalon" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Choisissez la hauteur de votre pantalon." }
+  ],
   "presets": [{ "name": "Custom — Pantalon" }]
 }
 {% endschema %}

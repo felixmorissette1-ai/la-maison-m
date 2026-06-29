@@ -93,50 +93,28 @@
   <hr class="lmm-sm-divider">
 
   <div class="lmm-sm-pant__header">
-    <h2 class="lmm-sm-pant__title">Hauteur du pantalon</h2>
-    <p class="lmm-sm-pant__sub">Choisissez la hauteur de votre pantalon.</p>
+    <h2 class="lmm-sm-pant__title">{{ section.settings.titre_pantalon }}</h2>
+    <p class="lmm-sm-pant__sub">{{ section.settings.sous_titre_pantalon }}</p>
   </div>
 
   <div class="lmm-sm-pant__grid" id="pant-grid">
-    <div class="lmm-sm-pant__card" data-val="Taille basse" onclick="selectPant(this, 'Taille basse')">
-      <div class="lmm-sm-pant__card-photo">
-        {% if section.settings.photo_taille_basse %}
-          <img src="{{ section.settings.photo_taille_basse | image_url: width: 600 }}" alt="Taille basse">
-        {% else %}
-          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
-        {% endif %}
+    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
+      <div class="lmm-sm-pant__card"
+           data-val="{{ entry.nom.value | escape }}"
+           onclick="selectPant(this, '{{ entry.nom.value | escape }}')">
+        <div class="lmm-sm-pant__card-photo">
+          {% if entry.photo.value %}
+            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-sm-pant__card-body">
+          <h3 class="lmm-sm-pant__name">{{ entry.nom.value }}</h3>
+          {% if entry.description.value %}<p class="lmm-sm-pant__desc">{{ entry.description.value }}</p>{% endif %}
+        </div>
       </div>
-      <div class="lmm-sm-pant__card-body">
-        <h3 class="lmm-sm-pant__name">Taille basse</h3>
-        <p class="lmm-sm-pant__desc">Coupe contemporaine et moderne. Convient aux silhouettes élancées et aux styles décontractés.</p>
-      </div>
-    </div>
-    <div class="lmm-sm-pant__card" data-val="Taille haute" onclick="selectPant(this, 'Taille haute')">
-      <div class="lmm-sm-pant__card-photo">
-        {% if section.settings.photo_taille_haute %}
-          <img src="{{ section.settings.photo_taille_haute | image_url: width: 600 }}" alt="Taille haute">
-        {% else %}
-          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
-        {% endif %}
-      </div>
-      <div class="lmm-sm-pant__card-body">
-        <h3 class="lmm-sm-pant__name">Taille haute</h3>
-        <p class="lmm-sm-pant__desc">Coupe classique et élégante. La taille haute allonge la silhouette et s'accorde avec tous les styles.</p>
-      </div>
-    </div>
-    <div class="lmm-sm-pant__card" data-val="Taille haute pincé" onclick="selectPant(this, 'Taille haute pincé')">
-      <div class="lmm-sm-pant__card-photo">
-        {% if section.settings.photo_taille_haute_pince %}
-          <img src="{{ section.settings.photo_taille_haute_pince | image_url: width: 600 }}" alt="Taille haute pincé">
-        {% else %}
-          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
-        {% endif %}
-      </div>
-      <div class="lmm-sm-pant__card-body">
-        <h3 class="lmm-sm-pant__name">Taille haute pincé</h3>
-        <p class="lmm-sm-pant__desc">Le summum du classicisme tailleur. Le pli pincé évoque les grands complets italiens des années 40–50.</p>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
   <div class="lmm-sm-const__nav">
@@ -209,12 +187,10 @@
 {
   "name": "Custom — Construction & Pantalon",
   "settings": [
-    { "type": "text", "id": "titre", "label": "Titre", "default": "Construction" },
-    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et la longévité de votre veston." },
-    { "type": "header", "content": "Photos pantalon (optionnelles)" },
-    { "type": "image_picker", "id": "photo_taille_basse", "label": "Taille basse" },
-    { "type": "image_picker", "id": "photo_taille_haute", "label": "Taille haute" },
-    { "type": "image_picker", "id": "photo_taille_haute_pince", "label": "Taille haute pincé" }
+    { "type": "text", "id": "titre", "label": "Titre (construction)", "default": "Construction" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre (construction)", "default": "La construction intérieure détermine le tombé, la durabilité et la longévité de votre veston." },
+    { "type": "text", "id": "titre_pantalon", "label": "Titre (hauteur de pantalon)", "default": "Hauteur du pantalon" },
+    { "type": "textarea", "id": "sous_titre_pantalon", "label": "Sous-titre (hauteur de pantalon)", "default": "Choisissez la hauteur de votre pantalon." }
   ],
   "presets": [{ "name": "Custom — Construction & Pantalon" }]
 }

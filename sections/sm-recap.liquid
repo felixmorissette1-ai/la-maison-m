@@ -26,8 +26,8 @@
 <div class="lmm-sm-recap-wrap lmm-sm-main">
   <div class="lmm-sm-recap__header">
     <p class="lmm-sm-recap__label">Configurateur custom — Récapitulatif</p>
-    <h1 class="lmm-sm-recap__title">Votre complet sur mesure</h1>
-    <p class="lmm-sm-recap__sub">Vérifiez vos choix avant de confirmer votre demande.</p>
+    <h1 class="lmm-sm-recap__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-sm-recap__sub">{{ section.settings.sous_titre }}</p>
   </div>
 
   <div class="lmm-sm-recap__table">
@@ -69,7 +69,7 @@
   <div class="lmm-sm-recap__nav">
     <button class="lmm-sm-recap__btn-confirm" onclick="confirmer()">Confirmer ma demande</button>
   </div>
-  <p class="lmm-sm-recap__note">Un membre de notre équipe vous contactera dans les 48 heures pour finaliser votre commande sur mesure et organiser vos essayages.</p>
+  <p class="lmm-sm-recap__note">{{ section.settings.note }}</p>
 </div>
 
 <script>
@@ -106,7 +106,11 @@
 {% schema %}
 {
   "name": "Custom — Récapitulatif",
-  "settings": [],
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Votre complet sur mesure" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Vérifiez vos choix avant de confirmer votre demande." },
+    { "type": "textarea", "id": "note", "label": "Note de bas de page", "default": "Un membre de notre équipe vous contactera dans les 48 heures pour finaliser votre commande sur mesure et organiser vos essayages." }
+  ],
   "presets": [{ "name": "Custom — Récapitulatif" }]
 }
 {% endschema %}

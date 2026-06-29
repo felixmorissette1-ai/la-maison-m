@@ -23,10 +23,9 @@
   .lmm-smo__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
   .lmm-smo__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
   .lmm-smo__nav { display: flex; justify-content: center; flex-shrink: 0; }
-  #smo-next { opacity: 0.4; pointer-events: none; }
-  #smo-next.active { opacity: 1; pointer-events: auto; }
-  .lmm-sm-btn { display: inline-block; background: #F5F0EB; color: #1C1C1C; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; }
-  .lmm-sm-btn:hover { background: #C9A96E; }
+  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn:hover { background: #333; }
+  .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
   @media (min-width: 861px) { .lmm-smo-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   @media (max-width: 860px) { .lmm-smo-wrap { height: auto; width: 92%; } .lmm-smo__grid { grid-template-columns: 1fr; } }
 </style>
@@ -34,25 +33,28 @@
 <div class="lmm-smo-wrap lmm-sm-main">
   <div class="lmm-smo__header">
     <p class="lmm-smo__label">Configurateur custom — Étape 7 sur 8</p>
-    <h1 class="lmm-smo__title">Bas de pantalon</h1>
-    <p class="lmm-smo__sub">Choisissez la finition du bas de votre pantalon.</p>
+    <h1 class="lmm-smo__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-smo__sub">{{ section.settings.sous_titre }}</p>
   </div>
 
   <div class="lmm-smo__grid" id="smo-grid">
-    <div class="lmm-smo__card" data-val="Simple" onclick="selectCard(this, 'Simple')">
-      <div class="lmm-smo__card-photo"><span class="lmm-smo__card-photo-placeholder">Photo à venir</span></div>
-      <div class="lmm-smo__card-body">
-        <h2 class="lmm-smo__name">Simple</h2>
-        <p class="lmm-smo__desc">Ourlet droit, classique et sobre.</p>
+    {% for entry in shop.metaobjects.bas_pantalon.values %}
+      <div class="lmm-smo__card"
+           data-val="{{ entry.nom.value | escape }}"
+           onclick="selectCard(this, '{{ entry.nom.value | escape }}')">
+        <div class="lmm-smo__card-photo">
+          {% if entry.photo.value %}
+            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <span class="lmm-smo__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-smo__card-body">
+          <h2 class="lmm-smo__name">{{ entry.nom.value }}</h2>
+          {% if entry.description.value %}<p class="lmm-smo__desc">{{ entry.description.value }}</p>{% endif %}
+        </div>
       </div>
-    </div>
-    <div class="lmm-smo__card" data-val="Revers" onclick="selectCard(this, 'Revers')">
-      <div class="lmm-smo__card-photo"><span class="lmm-smo__card-photo-placeholder">Photo à venir</span></div>
-      <div class="lmm-smo__card-body">
-        <h2 class="lmm-smo__name">Avec revers</h2>
-        <p class="lmm-smo__desc">Revers replié vers l'extérieur, style britannique traditionnel.</p>
-      </div>
-    </div>
+    {% endfor %}
   </div>
 
   <div class="lmm-smo__nav">
@@ -87,7 +89,6 @@
     document.getElementById('smo-next').classList.add('active');
     _p.set('bas', val);
     history.replaceState(null, '', '?' + _p.toString());
-    // Preview temps réel
     var valEl = document.getElementById('lmm-prev-bas');
     if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
   }
@@ -101,7 +102,10 @@
 {% schema %}
 {
   "name": "Custom — Ourlet",
-  "settings": [],
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Bas de pantalon" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Choisissez la finition du bas de votre pantalon." }
+  ],
   "presets": [{ "name": "Custom — Ourlet" }]
 }
 {% endschema %}
