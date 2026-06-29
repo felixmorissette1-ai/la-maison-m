@@ -1,11 +1,11 @@
-{% comment %} Panneau de prévisualisation — Configurateur Custom {% endcomment %}
+{% comment %} Panneau de prévisualisation — Configurateur Custom — v2 {% endcomment %}
 
 <style>
   .lmm-sm-preview {
     position: fixed;
     top: 72px;
     right: 0;
-    width: 300px;
+    width: 380px;
     height: calc(100vh - 72px);
     background: #fff;
     border-left: 1px solid #E8E2DA;
@@ -251,15 +251,57 @@
     .lmm-sm-preview__texts { display: none; }
   }
 
+  /* Bouton Continuer */
+  .lmm-sm-preview__footer {
+    padding: 16px 20px;
+    border-top: 1px solid #E8E2DA;
+    flex-shrink: 0;
+  }
+  .lmm-sm-preview__btn {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #1C1C1C;
+    color: #F5F0EB;
+    border: none;
+    padding: 13px 20px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    opacity: 0.35;
+    pointer-events: none;
+    transition: background 0.2s, opacity 0.2s;
+    box-sizing: border-box;
+  }
+  .lmm-sm-preview__btn:hover { background: #333; }
+  .lmm-sm-preview__btn.active { opacity: 1; pointer-events: auto; }
+
   /* Ajustement du contenu principal pour laisser place au panneau */
   @media (min-width: 861px) {
     .lmm-sm-main {
       width: auto !important;
       margin-left: 5% !important;
-      margin-right: 320px !important;
+      margin-right: 400px !important;
     }
   }
   @media (max-width: 860px) {
+    .lmm-sm-preview__footer {
+      border-top: none;
+      border-left: 1px solid #E8E2DA;
+      padding: 0 12px;
+      display: flex;
+      align-items: center;
+    }
+    .lmm-sm-preview__btn {
+      width: auto;
+      padding: 10px 14px;
+      font-size: 10px;
+      white-space: nowrap;
+    }
     .lmm-sm-main {
       padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
     }
@@ -325,6 +367,13 @@
       <span class="lmm-sm-preview__text-key">Bas</span>
       <span class="lmm-sm-preview__text-val lmm-sm-preview__text-val--empty" id="lmm-prev-bas">—</span>
     </div>
+  </div>
+
+  <div class="lmm-sm-preview__footer">
+    <button class="lmm-sm-preview__btn" id="lmm-prev-btn-next" onclick="typeof goNext === 'function' && goNext()">
+      Continuer
+      <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
   </div>
 </div>
 

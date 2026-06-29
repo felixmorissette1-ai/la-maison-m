@@ -9,7 +9,7 @@
   .lmm-sm-boutons__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
   .lmm-sm-boutons__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
   .lmm-sm-boutons__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
-  .lmm-sm-boutons__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .lmm-sm-boutons__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 0; }
   .lmm-sm-boutons__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
   .lmm-sm-boutons__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-sm-boutons__card--selected { border: 2px solid #1C1C1C !important; }
@@ -17,21 +17,17 @@
   .lmm-sm-boutons__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-sm-boutons__card:hover .lmm-sm-boutons__card-photo img { transform: scale(1.04); }
   .lmm-sm-boutons__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
-  .lmm-sm-boutons__card-body { padding: 12px 16px 16px; }
-  .lmm-sm-boutons__name { font-family: Georgia, serif; font-size: 15px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-sm-boutons__desc { font-size: 11px; color: #8C7B6E; margin-bottom: 6px; line-height: 1.5; }
-  .lmm-sm-boutons__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
-  .lmm-sm-boutons__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
-  .lmm-sm-btn:hover { background: #333; }
-  .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
-  @media (max-width: 860px) { .lmm-sm-boutons__grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 540px) { .lmm-sm-boutons__grid { grid-template-columns: 1fr; } .lmm-sm-boutons-wrap { width: 92%; } }
+  .lmm-sm-boutons__card-body { padding: 8px 10px 10px; }
+  .lmm-sm-boutons__name { font-family: Georgia, serif; font-size: 13px; font-weight: 400; color: #1C1C1C; margin-bottom: 2px; }
+  .lmm-sm-boutons__desc { font-size: 10px; color: #8C7B6E; margin-bottom: 4px; line-height: 1.4; }
+  .lmm-sm-boutons__prix { font-size: 12px; color: #1C1C1C; font-weight: 500; }
+  @media (max-width: 1100px) { .lmm-sm-boutons__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .lmm-sm-boutons__grid { grid-template-columns: repeat(2, 1fr); } .lmm-sm-boutons-wrap { width: 92%; } }
 </style>
 
 <div class="lmm-sm-boutons-wrap lmm-sm-main">
   <div class="lmm-sm-boutons__header">
-    <p class="lmm-sm-boutons__label">Configurateur custom — Étape 4 sur 8</p>
+    <p class="lmm-sm-boutons__label">Configurateur custom — Étape 4 sur 7</p>
     <h1 class="lmm-sm-boutons__title">{{ section.settings.titre }}</h1>
     <p class="lmm-sm-boutons__sub">{{ section.settings.sous_titre }}</p>
   </div>
@@ -63,9 +59,6 @@
     {% endfor %}
   </div>
 
-  <div class="lmm-sm-boutons__nav">
-    <button class="lmm-sm-btn" id="boutons-next" onclick="goNext()">Continuer</button>
-  </div>
 </div>
 
 <script>
@@ -84,7 +77,7 @@
     el.classList.add('lmm-sm-boutons__card--selected');
     selected = el.dataset.val;
     selectedPrix = parseFloat(el.dataset.prix) || 0;
-    document.getElementById('boutons-next').classList.add('active');
+    var btn = document.getElementById('lmm-prev-btn-next'); if (btn) btn.classList.add('active');
     _p.set('bouton', selected);
     _p.set('bouton_prix', selectedPrix);
     if (el.dataset.photo) _p.set('bouton_photo', el.dataset.photo);

@@ -1,5 +1,5 @@
-{% comment %} Ourlet — Configurateur Custom {% endcomment %}
-{% render 'fil-ariane-custom', etape_active: 7 %}
+{% comment %} Pantalon + Ourlet — Configurateur Custom {% endcomment %}
+{% render 'fil-ariane-custom', etape_active: 6 %}
 {% render 'sm-preview' %}
 
 <style>
@@ -7,41 +7,100 @@
     width: 90%; margin: 0 auto; padding: 28px 0 20px;
     display: flex; flex-direction: column; box-sizing: border-box;
   }
-  .lmm-smo__header { margin-bottom: 16px; flex-shrink: 0; }
+  @media (min-width: 861px) { .lmm-smo-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
+  .lmm-smo__header { margin-bottom: 20px; }
   .lmm-smo__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
   .lmm-smo__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
   .lmm-smo__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
-  .lmm-smo__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; flex: 1; min-height: 0; margin-bottom: 16px; }
-  .lmm-smo__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+
+  /* Grille pantalon (3 colonnes) */
+  .lmm-smo-pant__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .lmm-smo-pant__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+  .lmm-smo-pant__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-smo-pant__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-smo-pant__card-photo { width: 100%; aspect-ratio: 4/3; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .lmm-smo-pant__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-smo-pant__card:hover .lmm-smo-pant__card-photo img { transform: scale(1.04); }
+  .lmm-smo-pant__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-smo-pant__card-body { padding: 14px 18px 18px; }
+  .lmm-smo-pant__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
+  .lmm-smo-pant__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
+
+  /* Séparateur */
+  .lmm-smo-divider { border: none; border-top: 1px solid #E8E2DA; margin: 8px 0 32px; }
+
+  /* Section ourlet */
+  .lmm-smo__section-header { margin-bottom: 20px; }
+  .lmm-smo__section-title { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-smo__section-sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+
+  /* Grille ourlet (3 colonnes — même largeur que pantalon) */
+  .lmm-smo__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .lmm-smo__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
   .lmm-smo__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-smo__card--selected { border: 2px solid #1C1C1C !important; }
-  .lmm-smo__card-photo { width: 100%; flex: 1; min-height: 0; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .lmm-smo__card-photo { width: 100%; aspect-ratio: 4/3; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-smo__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-smo__card:hover .lmm-smo__card-photo img { transform: scale(1.04); }
   .lmm-smo__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
-  .lmm-smo__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
-  .lmm-smo__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
+  .lmm-smo__card-body { padding: 14px 18px 18px; }
+  .lmm-smo__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
   .lmm-smo__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
-  .lmm-smo__nav { display: flex; justify-content: center; flex-shrink: 0; }
+
+  .lmm-smo__nav { display: flex; justify-content: center; }
   .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
   .lmm-sm-btn:hover { background: #333; }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
-  @media (min-width: 861px) { .lmm-smo-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
-  @media (max-width: 860px) { .lmm-smo-wrap { height: auto; width: 92%; } .lmm-smo__grid { grid-template-columns: 1fr; } }
+
+  @media (max-width: 860px) {
+    .lmm-smo-pant__grid, .lmm-smo__grid { grid-template-columns: repeat(2, 1fr); }
+    .lmm-smo-wrap { width: 92%; }
+  }
+  @media (max-width: 540px) {
+    .lmm-smo-pant__grid, .lmm-smo__grid { grid-template-columns: 1fr; }
+  }
 </style>
 
 <div class="lmm-smo-wrap lmm-sm-main">
+
   <div class="lmm-smo__header">
-    <p class="lmm-smo__label">Configurateur custom — Étape 7 sur 8</p>
-    <h1 class="lmm-smo__title">{{ section.settings.titre }}</h1>
-    <p class="lmm-smo__sub">{{ section.settings.sous_titre }}</p>
+    <p class="lmm-smo__label">Configurateur custom — Étape 6 sur 7</p>
+    <h1 class="lmm-smo__title">{{ section.settings.titre_pantalon }}</h1>
+    <p class="lmm-smo__sub">{{ section.settings.sous_titre_pantalon }}</p>
+  </div>
+
+  <div class="lmm-smo-pant__grid" id="pant-grid">
+    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
+      <div class="lmm-smo-pant__card"
+           data-val="{{ entry.nom.value | escape }}"
+           onclick="selectPant(this, '{{ entry.nom.value | escape }}')">
+        <div class="lmm-smo-pant__card-photo">
+          {% if entry.photo.value %}
+            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+          {% else %}
+            <span class="lmm-smo-pant__card-photo-placeholder">Photo à venir</span>
+          {% endif %}
+        </div>
+        <div class="lmm-smo-pant__card-body">
+          <h2 class="lmm-smo-pant__name">{{ entry.nom.value }}</h2>
+          {% if entry.description.value %}<p class="lmm-smo-pant__desc">{{ entry.description.value }}</p>{% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <hr class="lmm-smo-divider">
+
+  <div class="lmm-smo__section-header">
+    <h2 class="lmm-smo__section-title">{{ section.settings.titre_ourlet }}</h2>
+    <p class="lmm-smo__section-sub">{{ section.settings.sous_titre_ourlet }}</p>
   </div>
 
   <div class="lmm-smo__grid" id="smo-grid">
     {% for entry in shop.metaobjects.bas_pantalon.values %}
       <div class="lmm-smo__card"
            data-val="{{ entry.nom.value | escape }}"
-           onclick="selectCard(this, '{{ entry.nom.value | escape }}')">
+           onclick="selectOurlet(this, '{{ entry.nom.value | escape }}')">
         <div class="lmm-smo__card-photo">
           {% if entry.photo.value %}
             <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
@@ -50,51 +109,65 @@
           {% endif %}
         </div>
         <div class="lmm-smo__card-body">
-          <h2 class="lmm-smo__name">{{ entry.nom.value }}</h2>
+          <h3 class="lmm-smo__name">{{ entry.nom.value }}</h3>
           {% if entry.description.value %}<p class="lmm-smo__desc">{{ entry.description.value }}</p>{% endif %}
         </div>
       </div>
     {% endfor %}
   </div>
 
-  <div class="lmm-smo__nav">
-    <button class="lmm-sm-btn" id="smo-next" onclick="goNext()">Continuer</button>
-  </div>
 </div>
 
 <script>
-  function ajusterHauteur() {
-    var wrap = document.querySelector('.lmm-smo-wrap');
-    if (!wrap) return;
-    var top = wrap.getBoundingClientRect().top + window.scrollY;
-    var bottomOffset = window.innerWidth <= 860 ? 64 : 8;
-    wrap.style.height = (window.innerHeight - top - bottomOffset) + 'px';
-  }
-  ajusterHauteur();
-  window.addEventListener('resize', ajusterHauteur);
-
-  var selected = null;
+  var selectedHauteur = null;
+  var selectedBas = null;
   var _p = new URLSearchParams(window.location.search);
 
+  var savedHauteur = _p.get('hauteur');
+  if (savedHauteur) {
+    var sh = document.querySelector('#pant-grid [data-val="' + savedHauteur + '"]');
+    if (sh) selectPant(sh, savedHauteur);
+  }
   var savedBas = _p.get('bas');
   if (savedBas) {
-    var savedCard = document.querySelector('#smo-grid [data-val="' + savedBas + '"]');
-    if (savedCard) selectCard(savedCard, savedBas);
+    var sb = document.querySelector('#smo-grid [data-val="' + savedBas + '"]');
+    if (sb) selectOurlet(sb, savedBas);
   }
 
-  function selectCard(el, val) {
+  function verifierComplet() {
+    var btn = document.getElementById('lmm-prev-btn-next');
+    if (!btn) return;
+    if (selectedHauteur && selectedBas) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }
+
+  function selectPant(el, val) {
+    document.querySelectorAll('#pant-grid .lmm-smo-pant__card').forEach(function(c) { c.classList.remove('lmm-smo-pant__card--selected'); });
+    el.classList.add('lmm-smo-pant__card--selected');
+    selectedHauteur = val;
+    _p.set('hauteur', val);
+    history.replaceState(null, '', '?' + _p.toString());
+    var valEl = document.getElementById('lmm-prev-hauteur');
+    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
+    verifierComplet();
+  }
+
+  function selectOurlet(el, val) {
     document.querySelectorAll('#smo-grid .lmm-smo__card').forEach(function(c) { c.classList.remove('lmm-smo__card--selected'); });
     el.classList.add('lmm-smo__card--selected');
-    selected = val;
-    document.getElementById('smo-next').classList.add('active');
+    selectedBas = val;
     _p.set('bas', val);
     history.replaceState(null, '', '?' + _p.toString());
     var valEl = document.getElementById('lmm-prev-bas');
     if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
+    verifierComplet();
   }
 
   function goNext() {
-    if (!selected) return;
+    if (!selectedHauteur || !selectedBas) return;
     window.location.href = '/pages/sur-mesure-recap?' + _p.toString();
   }
 </script>
@@ -103,8 +176,10 @@
 {
   "name": "Custom — Ourlet",
   "settings": [
-    { "type": "text", "id": "titre", "label": "Titre", "default": "Bas de pantalon" },
-    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Choisissez la finition du bas de votre pantalon." }
+    { "type": "text", "id": "titre_pantalon", "label": "Titre (pantalon)", "default": "Hauteur du pantalon" },
+    { "type": "textarea", "id": "sous_titre_pantalon", "label": "Sous-titre (pantalon)", "default": "Choisissez la hauteur de votre pantalon." },
+    { "type": "text", "id": "titre_ourlet", "label": "Titre (ourlet)", "default": "Bas de pantalon" },
+    { "type": "textarea", "id": "sous_titre_ourlet", "label": "Sous-titre (ourlet)", "default": "Choisissez la finition du bas de votre pantalon." }
   ],
   "presets": [{ "name": "Custom — Ourlet" }]
 }

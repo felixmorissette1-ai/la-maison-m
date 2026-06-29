@@ -4,17 +4,107 @@
 
 <style>
   .lmm-sm-tissu-wrap {
-    width: 90%; margin: 0 auto; padding: 28px 0 20px;
+    width: 90%; margin: 0 auto; padding: 20px 0 16px;
     display: flex; flex-direction: column; box-sizing: border-box;
   }
   @media (min-width: 861px) { .lmm-sm-tissu-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
-  .lmm-sm-tissu__header { margin-bottom: 24px; }
-  .lmm-sm-tissu__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
-  .lmm-sm-tissu__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-sm-tissu__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-sm-tissu__header { margin-bottom: 12px; }
+  .lmm-sm-tissu__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 4px; }
+  .lmm-sm-tissu__title { font-family: Georgia, serif; font-size: 24px; font-weight: 400; color: #1C1C1C; margin-bottom: 3px; }
+  .lmm-sm-tissu__sub { font-size: 12px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+
+  /* Barre de filtres */
+  .lmm-sm-tissu__filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .lmm-sm-tissu__filter-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: none;
+    border: 1px solid #C8BBB0;
+    color: #8C7B6E;
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, color 0.15s;
+    user-select: none;
+  }
+  .lmm-sm-tissu__filter-toggle:hover { border-color: #1C1C1C; color: #1C1C1C; }
+  .lmm-sm-tissu__filter-toggle.open { border-color: #1C1C1C; color: #1C1C1C; background: #F5F0EB; }
+  .lmm-sm-tissu__filter-toggle svg { transition: transform 0.2s; }
+  .lmm-sm-tissu__filter-toggle.open svg { transform: rotate(180deg); }
+  .lmm-sm-tissu__filter-count {
+    display: none;
+    background: #1C1C1C;
+    color: #F5F0EB;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 9px;
+    letter-spacing: 0;
+    line-height: 1.6;
+  }
+  .lmm-sm-tissu__filter-count.visible { display: inline-block; }
+
+  /* Panneau de filtres */
+  .lmm-sm-tissu__filter-panel {
+    display: none;
+    border: 1px solid #E8E2DA;
+    background: #FDFAF7;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .lmm-sm-tissu__filter-panel.open { display: flex; }
+
+  .lmm-sm-tissu__filter-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 26px;
+  }
+  .lmm-sm-tissu__filter-key {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8C7B6E;
+    flex-shrink: 0;
+    width: 52px;
+  }
+  .lmm-sm-tissu__filter-pills {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    flex: 1;
+    scrollbar-width: none;
+  }
+  .lmm-sm-tissu__filter-pills::-webkit-scrollbar { display: none; }
+  .lmm-sm-tissu__pill {
+    background: transparent;
+    border: 1px solid #D8D0C8;
+    color: #8C7B6E;
+    padding: 4px 11px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .lmm-sm-tissu__pill:hover { border-color: #1C1C1C; color: #1C1C1C; }
+  .lmm-sm-tissu__pill.active { background: #1C1C1C; border-color: #1C1C1C; color: #F5F0EB; }
+
+  /* Grille */
   .lmm-sm-tissu__grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 14px; margin-bottom: 24px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
   }
   .lmm-sm-tissu__card {
     background: #fff; border: 1px solid rgba(28,28,28,0.1);
@@ -25,74 +115,105 @@
   .lmm-sm-tissu__card--selected { border: 2px solid #1C1C1C !important; }
   .lmm-sm-tissu__card-photo {
     width: 100%; aspect-ratio: 1/1;
-    background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden;
-    position: relative;
+    background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;
   }
   .lmm-sm-tissu__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-sm-tissu__card:hover .lmm-sm-tissu__card-photo img { transform: scale(1.04); }
   .lmm-sm-tissu__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
-  /* Bouton zoom sur la photo */
   .lmm-sm-tissu__zoom-btn {
-    position: absolute; bottom: 8px; right: 8px;
-    width: 28px; height: 28px;
-    background: rgba(28,28,28,0.65); color: #fff;
-    border: none; cursor: pointer; display: none;
-    align-items: center; justify-content: center;
-    backdrop-filter: blur(4px);
-    transition: background 0.2s;
+    position: absolute; bottom: 6px; right: 6px; width: 24px; height: 24px;
+    background: rgba(28,28,28,0.65); color: #fff; border: none; cursor: pointer;
+    display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px); transition: background 0.2s;
   }
   .lmm-sm-tissu__card-photo:hover .lmm-sm-tissu__zoom-btn { display: flex; }
   .lmm-sm-tissu__zoom-btn:hover { background: rgba(28,28,28,0.9); }
-  .lmm-sm-tissu__card-body { padding: 12px 16px 16px; }
-  .lmm-sm-tissu__name { font-family: Georgia, serif; font-size: 15px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-sm-tissu__meta { font-size: 11px; color: #8C7B6E; margin-bottom: 6px; }
-  .lmm-sm-tissu__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
-  .lmm-sm-tissu__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
-  .lmm-sm-btn:hover { background: #333; }
-  .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
-  @media (max-width: 860px) { .lmm-sm-tissu__grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 540px) { .lmm-sm-tissu__grid { grid-template-columns: 1fr; } .lmm-sm-tissu-wrap { width: 92%; } }
+  .lmm-sm-tissu__card-body { padding: 8px 10px 10px; }
+  .lmm-sm-tissu__name { font-family: Georgia, serif; font-size: 13px; font-weight: 400; color: #1C1C1C; margin-bottom: 2px; }
+  .lmm-sm-tissu__livre { font-size: 10px; color: #C9A96E; letter-spacing: 0.04em; margin-bottom: 2px; }
+  .lmm-sm-tissu__meta { font-size: 10px; color: #8C7B6E; margin-bottom: 3px; line-height: 1.4; }
+  .lmm-sm-tissu__prix { font-size: 12px; color: #1C1C1C; font-weight: 500; }
+  .lmm-sm-tissu__no-results { display: none; padding: 40px 0; text-align: center; font-size: 12px; color: #8C7B6E; letter-spacing: 0.06em; }
 
   /* Lightbox */
-  .lmm-sm-lightbox {
-    display: none; position: fixed; inset: 0;
-    background: rgba(28,28,28,0.92); z-index: 9999;
-    align-items: center; justify-content: center;
-  }
+  .lmm-sm-lightbox { display: none; position: fixed; inset: 0; background: rgba(28,28,28,0.92); z-index: 9999; align-items: center; justify-content: center; }
   .lmm-sm-lightbox.open { display: flex; }
-  .lmm-sm-lightbox__inner {
-    position: relative; max-width: 90vw; max-height: 90vh;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .lmm-sm-lightbox__img {
-    max-width: 90vw; max-height: 90vh;
-    object-fit: contain; display: block;
-    cursor: zoom-in;
-    transition: transform 0.3s ease;
-    transform-origin: center center;
-  }
+  .lmm-sm-lightbox__inner { position: relative; max-width: 90vw; max-height: 90vh; display: flex; align-items: center; justify-content: center; }
+  .lmm-sm-lightbox__img { max-width: 90vw; max-height: 90vh; object-fit: contain; display: block; cursor: zoom-in; transition: transform 0.3s ease; transform-origin: center center; }
   .lmm-sm-lightbox__img.zoomed { cursor: zoom-out; transform: scale(2); }
-  .lmm-sm-lightbox__close {
-    position: fixed; top: 20px; right: 24px;
-    background: none; border: none; color: rgba(245,240,235,0.7);
-    font-size: 28px; cursor: pointer; line-height: 1;
-    transition: color 0.2s;
-  }
+  .lmm-sm-lightbox__close { position: fixed; top: 20px; right: 24px; background: none; border: none; color: rgba(245,240,235,0.7); font-size: 28px; cursor: pointer; line-height: 1; transition: color 0.2s; }
   .lmm-sm-lightbox__close:hover { color: #F5F0EB; }
-  .lmm-sm-lightbox__name {
-    position: fixed; bottom: 28px; left: 0; right: 0;
-    text-align: center; font-family: Georgia, serif;
-    font-size: 16px; color: rgba(245,240,235,0.8);
-  }
+  .lmm-sm-lightbox__name { position: fixed; bottom: 28px; left: 0; right: 0; text-align: center; font-family: Georgia, serif; font-size: 16px; color: rgba(245,240,235,0.8); }
+
+  @media (max-width: 1100px) { .lmm-sm-tissu__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 600px) { .lmm-sm-tissu__grid { grid-template-columns: repeat(2, 1fr); } .lmm-sm-tissu-wrap { width: 92%; } }
 </style>
+
+{% comment %} Valeurs uniques pour filtres {% endcomment %}
+{% assign _livres_raw = '' %}{% assign _couleurs_raw = '' %}{% assign _patterns_raw = '' %}
+{% for entry in shop.metaobjects.tissu.values %}
+  {% if entry.livre.value != blank %}{% assign _livres_raw = _livres_raw | append: entry.livre.value | append: '|||' %}{% endif %}
+  {% if entry.couleur.value != blank %}{% assign _couleurs_raw = _couleurs_raw | append: entry.couleur.value | append: '|||' %}{% endif %}
+  {% if entry.pattern.value != blank %}{% assign _patterns_raw = _patterns_raw | append: entry.pattern.value | append: '|||' %}{% endif %}
+{% endfor %}
+{% assign _livres = _livres_raw | split: '|||' | uniq %}
+{% assign _couleurs = _couleurs_raw | split: '|||' | uniq %}
+{% assign _patterns = _patterns_raw | split: '|||' | uniq %}
+{% assign _has_filters = false %}
+{% for v in _livres %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
+{% for v in _couleurs %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
+{% for v in _patterns %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
 
 <div class="lmm-sm-tissu-wrap lmm-sm-main">
   <div class="lmm-sm-tissu__header">
-    <p class="lmm-sm-tissu__label">Configurateur custom — Étape 2 sur 8</p>
+    <p class="lmm-sm-tissu__label">Configurateur custom — Étape 2 sur 7</p>
     <h1 class="lmm-sm-tissu__title">{{ section.settings.titre }}</h1>
     <p class="lmm-sm-tissu__sub">{{ section.settings.sous_titre }}</p>
   </div>
+
+  {% if _has_filters %}
+  <div class="lmm-sm-tissu__filter-bar">
+    <button class="lmm-sm-tissu__filter-toggle" id="tissu-filter-toggle" onclick="toggleFilters()">
+      <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M6 10h8M9 15h2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Filtres
+      <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <span class="lmm-sm-tissu__filter-count" id="tissu-filter-count"></span>
+  </div>
+
+  <div class="lmm-sm-tissu__filter-panel" id="tissu-filter-panel">
+    {% assign _livres_exist = false %}{% for v in _livres %}{% if v != '' %}{% assign _livres_exist = true %}{% endif %}{% endfor %}
+    {% if _livres_exist %}
+    <div class="lmm-sm-tissu__filter-row">
+      <span class="lmm-sm-tissu__filter-key">Livre</span>
+      <div class="lmm-sm-tissu__filter-pills" data-filter="livre">
+        <button class="lmm-sm-tissu__pill active" data-val="">Tous</button>
+        {% for v in _livres %}{% if v != '' %}<button class="lmm-sm-tissu__pill" data-val="{{ v | escape }}">{{ v }}</button>{% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% assign _couleurs_exist = false %}{% for v in _couleurs %}{% if v != '' %}{% assign _couleurs_exist = true %}{% endif %}{% endfor %}
+    {% if _couleurs_exist %}
+    <div class="lmm-sm-tissu__filter-row">
+      <span class="lmm-sm-tissu__filter-key">Couleur</span>
+      <div class="lmm-sm-tissu__filter-pills" data-filter="couleur">
+        <button class="lmm-sm-tissu__pill active" data-val="">Tous</button>
+        {% for v in _couleurs %}{% if v != '' %}<button class="lmm-sm-tissu__pill" data-val="{{ v | escape }}">{{ v }}</button>{% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% assign _patterns_exist = false %}{% for v in _patterns %}{% if v != '' %}{% assign _patterns_exist = true %}{% endif %}{% endfor %}
+    {% if _patterns_exist %}
+    <div class="lmm-sm-tissu__filter-row">
+      <span class="lmm-sm-tissu__filter-key">Pattern</span>
+      <div class="lmm-sm-tissu__filter-pills" data-filter="pattern">
+        <button class="lmm-sm-tissu__pill active" data-val="">Tous</button>
+        {% for v in _patterns %}{% if v != '' %}<button class="lmm-sm-tissu__pill" data-val="{{ v | escape }}">{{ v }}</button>{% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
 
   <div class="lmm-sm-tissu__grid" id="tissu-grid">
     {% for entry in shop.metaobjects.tissu.values %}
@@ -102,14 +223,15 @@
            data-val="{{ entry.nom.value | escape }}"
            data-prix="{{ entry.prix_base.value | default: 0 }}"
            data-photo="{{ photo_preview_url | escape }}"
+           data-livre="{{ entry.livre.value | escape }}"
+           data-couleur="{{ entry.couleur.value | escape }}"
+           data-pattern="{{ entry.pattern.value | escape }}"
            onclick="selectTissu(this)">
         <div class="lmm-sm-tissu__card-photo">
           {% if entry.photo.value %}
-            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
-            <button class="lmm-sm-tissu__zoom-btn"
-                    onclick="event.stopPropagation(); ouvrirLightbox('{{ photo_url | escape }}', '{{ entry.nom.value | escape }}')"
-                    title="Agrandir">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+            <img src="{{ entry.photo.value | image_url: width: 400 }}" alt="{{ entry.nom.value }}">
+            <button class="lmm-sm-tissu__zoom-btn" onclick="event.stopPropagation(); ouvrirLightbox('{{ photo_url | escape }}', '{{ entry.nom.value | escape }}')" title="Agrandir">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
             </button>
           {% else %}
             <span class="lmm-sm-tissu__card-photo-placeholder">Photo à venir</span>
@@ -117,19 +239,16 @@
         </div>
         <div class="lmm-sm-tissu__card-body">
           <p class="lmm-sm-tissu__name">{{ entry.nom.value }}</p>
+          {% if entry.livre.value %}<p class="lmm-sm-tissu__livre">{{ entry.livre.value }}</p>{% endif %}
           <p class="lmm-sm-tissu__meta">{% if entry.origine.value %}{{ entry.origine.value }}{% endif %}{% if entry.grammage.value %} · {{ entry.grammage.value }}{% endif %}</p>
           {% if entry.prix_base.value %}<p class="lmm-sm-tissu__prix">${{ entry.prix_base.value }}</p>{% endif %}
         </div>
       </div>
     {% endfor %}
   </div>
-
-  <div class="lmm-sm-tissu__nav">
-    <button class="lmm-sm-btn" id="tissu-next" onclick="goNext()">Continuer</button>
-  </div>
+  <p class="lmm-sm-tissu__no-results" id="tissu-no-results">Aucun tissu ne correspond à ces filtres.</p>
 </div>
 
-<!-- Lightbox -->
 <div class="lmm-sm-lightbox" id="lmm-lightbox" onclick="if(event.target===this) fermerLightbox()">
   <button class="lmm-sm-lightbox__close" onclick="fermerLightbox()">×</button>
   <div class="lmm-sm-lightbox__inner">
@@ -142,6 +261,7 @@
   var selected = null;
   var selectedPrix = 0;
   var _p = new URLSearchParams(window.location.search);
+  var activeFilters = { livre: '', couleur: '', pattern: '' };
 
   var savedTissu = _p.get('tissu');
   if (savedTissu) {
@@ -154,19 +274,17 @@
     el.classList.add('lmm-sm-tissu__card--selected');
     selected = el.dataset.val;
     selectedPrix = parseFloat(el.dataset.prix) || 0;
-    document.getElementById('tissu-next').classList.add('active');
+    var btn = document.getElementById('lmm-prev-btn-next');
+    if (btn) btn.classList.add('active');
     _p.set('tissu', selected);
     _p.set('tissu_prix', selectedPrix);
     if (el.dataset.photo) _p.set('tissu_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
-
-    // Mettre à jour le preview en temps réel
     var imgEl = document.getElementById('lmm-prev-tissu-img');
     var emptyEl = document.getElementById('lmm-prev-empty');
     var lblEl = document.getElementById('lmm-prev-tissu-label');
     if (imgEl && el.dataset.photo) {
-      imgEl.src = el.dataset.photo;
-      imgEl.style.display = 'block';
+      imgEl.src = el.dataset.photo; imgEl.style.display = 'block';
       if (emptyEl) emptyEl.style.display = 'none';
       if (lblEl) { lblEl.textContent = selected; lblEl.style.display = 'block'; }
     }
@@ -177,14 +295,61 @@
     window.location.href = '/pages/sur-mesure-lining?' + _p.toString();
   }
 
-  // Lightbox
+  function toggleFilters() {
+    var toggle = document.getElementById('tissu-filter-toggle');
+    var panel = document.getElementById('tissu-filter-panel');
+    if (!toggle || !panel) return;
+    toggle.classList.toggle('open');
+    panel.classList.toggle('open');
+  }
+
+  document.querySelectorAll('.lmm-sm-tissu__pill').forEach(function(pill) {
+    pill.addEventListener('click', function() {
+      var group = this.closest('[data-filter]');
+      var filterKey = group.dataset.filter;
+      group.querySelectorAll('.lmm-sm-tissu__pill').forEach(function(p) { p.classList.remove('active'); });
+      this.classList.add('active');
+      activeFilters[filterKey] = this.dataset.val;
+      updateFilterCount();
+      filterTissus();
+    });
+  });
+
+  function updateFilterCount() {
+    var count = 0;
+    if (activeFilters.livre) count++;
+    if (activeFilters.couleur) count++;
+    if (activeFilters.pattern) count++;
+    var el = document.getElementById('tissu-filter-count');
+    if (!el) return;
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.add('visible');
+    } else {
+      el.classList.remove('visible');
+    }
+  }
+
+  function filterTissus() {
+    var cards = document.querySelectorAll('#tissu-grid .lmm-sm-tissu__card');
+    var visible = 0;
+    cards.forEach(function(card) {
+      var show = true;
+      if (activeFilters.livre && card.dataset.livre !== activeFilters.livre) show = false;
+      if (activeFilters.couleur && card.dataset.couleur !== activeFilters.couleur) show = false;
+      if (activeFilters.pattern && card.dataset.pattern !== activeFilters.pattern) show = false;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    var noResults = document.getElementById('tissu-no-results');
+    if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
   function ouvrirLightbox(url, nom) {
     var lb = document.getElementById('lmm-lightbox');
     var img = document.getElementById('lmm-lightbox-img');
-    var nameEl = document.getElementById('lmm-lightbox-name');
-    img.src = url;
-    img.classList.remove('zoomed');
-    nameEl.textContent = nom;
+    img.src = url; img.classList.remove('zoomed');
+    document.getElementById('lmm-lightbox-name').textContent = nom;
     lb.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -195,13 +360,8 @@
     document.body.style.overflow = '';
   }
 
-  function toggleZoom(img) {
-    img.classList.toggle('zoomed');
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') fermerLightbox();
-  });
+  function toggleZoom(img) { img.classList.toggle('zoomed'); }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') fermerLightbox(); });
 </script>
 
 {% schema %}

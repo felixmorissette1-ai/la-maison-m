@@ -58,7 +58,7 @@
 <div class="lmm-sm-const-wrap lmm-sm-main">
 
   <div class="lmm-sm-const__header">
-    <p class="lmm-sm-const__label">Configurateur custom — Étape 5 sur 8</p>
+    <p class="lmm-sm-const__label">Configurateur custom — Étape 5 sur 7</p>
     <h1 class="lmm-sm-const__title">{{ section.settings.titre }}</h1>
     <p class="lmm-sm-const__sub">{{ section.settings.sous_titre }}</p>
   </div>
@@ -90,62 +90,17 @@
     {% endfor %}
   </div>
 
-  <hr class="lmm-sm-divider">
-
-  <div class="lmm-sm-pant__header">
-    <h2 class="lmm-sm-pant__title">{{ section.settings.titre_pantalon }}</h2>
-    <p class="lmm-sm-pant__sub">{{ section.settings.sous_titre_pantalon }}</p>
-  </div>
-
-  <div class="lmm-sm-pant__grid" id="pant-grid">
-    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
-      <div class="lmm-sm-pant__card"
-           data-val="{{ entry.nom.value | escape }}"
-           onclick="selectPant(this, '{{ entry.nom.value | escape }}')">
-        <div class="lmm-sm-pant__card-photo">
-          {% if entry.photo.value %}
-            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
-          {% else %}
-            <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
-          {% endif %}
-        </div>
-        <div class="lmm-sm-pant__card-body">
-          <h3 class="lmm-sm-pant__name">{{ entry.nom.value }}</h3>
-          {% if entry.description.value %}<p class="lmm-sm-pant__desc">{{ entry.description.value }}</p>{% endif %}
-        </div>
-      </div>
-    {% endfor %}
-  </div>
-
-  <div class="lmm-sm-const__nav">
-    <button class="lmm-sm-btn" id="const-next" onclick="goNext()">Continuer</button>
-  </div>
 </div>
 
 <script>
   var selectedConst = null;
-  var selectedPant = null;
   var selectedConstPrix = 0;
   var _p = new URLSearchParams(window.location.search);
 
-  // Restaurer sélections depuis URL
   var savedConst = _p.get('construction');
   if (savedConst) {
     var sc = document.querySelector('#const-grid [data-val="' + savedConst + '"]');
     if (sc) selectConst(sc);
-  }
-  var savedPant = _p.get('hauteur');
-  if (savedPant) {
-    var sp = document.querySelector('#pant-grid [data-val="' + savedPant + '"]');
-    if (sp) selectPant(sp, savedPant);
-  }
-
-  function verifierComplet() {
-    if (selectedConst && selectedPant) {
-      document.getElementById('const-next').classList.add('active');
-    } else {
-      document.getElementById('const-next').classList.remove('active');
-    }
   }
 
   function selectConst(el) {
@@ -157,41 +112,26 @@
     _p.set('construction_prix', selectedConstPrix);
     if (el.dataset.photo) _p.set('construction_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
-    // Preview temps réel
     var imgEl = document.getElementById('lmm-prev-const-img');
     var valEl = document.getElementById('lmm-prev-const-val');
     if (imgEl && el.dataset.photo) { imgEl.src = el.dataset.photo; imgEl.classList.add('loaded'); }
     if (valEl) { valEl.textContent = selectedConst; valEl.classList.remove('lmm-sm-preview__swatch-val--empty'); }
-    verifierComplet();
-  }
-
-  function selectPant(el, val) {
-    document.querySelectorAll('#pant-grid .lmm-sm-pant__card').forEach(function(c) { c.classList.remove('lmm-sm-pant__card--selected'); });
-    el.classList.add('lmm-sm-pant__card--selected');
-    selectedPant = val;
-    _p.set('hauteur', val);
-    history.replaceState(null, '', '?' + _p.toString());
-    // Preview temps réel
-    var valEl = document.getElementById('lmm-prev-hauteur');
-    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
-    verifierComplet();
+    var btn = document.getElementById('lmm-prev-btn-next'); if (btn) btn.classList.add('active');
   }
 
   function goNext() {
-    if (!selectedConst || !selectedPant) return;
+    if (!selectedConst) return;
     window.location.href = '/pages/sur-mesure-ourlet?' + _p.toString();
   }
 </script>
 
 {% schema %}
 {
-  "name": "Construction & Pantalon",
+  "name": "Custom — Construction",
   "settings": [
-    { "type": "text", "id": "titre", "label": "Titre (construction)", "default": "Construction" },
-    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre (construction)", "default": "La construction intérieure détermine le tombé, la durabilité et la longévité de votre veston." },
-    { "type": "text", "id": "titre_pantalon", "label": "Titre (hauteur de pantalon)", "default": "Hauteur du pantalon" },
-    { "type": "textarea", "id": "sous_titre_pantalon", "label": "Sous-titre (hauteur de pantalon)", "default": "Choisissez la hauteur de votre pantalon." }
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Construction" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et la longévité de votre veston." }
   ],
-  "presets": [{ "name": "Custom — Construction & Pantalon" }]
+  "presets": [{ "name": "Custom — Construction" }]
 }
 {% endschema %}

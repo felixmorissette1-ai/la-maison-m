@@ -1,4 +1,4 @@
-{% comment %} Paramètre: etape_active (1-8) — Configurateur Custom {% endcomment %}
+{% comment %} Paramètre: etape_active (1-7) — Configurateur Custom {% endcomment %}
 <style>
   .lmm-filc { background: #F5F0EB; border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 4%; overflow-x: auto; }
   .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
@@ -91,7 +91,7 @@
     <span class="lmm-filc__sep">›</span>
 
     {% if etape_active > 6 %}
-      <a href="/pages/sur-mesure-pantalon" class="lmm-filc__step lmm-filc__step--done" id="smc-step-6">
+      <a href="/pages/sur-mesure-ourlet" class="lmm-filc__step lmm-filc__step--done" id="smc-step-6">
         <span class="lmm-filc__num">✓</span>Pantalon
       </a>
     {% elsif etape_active == 6 %}
@@ -103,25 +103,12 @@
     {% endif %}
     <span class="lmm-filc__sep">›</span>
 
-    {% if etape_active > 7 %}
-      <a href="/pages/sur-mesure-ourlet" class="lmm-filc__step lmm-filc__step--done" id="smc-step-7">
-        <span class="lmm-filc__num">✓</span>Ourlet
-      </a>
-    {% elsif etape_active == 7 %}
+    {% if etape_active == 7 %}
       <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-7">
-        <span class="lmm-filc__num">7</span>Ourlet
+        <span class="lmm-filc__num">7</span>Récap
       </span>
     {% else %}
-      <span class="lmm-filc__step" id="smc-step-7"><span class="lmm-filc__num">7</span>Ourlet</span>
-    {% endif %}
-    <span class="lmm-filc__sep">›</span>
-
-    {% if etape_active == 8 %}
-      <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-8">
-        <span class="lmm-filc__num">8</span>Récap
-      </span>
-    {% else %}
-      <span class="lmm-filc__step" id="smc-step-8"><span class="lmm-filc__num">8</span>Récap</span>
+      <span class="lmm-filc__step" id="smc-step-7"><span class="lmm-filc__num">7</span>Récap</span>
     {% endif %}
 
   </div>
@@ -134,18 +121,16 @@
       3: '/pages/sur-mesure-lining',
       4: '/pages/sur-mesure-boutons',
       5: '/pages/sur-mesure-construction',
-      6: '/pages/sur-mesure-construction',
-      7: '/pages/sur-mesure-ourlet'
+      6: '/pages/sur-mesure-ourlet'
     };
     var completed = {
       2: !!params.get('tissu'),
       3: !!params.get('lining'),
       4: !!params.get('bouton'),
       5: !!params.get('construction'),
-      6: !!params.get('hauteur'),
-      7: !!params.get('bas')
+      6: !!params.get('hauteur') && !!params.get('bas')
     };
-    [2, 3, 4, 5, 6, 7].forEach(function(step) {
+    [2, 3, 4, 5, 6].forEach(function(step) {
       var el = document.getElementById('smc-step-' + step);
       if (!el) return;
       if (completed[step] && !el.classList.contains('lmm-filc__step--active') && !el.classList.contains('lmm-filc__step--done')) {
