@@ -1,4 +1,4 @@
-{% comment %} Construction — Configurateur Custom {% endcomment %}
+{% comment %} Construction + Pantalon — Configurateur Custom {% endcomment %}
 {% render 'fil-ariane-custom', etape_active: 5 %}
 {% render 'sm-preview' %}
 
@@ -9,7 +9,7 @@
   .lmm-sm-const__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
   .lmm-sm-const__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
   .lmm-sm-const__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
-  .lmm-sm-const__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px; }
+  .lmm-sm-const__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
   .lmm-sm-const__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
   .lmm-sm-const__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-sm-const__card--selected { border: 2px solid #1C1C1C !important; }
@@ -21,15 +21,42 @@
   .lmm-sm-const__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
   .lmm-sm-const__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 6px; }
   .lmm-sm-const__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
+
+  /* Séparateur entre les deux sections */
+  .lmm-sm-divider { border: none; border-top: 1px solid #E8E2DA; margin: 8px 0 32px; }
+
+  /* Section pantalon */
+  .lmm-sm-pant__header { margin-bottom: 20px; }
+  .lmm-sm-pant__title { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
+  .lmm-sm-pant__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-sm-pant__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
+  .lmm-sm-pant__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+  .lmm-sm-pant__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-sm-pant__card--selected { border: 2px solid #1C1C1C !important; }
+  .lmm-sm-pant__card-photo { width: 100%; aspect-ratio: 4/3; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .lmm-sm-pant__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-sm-pant__card:hover .lmm-sm-pant__card-photo img { transform: scale(1.04); }
+  .lmm-sm-pant__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-sm-pant__card-body { padding: 14px 18px 18px; }
+  .lmm-sm-pant__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
+  .lmm-sm-pant__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
+
   .lmm-sm-const__nav { display: flex; justify-content: center; }
   .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
   .lmm-sm-btn:hover { background: #333; }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
-  @media (max-width: 860px) { .lmm-sm-const__grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 540px) { .lmm-sm-const__grid { grid-template-columns: 1fr; } .lmm-sm-const-wrap { width: 92%; } }
+
+  @media (max-width: 860px) {
+    .lmm-sm-const__grid, .lmm-sm-pant__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 540px) {
+    .lmm-sm-const__grid, .lmm-sm-pant__grid { grid-template-columns: 1fr; }
+    .lmm-sm-const-wrap { width: 92%; }
+  }
 </style>
 
 <div class="lmm-sm-const-wrap lmm-sm-main">
+
   <div class="lmm-sm-const__header">
     <p class="lmm-sm-const__label">Configurateur custom — Étape 5 sur 8</p>
     <h1 class="lmm-sm-const__title">{{ section.settings.titre }}</h1>
@@ -63,52 +90,132 @@
     {% endfor %}
   </div>
 
+  <hr class="lmm-sm-divider">
+
+  <div class="lmm-sm-pant__header">
+    <h2 class="lmm-sm-pant__title">Hauteur du pantalon</h2>
+    <p class="lmm-sm-pant__sub">Choisissez la hauteur de votre pantalon.</p>
+  </div>
+
+  <div class="lmm-sm-pant__grid" id="pant-grid">
+    <div class="lmm-sm-pant__card" data-val="Taille basse" onclick="selectPant(this, 'Taille basse')">
+      <div class="lmm-sm-pant__card-photo">
+        {% if section.settings.photo_taille_basse %}
+          <img src="{{ section.settings.photo_taille_basse | image_url: width: 600 }}" alt="Taille basse">
+        {% else %}
+          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-pant__card-body">
+        <h3 class="lmm-sm-pant__name">Taille basse</h3>
+        <p class="lmm-sm-pant__desc">Coupe contemporaine et moderne. Convient aux silhouettes élancées et aux styles décontractés.</p>
+      </div>
+    </div>
+    <div class="lmm-sm-pant__card" data-val="Taille haute" onclick="selectPant(this, 'Taille haute')">
+      <div class="lmm-sm-pant__card-photo">
+        {% if section.settings.photo_taille_haute %}
+          <img src="{{ section.settings.photo_taille_haute | image_url: width: 600 }}" alt="Taille haute">
+        {% else %}
+          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-pant__card-body">
+        <h3 class="lmm-sm-pant__name">Taille haute</h3>
+        <p class="lmm-sm-pant__desc">Coupe classique et élégante. La taille haute allonge la silhouette et s'accorde avec tous les styles.</p>
+      </div>
+    </div>
+    <div class="lmm-sm-pant__card" data-val="Taille haute pincé" onclick="selectPant(this, 'Taille haute pincé')">
+      <div class="lmm-sm-pant__card-photo">
+        {% if section.settings.photo_taille_haute_pince %}
+          <img src="{{ section.settings.photo_taille_haute_pince | image_url: width: 600 }}" alt="Taille haute pincé">
+        {% else %}
+          <span class="lmm-sm-pant__card-photo-placeholder">Photo à venir</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-pant__card-body">
+        <h3 class="lmm-sm-pant__name">Taille haute pincé</h3>
+        <p class="lmm-sm-pant__desc">Le summum du classicisme tailleur. Le pli pincé évoque les grands complets italiens des années 40–50.</p>
+      </div>
+    </div>
+  </div>
+
   <div class="lmm-sm-const__nav">
     <button class="lmm-sm-btn" id="const-next" onclick="goNext()">Continuer</button>
   </div>
 </div>
 
 <script>
-  var selected = null;
-  var selectedPrix = 0;
+  var selectedConst = null;
+  var selectedPant = null;
+  var selectedConstPrix = 0;
   var _p = new URLSearchParams(window.location.search);
 
+  // Restaurer sélections depuis URL
   var savedConst = _p.get('construction');
   if (savedConst) {
-    var savedCard = document.querySelector('#const-grid [data-val="' + savedConst + '"]');
-    if (savedCard) selectConst(savedCard);
+    var sc = document.querySelector('#const-grid [data-val="' + savedConst + '"]');
+    if (sc) selectConst(sc);
+  }
+  var savedPant = _p.get('hauteur');
+  if (savedPant) {
+    var sp = document.querySelector('#pant-grid [data-val="' + savedPant + '"]');
+    if (sp) selectPant(sp, savedPant);
+  }
+
+  function verifierComplet() {
+    if (selectedConst && selectedPant) {
+      document.getElementById('const-next').classList.add('active');
+    } else {
+      document.getElementById('const-next').classList.remove('active');
+    }
   }
 
   function selectConst(el) {
     document.querySelectorAll('#const-grid .lmm-sm-const__card').forEach(function(c) { c.classList.remove('lmm-sm-const__card--selected'); });
     el.classList.add('lmm-sm-const__card--selected');
-    selected = el.dataset.val;
-    selectedPrix = parseFloat(el.dataset.prix) || 0;
-    document.getElementById('const-next').classList.add('active');
-    _p.set('construction', selected);
-    _p.set('construction_prix', selectedPrix);
+    selectedConst = el.dataset.val;
+    selectedConstPrix = parseFloat(el.dataset.prix) || 0;
+    _p.set('construction', selectedConst);
+    _p.set('construction_prix', selectedConstPrix);
     if (el.dataset.photo) _p.set('construction_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
     // Preview temps réel
     var imgEl = document.getElementById('lmm-prev-const-img');
     var valEl = document.getElementById('lmm-prev-const-val');
     if (imgEl && el.dataset.photo) { imgEl.src = el.dataset.photo; imgEl.classList.add('loaded'); }
-    if (valEl) { valEl.textContent = selected; valEl.classList.remove('lmm-sm-preview__swatch-val--empty'); }
+    if (valEl) { valEl.textContent = selectedConst; valEl.classList.remove('lmm-sm-preview__swatch-val--empty'); }
+    verifierComplet();
+  }
+
+  function selectPant(el, val) {
+    document.querySelectorAll('#pant-grid .lmm-sm-pant__card').forEach(function(c) { c.classList.remove('lmm-sm-pant__card--selected'); });
+    el.classList.add('lmm-sm-pant__card--selected');
+    selectedPant = val;
+    _p.set('hauteur', val);
+    history.replaceState(null, '', '?' + _p.toString());
+    // Preview temps réel
+    var valEl = document.getElementById('lmm-prev-hauteur');
+    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
+    verifierComplet();
   }
 
   function goNext() {
-    if (!selected) return;
-    window.location.href = '/pages/sur-mesure-pantalon?' + _p.toString();
+    if (!selectedConst || !selectedPant) return;
+    window.location.href = '/pages/sur-mesure-ourlet?' + _p.toString();
   }
 </script>
 
 {% schema %}
 {
-  "name": "Custom — Construction",
+  "name": "Custom — Construction & Pantalon",
   "settings": [
-    { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre construction" },
-    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction détermine la qualité et la tenue de votre veston." }
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Construction" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et la longévité de votre veston." },
+    { "type": "header", "content": "Photos pantalon (optionnelles)" },
+    { "type": "image_picker", "id": "photo_taille_basse", "label": "Taille basse" },
+    { "type": "image_picker", "id": "photo_taille_haute", "label": "Taille haute" },
+    { "type": "image_picker", "id": "photo_taille_haute_pince", "label": "Taille haute pincé" }
   ],
-  "presets": [{ "name": "Custom — Construction" }]
+  "presets": [{ "name": "Custom — Construction & Pantalon" }]
 }
 {% endschema %}
