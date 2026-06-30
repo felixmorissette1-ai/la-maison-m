@@ -4,7 +4,7 @@
     margin: 64px auto;
     padding: 0 48px 120px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-cart__title {
@@ -13,13 +13,13 @@
     font-weight: 400;
     letter-spacing: 0.04em;
     margin-bottom: 48px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-cart__empty {
     text-align: center;
     padding: 80px 0;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-size: 15px;
     letter-spacing: 0.04em;
   }
@@ -27,7 +27,7 @@
   .lmm-cart__empty a {
     display: inline-block;
     margin-top: 24px;
-    color: #C9A96E;
+    color: var(--lmm-gold);
     text-decoration: none;
     font-size: 12px;
     letter-spacing: 0.12em;
@@ -35,7 +35,7 @@
   }
 
   .lmm-cart__items {
-    border-top: 1px solid #E8E2DA;
+    border-top: 1px solid var(--lmm-border);
   }
 
   .lmm-cart__item {
@@ -44,21 +44,21 @@
     gap: 24px;
     align-items: start;
     padding: 28px 0;
-    border-bottom: 1px solid #E8E2DA;
+    border-bottom: 1px solid var(--lmm-border);
   }
 
   .lmm-cart__item-img {
     width: 100px;
     height: 120px;
     object-fit: cover;
-    background: #F0EBE3;
+    background: var(--lmm-surface);
     display: block;
   }
 
   .lmm-cart__item-img-placeholder {
     width: 100px;
     height: 120px;
-    background: #F0EBE3;
+    background: var(--lmm-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,7 +73,7 @@
     font-size: 16px;
     font-weight: 400;
     margin: 0 0 10px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-cart__item-props {
@@ -84,27 +84,27 @@
 
   .lmm-cart__item-props li {
     font-size: 12px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     letter-spacing: 0.04em;
     line-height: 1.8;
   }
 
   .lmm-cart__item-props span {
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-cart__item-remove {
     font-size: 11px;
     letter-spacing: 0.08em;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     text-decoration: none;
     text-transform: uppercase;
-    border-bottom: 1px solid #E8E2DA;
+    border-bottom: 1px solid var(--lmm-border);
   }
 
   .lmm-cart__item-remove:hover {
-    color: #1C1C1C;
-    border-color: #1C1C1C;
+    color: var(--lmm-text);
+    border-color: var(--lmm-text);
   }
 
   .lmm-cart__item-right {
@@ -115,7 +115,7 @@
   .lmm-cart__item-price {
     font-size: 16px;
     font-family: Georgia, serif;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 16px;
   }
 
@@ -128,12 +128,12 @@
 
   .lmm-cart__qty-btn {
     background: none;
-    border: 1px solid #E8E2DA;
+    border: 1px solid var(--lmm-border);
     width: 28px;
     height: 28px;
     cursor: pointer;
     font-size: 16px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -141,7 +141,13 @@
   }
 
   .lmm-cart__qty-btn:hover {
-    border-color: #1C1C1C;
+    border-color: var(--lmm-text);
+  }
+
+  .lmm-cart__qty-btn:disabled {
+    opacity: 0.25;
+    cursor: default;
+    border-color: var(--lmm-border);
   }
 
   .lmm-cart__qty-num {
@@ -163,7 +169,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background: #F5F0EB;
+    background: var(--lmm-surface);
     padding: 32px;
   }
 
@@ -173,7 +179,7 @@
     width: 100%;
     font-size: 13px;
     letter-spacing: 0.06em;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     text-transform: uppercase;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(28,28,28,0.12);
@@ -182,19 +188,19 @@
   .lmm-cart__subtotal-amount {
     font-family: Georgia, serif;
     font-size: 18px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     letter-spacing: 0.02em;
   }
 
   .lmm-cart__note {
     font-size: 11px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     letter-spacing: 0.04em;
   }
 
   .lmm-cart__checkout-btn {
-    background: #1C1C1C;
-    color: #F5F0EB;
+    background: var(--lmm-text);
+    color: #ffffff;
     border: none;
     padding: 16px 40px;
     font-size: 12px;
@@ -212,19 +218,19 @@
   }
 
   .lmm-cart__checkout-btn:hover {
-    background: #C9A96E;
+    background: var(--lmm-gold);
   }
 
   .lmm-cart__continue {
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     text-decoration: none;
   }
 
   .lmm-cart__continue:hover {
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 </style>
 
@@ -248,7 +254,7 @@
                 <img class="lmm-cart__item-img" src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}" loading="lazy">
               {% else %}
                 <div class="lmm-cart__item-img-placeholder">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="1" stroke="#C9A96E" stroke-width="1.2"/><path d="M11 4v4a5 5 0 0010 0V4" stroke="#C9A96E" stroke-width="1.2"/></svg>
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="1" stroke="var(--lmm-gold)" stroke-width="1.2"/><path d="M11 4v4a5 5 0 0010 0V4" stroke="var(--lmm-gold)" stroke-width="1.2"/></svg>
                 </div>
               {% endif %}
             </div>
@@ -270,7 +276,7 @@
             <div class="lmm-cart__item-right">
               <p class="lmm-cart__item-price">{{ item.final_line_price | money }}</p>
               <div class="lmm-cart__qty">
-                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})">−</button>
+                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
                 <span class="lmm-cart__qty-num">{{ item.quantity }}</span>
                 <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
               </div>
@@ -281,7 +287,7 @@
       </div>
 
       <div class="lmm-cart__footer">
-        <h2 style="font-family:Georgia,serif; font-size:18px; font-weight:400; color:#1C1C1C; margin:0 0 8px;">Résumé</h2>
+        <h2 style="font-family:Georgia,serif; font-size:18px; font-weight:400; color:var(--lmm-text); margin:0 0 8px;">Résumé</h2>
         <div class="lmm-cart__subtotal">
           <span>Sous-total</span>
           <span class="lmm-cart__subtotal-amount">{{ cart.total_price | money }}</span>
@@ -297,9 +303,9 @@
             <a href="/account/register" class="lmm-cart__continue" style="text-align:center; display:block;">Créer un compte</a>
 
           {% elsif customer.metafields.custom.mensurations %}
-            <div style="display:flex; align-items:center; gap:10px; background:#F5F0EB; padding:10px 14px;">
-              <div style="width:8px; height:8px; border-radius:50%; background:#7DAF7D; flex-shrink:0;"></div>
-              <p style="font-size:11px; color:#1C1C1C; margin:0; letter-spacing:0.04em;">Mensurations enregistrées au dossier</p>
+            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-success); flex-shrink:0;"></div>
+              <p style="font-size:11px; color:var(--lmm-text); margin:0; letter-spacing:0.04em;">Mensurations enregistrées au dossier</p>
             </div>
             <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
               Procéder au paiement
@@ -309,9 +315,9 @@
           {% assign now_ts = 'now' | date: '%s' %}
           {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
           {% elsif customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
-            <div style="display:flex; align-items:center; gap:10px; background:#F5F0EB; padding:10px 14px;">
-              <div style="width:8px; height:8px; border-radius:50%; background:#C9A96E; flex-shrink:0;"></div>
-              <p style="font-size:11px; color:#1C1C1C; margin:0; letter-spacing:0.04em;">Rendez-vous confirmé</p>
+            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-gold); flex-shrink:0;"></div>
+              <p style="font-size:11px; color:var(--lmm-text); margin:0; letter-spacing:0.04em;">Rendez-vous confirmé</p>
             </div>
             <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
               Procéder au paiement
@@ -319,8 +325,8 @@
             </button>
 
           {% else %}
-            <div style="background:#FDF8F0; border-left:3px solid #C9A96E; padding:12px 16px;">
-              <p style="font-size:11px; color:#8C7B6E; line-height:1.7; margin:0;"><strong style="color:#1C1C1C;">Rendez-vous requis.</strong> Prenez rendez-vous pour vos mensurations avant de procéder au paiement.</p>
+            <div style="background:var(--lmm-surface); border-left:3px solid var(--lmm-gold); padding:12px 16px;">
+              <p style="font-size:11px; color:var(--lmm-muted); line-height:1.7; margin:0;"><strong style="color:var(--lmm-text);">Rendez-vous requis.</strong> Prenez rendez-vous pour vos mensurations avant de procéder au paiement.</p>
             </div>
             <button type="button" class="lmm-cart__checkout-btn" onclick="ouvrirCalModal()">
               Prise de rendez-vous
@@ -338,7 +344,7 @@
 
 <script>
   function updateQty(key, qty) {
-    if (qty < 0) qty = 0;
+    if (qty < 1) return;
     fetch('/cart/change.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

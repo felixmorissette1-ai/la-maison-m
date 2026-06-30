@@ -11,12 +11,12 @@
     </div>
 
     <div style="margin-bottom:20px;">
-      <button onclick="toggleFiltres(this)" style="background:none; border:1px solid #E8E2DA; color:#8C7B6E; padding:8px 18px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:8px;">
+      <button onclick="toggleFiltres(this)" style="background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:8px 18px; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:8px;">
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M3 6h6M5 9h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
         Filtrer les tissus
       </button>
 
-      <div id="lmm-filtres-panel" style="display:none; margin-top:14px; padding:18px; background:#F5F0EB; display:none; flex-direction:column; gap:14px;">
+      <div id="lmm-filtres-panel" style="display:none; margin-top:14px; padding:18px; background:var(--lmm-surface); display:none; flex-direction:column; gap:14px;">
         <div class="lmm-cfg__filtre-groupe">
           <span class="lmm-cfg__filtre-label">Couleur</span>
           <div class="lmm-cfg__filtre-row">
@@ -70,7 +70,7 @@
             <button class="lmm-cfg__filtre-btn" onclick="filtrer('saison', 'hiver', this)">Hiver</button>
           </div>
         </div>
-        <button onclick="reinitialiserFiltres()" style="background:none; border:none; color:#C9A96E; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; padding:0; text-align:left;">Réinitialiser les filtres</button>
+        <button onclick="reinitialiserFiltres()" style="background:none; border:none; color:var(--lmm-gold); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; padding:0; text-align:left;">Réinitialiser les filtres</button>
       </div>
     </div>
 
@@ -102,7 +102,7 @@
       {% endfor %}
     </div>
 
-    <p id="cfg-aucun-resultat" style="display:none; font-size:13px; color:#8C7B6E; padding:20px 0;">Aucun tissu ne correspond à vos filtres.</p>
+    <p id="cfg-aucun-resultat" style="display:none; font-size:13px; color:var(--lmm-muted); padding:20px 0;">Aucun tissu ne correspond à vos filtres.</p>
 
     <div class="lmm-cfg__nav">
       <a href="/pages/configurateur{{ request.search }}" class="lmm-cfg__btn-back">← Retour</a>
@@ -113,7 +113,7 @@
   <div class="lmm-cfg__panel">
     <div class="lmm-cfg__panel-box">
       <p class="lmm-cfg__panel-label">Aperçu de votre complet</p>
-      <div class="lmm-cfg__panel-img"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;">Votre complet</span></div>
+      <div class="lmm-cfg__panel-img"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--lmm-muted);">Votre complet</span></div>
       <div class="lmm-cfg__panel-rows">
         <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Style</span><span class="lmm-cfg__panel-val" id="panel-style">—</span></div>
         <div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">Tissu</span><span class="lmm-cfg__panel-val" id="panel-tissu"><span class="lmm-cfg__panel-val--empty">À choisir</span></span></div>
@@ -148,8 +148,8 @@
     var panel = document.getElementById('lmm-filtres-panel');
     var ouvert = panel.style.display === 'flex';
     panel.style.display = ouvert ? 'none' : 'flex';
-    btn.style.borderColor = ouvert ? '#E8E2DA' : '#1C1C1C';
-    btn.style.color = ouvert ? '#8C7B6E' : '#1C1C1C';
+    btn.style.borderColor = ouvert ? 'var(--lmm-border)' : 'var(--lmm-text)';
+    btn.style.color = ouvert ? 'var(--lmm-muted)' : 'var(--lmm-text)';
   }
 
   function reinitialiserFiltres() {

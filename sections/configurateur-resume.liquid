@@ -19,9 +19,9 @@
       <div class="lmm-cfg__resume-item"><p class="lmm-cfg__resume-item-label">Pantalon</p><p class="lmm-cfg__resume-item-val" id="r-pantalon">—</p></div>
     </div>
 
-    <div style="background:#F5F0EB; padding:20px 24px; margin-bottom:32px; display:flex; justify-content:space-between; align-items:baseline;">
-      <span style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#1C1C1C;">Total</span>
-      <span style="font-family:Georgia,serif; font-size:28px; color:#1C1C1C;" id="r-total">—</span>
+    <div style="background:var(--lmm-surface); padding:20px 24px; margin-bottom:32px; display:flex; justify-content:space-between; align-items:baseline;">
+      <span style="font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--lmm-text);">Total</span>
+      <span style="font-family:Georgia,serif; font-size:28px; color:var(--lmm-text);" id="r-total">—</span>
     </div>
 
     <div class="lmm-cfg__nav">
@@ -31,13 +31,13 @@
         <svg width="14" height="14" viewBox="0 0 18 18" fill="none" style="margin-left:8px;"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
-    <p id="cfg-panier-erreur" style="color:#c0392b; font-size:12px; margin-top:12px; display:none;">Une erreur est survenue. Veuillez réessayer.</p>
+    <p id="cfg-panier-erreur" style="color:var(--lmm-error); font-size:12px; margin-top:12px; display:none;">Une erreur est survenue. Veuillez réessayer.</p>
   </div>
 
   <div class="lmm-cfg__panel">
     <div class="lmm-cfg__panel-box">
       <p class="lmm-cfg__panel-label">Votre complet sur mesure</p>
-      <div class="lmm-cfg__panel-img"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;">Votre complet</span></div>
+      <div class="lmm-cfg__panel-img"><span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--lmm-muted);">Votre complet</span></div>
       <div class="lmm-cfg__panel-rows" id="panel-rows-resume"></div>
       <div class="lmm-cfg__panel-total">
         <span class="lmm-cfg__panel-total-label">Total</span>
@@ -65,7 +65,7 @@
     total += prix;
     document.getElementById(c.elId).textContent = val;
     if (c.prixElId) document.getElementById(c.prixElId).textContent = prix > 0 ? '+$' + prix.toLocaleString('fr-CA') : 'Inclus';
-    panelRows += '<div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">' + c.label + '</span><span class="lmm-cfg__panel-val">' + val + (prix > 0 ? ' <span style="color:#C9A96E;font-size:10px;">(+$' + prix + ')</span>' : '') + '</span></div>';
+    panelRows += '<div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">' + c.label + '</span><span class="lmm-cfg__panel-val">' + val + (prix > 0 ? ' <span style="color:var(--lmm-gold);font-size:10px;">(+$' + prix + ')</span>' : '') + '</span></div>';
   });
   document.getElementById('r-total').textContent = '$' + total.toLocaleString('fr-CA');
   document.getElementById('panel-total-resume').textContent = '$' + total.toLocaleString('fr-CA');

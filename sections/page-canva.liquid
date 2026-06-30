@@ -14,9 +14,9 @@
     box-sizing: border-box;
   }
   .lmm-canva__header { margin-bottom: 16px; flex-shrink: 0; }
-  .lmm-canva__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
-  .lmm-canva__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-canva__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-canva__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 6px; }
+  .lmm-canva__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
+  .lmm-canva__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
 
   /* ── 3 cartes côte à côte, photos qui remplissent ── */
   .lmm-canva__grid {
@@ -39,13 +39,13 @@
     min-height: 0;
   }
   .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-  .lmm-canva__card--selected { border: 2px solid #1C1C1C !important; }
-  .lmm-canva__card--recommended { border-color: #C9A96E; }
+  .lmm-canva__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-canva__card--recommended { border-color: var(--lmm-gold); }
   .lmm-badge-recommended {
     position: absolute;
     top: 12px; left: 12px;
-    background: #C9A96E;
-    color: #1C1C1C;
+    background: var(--lmm-gold);
+    color: var(--lmm-text);
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -57,7 +57,7 @@
     width: 100%;
     flex: 1;
     min-height: 0;
-    background: #E8E2DB;
+    background: var(--lmm-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,15 +65,15 @@
   }
   .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-canva__card:hover .lmm-canva__card-photo img { transform: scale(1.04); }
-  .lmm-canva__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-canva__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
   .lmm-canva__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
-  .lmm-canva__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: #1C1C1C; margin-bottom: 8px; }
-  .lmm-canva__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 0; }
-  .lmm-canva__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; margin-top: 10px; padding-top: 10px; border-top: 1px solid #E8E2DA; }
+  .lmm-canva__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: var(--lmm-text); margin-bottom: 8px; }
+  .lmm-canva__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; margin-bottom: 0; }
+  .lmm-canva__prix { font-size: 13px; color: var(--lmm-text); font-weight: 500; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--lmm-border); }
 
   /* ── Navigation ── */
   .lmm-canva__nav { display: flex; align-items: center; justify-content: center; gap: 16px; flex-shrink: 0; }
-  .lmm-canva__hint { font-size: 12px; color: #B0A49A; }
+  .lmm-canva__hint { font-size: 12px; color: var(--lmm-muted); }
   #canva-next { opacity: 0.4; pointer-events: none; }
   #canva-next.active { opacity: 1; pointer-events: auto; }
 

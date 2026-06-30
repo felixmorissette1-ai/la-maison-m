@@ -8,40 +8,40 @@
 <style>
   .lmm-canva-wrap { display: grid; grid-template-columns: 1fr 380px; gap: 48px; max-width: 1280px; margin: 0 auto; padding: 64px 32px 80px; align-items: start; }
   .lmm-canva__header { margin-bottom: 40px; }
-  .lmm-canva__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: #1C1C1C; margin-bottom: 12px; }
-  .lmm-canva__sub { font-size: 14px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
+  .lmm-canva__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: var(--lmm-text); margin-bottom: 12px; }
+  .lmm-canva__sub { font-size: 14px; color: var(--lmm-muted); font-weight: 300; line-height: 1.7; }
   .lmm-canva__grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
   .lmm-canva__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); padding: 24px; cursor: pointer; position: relative; transition: border-color 0.2s; display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center; }
   .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); }
-  .lmm-canva__card--selected { border: 2px solid #1C1C1C !important; }
-  .lmm-canva__card--recommended { border-color: #C9A96E; }
-  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: #C9A96E; color: #1C1C1C; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; }
-  .lmm-canva__card-photo { width: 80px; height: 80px; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+  .lmm-canva__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-canva__card--recommended { border-color: var(--lmm-gold); }
+  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: var(--lmm-gold); color: var(--lmm-text); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; }
+  .lmm-canva__card-photo { width: 80px; height: 80px; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
   .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; }
-  .lmm-canva__card-photo-placeholder { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-align: center; padding: 4px; }
+  .lmm-canva__card-photo-placeholder { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); text-align: center; padding: 4px; }
   .lmm-canva__card-body {}
-  .lmm-canva__name { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: #1C1C1C; margin-bottom: 2px; }
-  .lmm-canva__tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; margin-bottom: 10px; }
-  .lmm-canva__feats-text { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
-  .lmm-canva__desc-box { background: #EDE8E3; border-left: 3px solid #C9A96E; padding: 16px 20px; margin-bottom: 32px; display: none; }
-  .lmm-canva__desc-text { font-size: 13px; color: #4A4440; font-style: italic; line-height: 1.7; }
+  .lmm-canva__name { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: var(--lmm-text); margin-bottom: 2px; }
+  .lmm-canva__tag { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); margin-bottom: 10px; }
+  .lmm-canva__feats-text { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; }
+  .lmm-canva__desc-box { background: var(--lmm-surface); border-left: 3px solid var(--lmm-gold); padding: 16px 20px; margin-bottom: 32px; display: none; }
+  .lmm-canva__desc-text { font-size: 13px; color: var(--lmm-muted); font-style: italic; line-height: 1.7; }
   .lmm-canva__footer {}
-  .lmm-canva__hint { font-size: 12px; color: #8C7B6E; margin-top: 12px; }
+  .lmm-canva__hint { font-size: 12px; color: var(--lmm-muted); margin-top: 12px; }
   #canva-next { opacity: 0.4; pointer-events: none; }
   #canva-next.active { opacity: 1; pointer-events: auto; }
 
   /* Panneau droit — aperçu */
   .lmm-canva__preview { position: sticky; top: 100px; }
-  .lmm-canva__preview-box { background: #EDE8E3; border: 1px solid rgba(28,28,28,0.08); padding: 32px 24px; }
-  .lmm-canva__preview-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #8C7B6E; margin-bottom: 20px; }
-  .lmm-canva__preview-suit { width: 100%; aspect-ratio: 3/4; background: #E0DBD5; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
-  .lmm-canva__preview-suit-placeholder { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; text-align: center; }
+  .lmm-canva__preview-box { background: var(--lmm-surface); border: 1px solid rgba(28,28,28,0.08); padding: 32px 24px; }
+  .lmm-canva__preview-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-muted); margin-bottom: 20px; }
+  .lmm-canva__preview-suit { width: 100%; aspect-ratio: 3/4; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+  .lmm-canva__preview-suit-placeholder { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); text-align: center; }
   .lmm-canva__preview-summary { border-top: 1px solid rgba(28,28,28,0.08); padding-top: 20px; }
   .lmm-canva__preview-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(28,28,28,0.05); }
   .lmm-canva__preview-row:last-child { border-bottom: none; }
-  .lmm-canva__preview-key { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
-  .lmm-canva__preview-val { font-size: 13px; font-weight: 500; color: #1C1C1C; }
-  .lmm-canva__preview-val--empty { color: #C8BBB0; font-weight: 400; font-style: italic; font-size: 12px; }
+  .lmm-canva__preview-key { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
+  .lmm-canva__preview-val { font-size: 13px; font-weight: 500; color: var(--lmm-text); }
+  .lmm-canva__preview-val--empty { color: var(--lmm-border); font-weight: 400; font-style: italic; font-size: 12px; }
 
   @media (max-width: 900px) { .lmm-canva-wrap { grid-template-columns: 1fr; } .lmm-canva__preview { display: none; } }
 </style>
@@ -51,7 +51,7 @@
   {% comment %} Colonne gauche — choix {% endcomment %}
   <div>
     <div class="lmm-canva__header">
-      <p class="lmm-label" style="color:#C9A96E; margin-bottom:12px;">Sur mesure — Étape 1</p>
+      <p class="lmm-label" style="color:var(--lmm-gold); margin-bottom:12px;">Sur mesure — Étape 1</p>
       <h1 class="lmm-canva__title">Choisissez votre construction</h1>
       <p class="lmm-canva__sub">La construction intérieure détermine le tombé, la durabilité et le prix de votre complet.</p>
     </div>

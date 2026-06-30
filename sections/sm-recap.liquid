@@ -6,21 +6,21 @@
   .lmm-sm-recap-wrap { width: 90%; max-width: 900px; margin: 0 auto; padding: 40px 0 60px; }
   @media (min-width: 861px) { .lmm-sm-recap-wrap { max-width: none; width: 86%; margin-right: 0; margin-left: 5%; } }
   .lmm-sm-recap__header { margin-bottom: 48px; }
-  .lmm-sm-recap__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 12px; }
-  .lmm-sm-recap__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: #1C1C1C; margin-bottom: 12px; }
-  .lmm-sm-recap__sub { font-size: 14px; color: #8C7B6E; font-weight: 300; line-height: 1.7; }
-  .lmm-sm-recap__table { border-top: 1px solid #E8E2DA; margin-bottom: 48px; }
-  .lmm-sm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #E8E2DA; }
-  .lmm-sm-recap__key { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8C7B6E; }
-  .lmm-sm-recap__val { font-size: 15px; color: #1C1C1C; font-family: Georgia, serif; }
-  .lmm-sm-recap__val--prix { font-size: 12px; color: #8C7B6E; margin-left: 8px; }
-  .lmm-sm-recap__total { display: flex; justify-content: space-between; align-items: baseline; background: #F5F0EB; padding: 20px 24px; margin-bottom: 32px; }
-  .lmm-sm-recap__total-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #1C1C1C; }
-  .lmm-sm-recap__total-price { font-family: Georgia, serif; font-size: 32px; color: #1C1C1C; }
+  .lmm-sm-recap__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 12px; }
+  .lmm-sm-recap__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: var(--lmm-text); margin-bottom: 12px; }
+  .lmm-sm-recap__sub { font-size: 14px; color: var(--lmm-muted); font-weight: 300; line-height: 1.7; }
+  .lmm-sm-recap__table { border-top: 1px solid var(--lmm-border); margin-bottom: 48px; }
+  .lmm-sm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--lmm-border); }
+  .lmm-sm-recap__key { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-muted); }
+  .lmm-sm-recap__val { font-size: 15px; color: var(--lmm-text); font-family: Georgia, serif; }
+  .lmm-sm-recap__val--prix { font-size: 12px; color: var(--lmm-muted); margin-left: 8px; }
+  .lmm-sm-recap__total { display: flex; justify-content: space-between; align-items: baseline; background: var(--lmm-surface); padding: 20px 24px; margin-bottom: 32px; }
+  .lmm-sm-recap__total-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-text); }
+  .lmm-sm-recap__total-price { font-family: Georgia, serif; font-size: 32px; color: var(--lmm-text); }
   .lmm-sm-recap__nav { display: flex; gap: 12px; align-items: center; }
-  .lmm-sm-recap__btn-confirm { background: #1C1C1C; color: #fff; border: none; padding: 16px 40px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
-  .lmm-sm-recap__btn-confirm:hover { background: #333; }
-  .lmm-sm-recap__note { font-size: 12px; color: #8C7B6E; margin-top: 16px; line-height: 1.6; }
+  .lmm-sm-recap__btn-confirm { background: var(--lmm-text); color: #fff; border: none; padding: 16px 40px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: inherit; }
+  .lmm-sm-recap__btn-confirm:hover { background: var(--lmm-text); }
+  .lmm-sm-recap__note { font-size: 12px; color: var(--lmm-muted); margin-top: 16px; line-height: 1.6; }
 </style>
 
 <div class="lmm-sm-recap-wrap lmm-sm-main">
@@ -67,13 +67,21 @@
   </div>
 
   <div class="lmm-sm-recap__nav">
-    <button class="lmm-sm-recap__btn-confirm" onclick="confirmer()">Confirmer ma demande</button>
+    <button class="lmm-sm-recap__btn-confirm" id="btn-confirmer" onclick="confirmer()">Confirmer ma demande</button>
   </div>
   <p class="lmm-sm-recap__note">{{ section.settings.note }}</p>
 </div>
 
+{% assign sm_produit = section.settings.produit_sur_mesure %}
+{% if sm_produit %}
+  {% assign sm_variant_id = sm_produit.variants.first.id %}
+{% else %}
+  {% assign sm_variant_id = 51812728996130 %}
+{% endif %}
+
 <script>
   var params = new URLSearchParams(window.location.search);
+  var SM_VARIANT_ID = {{ sm_variant_id }};
 
   document.getElementById('r-style').textContent = params.get('style') || '—';
   document.getElementById('r-tissu').textContent = params.get('tissu') || '—';
@@ -91,15 +99,37 @@
   document.getElementById('r-total').textContent = total > 0 ? '$' + total.toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
 
   function confirmer() {
-    var rdvUrl = '/pages/rendez-vous?'
-      + 'style=' + encodeURIComponent(params.get('style') || '')
-      + '&tissu=' + encodeURIComponent(params.get('tissu') || '')
-      + '&lining=' + encodeURIComponent(params.get('lining') || '')
-      + '&bouton=' + encodeURIComponent(params.get('bouton') || '')
-      + '&construction=' + encodeURIComponent(params.get('construction') || '')
-      + '&hauteur=' + encodeURIComponent(params.get('hauteur') || '')
-      + '&bas=' + encodeURIComponent(params.get('bas') || '');
-    window.location.href = rdvUrl;
+    var btn = document.getElementById('btn-confirmer');
+    btn.textContent = 'Ajout au panier…';
+    btn.disabled = true;
+
+    var properties = {};
+    if (params.get('style')) properties['Style'] = params.get('style');
+    if (params.get('tissu')) properties['Tissu'] = params.get('tissu');
+    if (params.get('lining')) properties['Lining'] = params.get('lining');
+    if (params.get('bouton')) properties['Boutons'] = params.get('bouton');
+    if (params.get('construction')) properties['Construction'] = params.get('construction');
+    if (params.get('hauteur')) properties['Hauteur du pantalon'] = params.get('hauteur');
+    if (params.get('bas')) properties['Bas de pantalon'] = params.get('bas');
+
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: SM_VARIANT_ID, quantity: 1, properties: properties })
+    })
+    .then(function(res) {
+      if (!res.ok) throw new Error('Erreur ' + res.status);
+      return res.json();
+    })
+    .then(function() {
+      window.location.href = '/cart';
+    })
+    .catch(function(err) {
+      console.error('Erreur ajout panier:', err);
+      btn.textContent = 'Confirmer ma demande';
+      btn.disabled = false;
+      alert('Une erreur est survenue. Veuillez réessayer.');
+    });
   }
 </script>
 
@@ -109,7 +139,8 @@
   "settings": [
     { "type": "text", "id": "titre", "label": "Titre", "default": "Votre complet sur mesure" },
     { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Vérifiez vos choix avant de confirmer votre demande." },
-    { "type": "textarea", "id": "note", "label": "Note de bas de page", "default": "Un membre de notre équipe vous contactera dans les 48 heures pour finaliser votre commande sur mesure et organiser vos essayages." }
+    { "type": "textarea", "id": "note", "label": "Note de bas de page", "default": "Un membre de notre équipe vous contactera dans les 48 heures pour finaliser votre commande sur mesure et organiser vos essayages." },
+    { "type": "product", "id": "produit_sur_mesure", "label": "Produit sur mesure (complet custom)" }
   ],
   "presets": [{ "name": "Custom — Récapitulatif" }]
 }

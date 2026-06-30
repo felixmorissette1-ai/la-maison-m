@@ -6,44 +6,44 @@
   .lmm-sm-const-wrap { width: 90%; margin: 0 auto; padding: 28px 0 20px; display: flex; flex-direction: column; box-sizing: border-box; }
   @media (min-width: 861px) { .lmm-sm-const-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
   .lmm-sm-const__header { margin-bottom: 24px; }
-  .lmm-sm-const__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #C9A96E; margin-bottom: 6px; }
-  .lmm-sm-const__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-sm-const__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-sm-const__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 6px; }
+  .lmm-sm-const__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
+  .lmm-sm-const__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
   .lmm-sm-const__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
   .lmm-sm-const__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
   .lmm-sm-const__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-  .lmm-sm-const__card--selected { border: 2px solid #1C1C1C !important; }
-  .lmm-sm-const__card-photo { width: 100%; aspect-ratio: 4/3; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .lmm-sm-const__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-sm-const__card-photo { width: 100%; aspect-ratio: 4/3; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-sm-const__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-sm-const__card:hover .lmm-sm-const__card-photo img { transform: scale(1.04); }
-  .lmm-sm-const__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-sm-const__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
   .lmm-sm-const__card-body { padding: 14px 18px 18px; }
-  .lmm-sm-const__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
-  .lmm-sm-const__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; margin-bottom: 6px; }
-  .lmm-sm-const__prix { font-size: 13px; color: #1C1C1C; font-weight: 500; }
+  .lmm-sm-const__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: var(--lmm-text); margin-bottom: 6px; }
+  .lmm-sm-const__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; margin-bottom: 6px; }
+  .lmm-sm-const__prix { font-size: 13px; color: var(--lmm-text); font-weight: 500; }
 
   /* Séparateur entre les deux sections */
-  .lmm-sm-divider { border: none; border-top: 1px solid #E8E2DA; margin: 8px 0 32px; }
+  .lmm-sm-divider { border: none; border-top: 1px solid var(--lmm-border); margin: 8px 0 32px; }
 
   /* Section pantalon */
   .lmm-sm-pant__header { margin-bottom: 20px; }
-  .lmm-sm-pant__title { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: #1C1C1C; margin-bottom: 4px; }
-  .lmm-sm-pant__sub { font-size: 13px; color: #8C7B6E; font-weight: 300; line-height: 1.5; }
+  .lmm-sm-pant__title { font-family: Georgia, serif; font-size: 22px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
+  .lmm-sm-pant__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
   .lmm-sm-pant__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
   .lmm-sm-pant__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
   .lmm-sm-pant__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-  .lmm-sm-pant__card--selected { border: 2px solid #1C1C1C !important; }
-  .lmm-sm-pant__card-photo { width: 100%; aspect-ratio: 4/3; background: #E8E2DB; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .lmm-sm-pant__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-sm-pant__card-photo { width: 100%; aspect-ratio: 4/3; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-sm-pant__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
   .lmm-sm-pant__card:hover .lmm-sm-pant__card-photo img { transform: scale(1.04); }
-  .lmm-sm-pant__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-sm-pant__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
   .lmm-sm-pant__card-body { padding: 14px 18px 18px; }
-  .lmm-sm-pant__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: #1C1C1C; margin-bottom: 6px; }
-  .lmm-sm-pant__desc { font-size: 12px; color: #8C7B6E; line-height: 1.6; }
+  .lmm-sm-pant__name { font-family: Georgia, serif; font-size: 16px; font-weight: 400; color: var(--lmm-text); margin-bottom: 6px; }
+  .lmm-sm-pant__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; }
 
   .lmm-sm-const__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: #1C1C1C; color: #F5F0EB; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
-  .lmm-sm-btn:hover { background: #333; }
+  .lmm-sm-btn { display: inline-block; background: var(--lmm-text); color: #ffffff; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn:hover { background: var(--lmm-text); }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
 
   @media (max-width: 860px) {
@@ -121,7 +121,7 @@
 
   function goNext() {
     if (!selectedConst) return;
-    window.location.href = '/pages/sur-mesure-ourlet?' + _p.toString();
+    _p.set('_t', Date.now()); window.location.href = '/pages/sur-mesure-ourlet?' + _p.toString();
   }
 </script>
 

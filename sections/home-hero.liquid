@@ -31,7 +31,7 @@
 
 {% stylesheet %}
   .lmm-hero {
-    background: #1C1C1C;
+    background: var(--lmm-text);
     min-height: calc(100vh - 72px);
     display: flex;
     align-items: center;
@@ -48,7 +48,7 @@
     font-size: 11px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #C9A96E;
+    color: var(--lmm-gold);
     margin-bottom: 24px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
@@ -57,7 +57,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(48px, 7vw, 96px);
     font-weight: 400;
-    color: #F5F0EB;
+    color: #ffffff;
     line-height: 1.05;
     margin-bottom: 28px;
     max-width: 800px;
@@ -80,8 +80,8 @@
 
   .lmm-btn-primary {
     display: inline-block;
-    background: #F5F0EB;
-    color: #1C1C1C;
+    background: var(--lmm-surface);
+    color: var(--lmm-text);
     text-decoration: none;
     padding: 16px 36px;
     font-size: 11px;
@@ -92,14 +92,14 @@
   }
 
   .lmm-btn-primary:hover {
-    background: #C9A96E;
-    color: #1C1C1C;
+    background: var(--lmm-gold);
+    color: var(--lmm-text);
   }
 
   .lmm-btn-outline {
     display: inline-block;
     background: transparent;
-    color: #F5F0EB;
+    color: #ffffff;
     text-decoration: none;
     padding: 15px 36px;
     font-size: 11px;
@@ -111,12 +111,12 @@
   }
 
   .lmm-btn-outline:hover {
-    border-color: #F5F0EB;
-    color: #F5F0EB;
+    border-color: #ffffff;
+    color: #ffffff;
   }
 
   .lmm-trust {
-    background: #F5F0EB;
+    background: var(--lmm-surface);
     border-bottom: 1px solid rgba(28, 28, 28, 0.08);
     padding: 40px 32px;
   }
@@ -137,7 +137,7 @@
   .lmm-trust__num {
     font-family: Georgia, serif;
     font-size: 28px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 4px;
   }
 
@@ -145,7 +145,7 @@
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
   .lmm-divider-v {

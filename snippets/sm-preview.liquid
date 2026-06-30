@@ -1,23 +1,25 @@
-{% comment %} Panneau de prévisualisation — Configurateur Custom — v2 {% endcomment %}
+{% comment %} Panneau de prévisualisation — Configurateur Custom — v5 {% endcomment %}
 
 <style>
   .lmm-sm-preview {
     position: fixed;
-    top: 72px;
-    right: 0;
-    width: 380px;
-    height: calc(100vh - 72px);
+    top: calc(72px + 16px);
+    right: 16px;
+    width: 30vw;
+    height: calc(100vh - 72px - 32px);
     background: #fff;
-    border-left: 1px solid #E8E2DA;
+    border: 1px solid var(--lmm-border);
+    border-radius: 4px;
     display: flex;
     flex-direction: column;
     z-index: 50;
     overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
   }
 
   .lmm-sm-preview__header {
-    padding: 20px 20px 14px;
-    border-bottom: 1px solid #E8E2DA;
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid var(--lmm-border);
     flex-shrink: 0;
   }
 
@@ -25,99 +27,99 @@
     font-size: 9px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: #C9A96E;
-    margin-bottom: 4px;
+    color: var(--lmm-gold);
+    margin-bottom: 3px;
   }
 
   .lmm-sm-preview__title {
     font-family: Georgia, serif;
     font-size: 14px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     font-weight: 400;
   }
 
-  /* Photo principale (tissu) */
-  .lmm-sm-preview__main {
-    flex: 1;
+  /* 1. Style — grande photo principale */
+  .lmm-sm-preview__style {
+    flex: 3;
     min-height: 0;
     position: relative;
-    background: #F0EBE5;
+    background: var(--lmm-surface);
     overflow: hidden;
+    padding: 10px;
   }
 
-  .lmm-sm-preview__main-img {
+  .lmm-sm-preview__style img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    transition: opacity 0.3s ease;
+    display: none;
+    background: #fff;
   }
 
-  .lmm-sm-preview__main-empty {
-    width: 100%;
-    height: 100%;
+  .lmm-sm-preview__style-empty {
+    position: absolute;
+    inset: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    background: #fff;
   }
 
-  .lmm-sm-preview__main-empty-icon {
-    width: 48px;
-    height: 48px;
-    opacity: 0.18;
+  .lmm-sm-preview__style-empty-icon {
+    width: 36px;
+    height: 36px;
+    opacity: 0.2;
   }
 
-  .lmm-sm-preview__main-empty-text {
-    font-size: 10px;
+  .lmm-sm-preview__style-empty-text {
+    font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #C8BBB0;
+    color: #B8AFA8;
     text-align: center;
-    padding: 0 20px;
+    padding: 0 24px;
   }
 
-  .lmm-sm-preview__main-label {
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-    background: rgba(28,28,28,0.75);
-    color: #F5F0EB;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    padding: 4px 10px;
-    backdrop-filter: blur(4px);
-    max-width: calc(100% - 24px);
-    white-space: nowrap;
+  /* 2. Tissu — bande pleine largeur */
+  .lmm-sm-preview__tissu {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    background: var(--lmm-surface);
     overflow: hidden;
-    text-overflow: ellipsis;
-    display: none;
+    border-top: 1px solid var(--lmm-border);
+    padding: 10px;
   }
 
-  /* Vignettes secondaires */
-  .lmm-sm-preview__swatches {
-    padding: 14px 20px;
-    border-top: 1px solid #E8E2DA;
-    flex-shrink: 0;
+  .lmm-sm-preview__tissu img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: #fff;
+  }
+
+  .lmm-sm-preview__tissu img.loaded { opacity: 1; }
+
+  /* 3. Lining + Boutons — rangée côte à côte */
+  .lmm-sm-preview__row {
+    flex: 1;
+    min-height: 0;
     display: flex;
-    flex-direction: column;
     gap: 10px;
-  }
-
-  .lmm-sm-preview__swatch-row {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+    padding: 10px;
+    border-top: 1px solid var(--lmm-border);
+    background: var(--lmm-surface);
   }
 
   .lmm-sm-preview__swatch {
-    width: 36px;
-    height: 36px;
-    background: #F0EBE5;
-    flex-shrink: 0;
-    overflow: hidden;
+    flex: 1;
     position: relative;
+    background: #fff;
+    overflow: hidden;
   }
 
   .lmm-sm-preview__swatch img {
@@ -128,143 +130,60 @@
     transition: opacity 0.3s ease;
   }
 
-  .lmm-sm-preview__swatch img.loaded {
-    opacity: 1;
-  }
+  .lmm-sm-preview__swatch img.loaded { opacity: 1; }
 
-  .lmm-sm-preview__swatch-info {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .lmm-sm-preview__swatch-key {
-    font-size: 9px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: #C8BBB0;
-    margin-bottom: 2px;
-  }
-
-  .lmm-sm-preview__swatch-val {
-    font-size: 12px;
-    color: #1C1C1C;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-family: Georgia, serif;
-  }
-
-  .lmm-sm-preview__swatch-val--empty {
-    color: #D0C8C0;
-    font-style: italic;
-    font-size: 11px;
-    font-family: inherit;
-  }
-
-  /* Labels texte (pantalon, ourlet) */
+  /* 4. Textes — construction, hauteur, bas */
   .lmm-sm-preview__texts {
-    padding: 0 20px 14px;
+    border-top: 1px solid var(--lmm-border);
     flex-shrink: 0;
+    padding: 10px 20px;
     display: flex;
+    gap: 0;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
   }
 
   .lmm-sm-preview__text-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
   }
 
   .lmm-sm-preview__text-key {
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #C8BBB0;
+    color: var(--lmm-border);
   }
 
   .lmm-sm-preview__text-val {
     font-size: 11px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
+    font-family: Georgia, serif;
   }
 
   .lmm-sm-preview__text-val--empty {
     color: #D0C8C0;
     font-style: italic;
+    font-family: inherit;
+    font-size: 10px;
   }
 
-  /* Responsive — barre fixe en bas sur mobile */
-  @media (max-width: 860px) {
-    .lmm-sm-preview {
-      position: fixed;
-      top: auto;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: auto;
-      flex-direction: row;
-      border-left: none;
-      border-top: 1px solid #E8E2DA;
-      z-index: 50;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-    }
-
-    .lmm-sm-preview__header { display: none; }
-
-    .lmm-sm-preview__main {
-      width: 56px;
-      height: 56px;
-      flex: none;
-      flex-shrink: 0;
-      border-right: 1px solid #E8E2DA;
-    }
-
-    .lmm-sm-preview__main-empty { display: none; }
-    .lmm-sm-preview__main-label { display: none !important; }
-
-    .lmm-sm-preview__swatches {
-      flex-direction: row;
-      border-top: none;
-      border-right: 1px solid #E8E2DA;
-      padding: 8px 12px;
-      overflow-x: auto;
-      gap: 10px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .lmm-sm-preview__swatch-row {
-      flex-direction: column;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .lmm-sm-preview__swatch {
-      width: 40px;
-      height: 40px;
-    }
-
-    .lmm-sm-preview__swatch-info { display: none; }
-
-    .lmm-sm-preview__texts { display: none; }
-  }
-
-  /* Bouton Continuer */
+  /* 5. Bouton Continuer */
   .lmm-sm-preview__footer {
-    padding: 16px 20px;
-    border-top: 1px solid #E8E2DA;
+    padding: 14px 20px;
+    border-top: 1px solid var(--lmm-border);
     flex-shrink: 0;
   }
+
   .lmm-sm-preview__btn {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: #1C1C1C;
-    color: #F5F0EB;
+    background: var(--lmm-text);
+    color: #ffffff;
     border: none;
     padding: 13px 20px;
     font-size: 11px;
@@ -277,31 +196,79 @@
     transition: background 0.2s, opacity 0.2s;
     box-sizing: border-box;
   }
-  .lmm-sm-preview__btn:hover { background: #333; }
+
+  .lmm-sm-preview__btn:hover { background: var(--lmm-text); }
   .lmm-sm-preview__btn.active { opacity: 1; pointer-events: auto; }
 
-  /* Ajustement du contenu principal pour laisser place au panneau */
+  /* Desktop */
   @media (min-width: 861px) {
     .lmm-sm-main {
       width: auto !important;
       margin-left: 5% !important;
-      margin-right: 400px !important;
+      margin-right: calc(30vw + 36px) !important;
     }
   }
+
+  /* Mobile — barre fixe en bas */
   @media (max-width: 860px) {
+    .lmm-sm-preview {
+      position: fixed;
+      top: auto; right: 0; bottom: 0; left: 0;
+      width: 100%; height: auto;
+      flex-direction: row;
+      border-left: none;
+      border-top: 1px solid var(--lmm-border);
+      z-index: 50;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .lmm-sm-preview__header { display: none; }
+
+    .lmm-sm-preview__style {
+      width: 56px; height: 56px;
+      flex: none; flex-shrink: 0;
+      border-right: 1px solid var(--lmm-border);
+    }
+    .lmm-sm-preview__style-empty { display: none; }
+
+    .lmm-sm-preview__tissu {
+      width: 56px; height: 56px;
+      border-top: none;
+      border-right: 1px solid var(--lmm-border);
+      flex-shrink: 0;
+    }
+
+    .lmm-sm-preview__row {
+      height: 56px;
+      border-top: none;
+      border-right: 1px solid var(--lmm-border);
+      padding: 4px;
+      gap: 4px;
+      flex-shrink: 0;
+      width: 114px;
+    }
+
+    .lmm-sm-preview__swatch { border-radius: 2px; }
+
+    /* Textes : cachés sur mobile */
+    .lmm-sm-preview__texts { display: none; }
+
     .lmm-sm-preview__footer {
       border-top: none;
-      border-left: 1px solid #E8E2DA;
+      border-left: 1px solid var(--lmm-border);
       padding: 0 12px;
       display: flex;
       align-items: center;
+      flex: 1;
     }
+
     .lmm-sm-preview__btn {
-      width: auto;
+      width: 100%;
       padding: 10px 14px;
       font-size: 10px;
       white-space: nowrap;
     }
+
     .lmm-sm-main {
       padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
     }
@@ -314,51 +281,41 @@
     <p class="lmm-sm-preview__title">Votre complet</p>
   </div>
 
-  <div class="lmm-sm-preview__main" id="lmm-prev-main">
-    <img id="lmm-prev-tissu-img" class="lmm-sm-preview__main-img" src="" alt="" style="display:none;">
-    <div class="lmm-sm-preview__main-empty" id="lmm-prev-empty">
-      <svg class="lmm-sm-preview__main-empty-icon" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 8 L8 20 L2 22 L2 72 L58 72 L58 22 L52 20 L48 8 L38 14 C36 18 24 18 22 14 Z" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
-        <path d="M22 14 L24 28 L30 34 L36 28 L38 14" stroke="#1C1C1C" stroke-width="1.5" fill="none"/>
-        <line x1="10" y1="30" x2="10" y2="68" stroke="#1C1C1C" stroke-width="1" opacity="0.4"/>
-        <line x1="50" y1="30" x2="50" y2="68" stroke="#1C1C1C" stroke-width="1" opacity="0.4"/>
+  <!-- 1. Style — grande photo -->
+  <div class="lmm-sm-preview__style" id="lmm-prev-style">
+    <img id="lmm-prev-style-img" src="" alt="">
+    <div class="lmm-sm-preview__style-empty" id="lmm-prev-empty">
+      <svg class="lmm-sm-preview__style-empty-icon" viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 8 L8 20 L2 22 L2 72 L58 72 L58 22 L52 20 L48 8 L38 14 C36 18 24 18 22 14 Z" stroke="var(--lmm-text)" stroke-width="1.5" fill="none"/>
+        <path d="M22 14 L24 28 L30 34 L36 28 L38 14" stroke="var(--lmm-text)" stroke-width="1.5" fill="none"/>
+        <line x1="10" y1="30" x2="10" y2="68" stroke="var(--lmm-text)" stroke-width="1" opacity="0.4"/>
+        <line x1="50" y1="30" x2="50" y2="68" stroke="var(--lmm-text)" stroke-width="1" opacity="0.4"/>
       </svg>
-      <span class="lmm-sm-preview__main-empty-text">Choisissez votre tissu pour voir l'aperçu</span>
-    </div>
-    <span class="lmm-sm-preview__main-label" id="lmm-prev-tissu-label"></span>
-  </div>
-
-  <div class="lmm-sm-preview__swatches">
-    <div class="lmm-sm-preview__swatch-row">
-      <div class="lmm-sm-preview__swatch">
-        <img id="lmm-prev-lining-img" src="" alt="">
-      </div>
-      <div class="lmm-sm-preview__swatch-info">
-        <p class="lmm-sm-preview__swatch-key">Lining</p>
-        <p class="lmm-sm-preview__swatch-val lmm-sm-preview__swatch-val--empty" id="lmm-prev-lining-val">—</p>
-      </div>
-    </div>
-    <div class="lmm-sm-preview__swatch-row">
-      <div class="lmm-sm-preview__swatch">
-        <img id="lmm-prev-bouton-img" src="" alt="">
-      </div>
-      <div class="lmm-sm-preview__swatch-info">
-        <p class="lmm-sm-preview__swatch-key">Boutons</p>
-        <p class="lmm-sm-preview__swatch-val lmm-sm-preview__swatch-val--empty" id="lmm-prev-bouton-val">—</p>
-      </div>
-    </div>
-    <div class="lmm-sm-preview__swatch-row">
-      <div class="lmm-sm-preview__swatch">
-        <img id="lmm-prev-const-img" src="" alt="">
-      </div>
-      <div class="lmm-sm-preview__swatch-info">
-        <p class="lmm-sm-preview__swatch-key">Construction</p>
-        <p class="lmm-sm-preview__swatch-val lmm-sm-preview__swatch-val--empty" id="lmm-prev-const-val">—</p>
-      </div>
+      <span class="lmm-sm-preview__style-empty-text">Choisissez votre style pour commencer</span>
     </div>
   </div>
 
+  <!-- 2. Tissu — bande pleine largeur -->
+  <div class="lmm-sm-preview__tissu">
+    <img id="lmm-prev-tissu-img" src="" alt="">
+  </div>
+
+  <!-- 3. Lining + Boutons — rangée côte à côte -->
+  <div class="lmm-sm-preview__row">
+    <div class="lmm-sm-preview__swatch">
+      <img id="lmm-prev-lining-img" src="" alt="">
+    </div>
+    <div class="lmm-sm-preview__swatch">
+      <img id="lmm-prev-bouton-img" src="" alt="">
+    </div>
+  </div>
+
+  <!-- 4. Construction · Hauteur · Bas -->
   <div class="lmm-sm-preview__texts">
+    <div class="lmm-sm-preview__text-row">
+      <span class="lmm-sm-preview__text-key">Construction</span>
+      <span class="lmm-sm-preview__text-val lmm-sm-preview__text-val--empty" id="lmm-prev-const-val">—</span>
+    </div>
     <div class="lmm-sm-preview__text-row">
       <span class="lmm-sm-preview__text-key">Hauteur</span>
       <span class="lmm-sm-preview__text-val lmm-sm-preview__text-val--empty" id="lmm-prev-hauteur">—</span>
@@ -369,6 +326,7 @@
     </div>
   </div>
 
+  <!-- 5. Continuer -->
   <div class="lmm-sm-preview__footer">
     <button class="lmm-sm-preview__btn" id="lmm-prev-btn-next" onclick="typeof goNext === 'function' && goNext()">
       Continuer
@@ -381,53 +339,60 @@
 (function() {
   var p = new URLSearchParams(window.location.search);
 
-  function setImg(imgEl, url) {
+  function showImg(imgEl, url) {
     if (!url) return;
     imgEl.src = url;
     imgEl.style.display = 'block';
     imgEl.onload = function() { imgEl.classList.add('loaded'); };
+    var empty = imgEl.nextElementSibling;
+    if (empty) empty.style.display = 'none';
   }
 
-  function setVal(el, val) {
-    if (!val) return;
+  function setVal(id, val) {
+    var el = document.getElementById(id);
+    if (!el || !val) return;
     el.textContent = val;
-    el.classList.remove('lmm-sm-preview__swatch-val--empty', 'lmm-sm-preview__text-val--empty');
+    el.classList.remove('lmm-sm-preview__text-val--empty');
   }
 
-  // Tissu (photo principale)
-  var tissuPhoto = p.get('tissu_photo');
-  var tissuNom = p.get('tissu');
-  if (tissuPhoto) {
+  // 1. Style
+  var stylePhoto = p.get('style_photo');
+  if (stylePhoto) {
+    var styleImg = document.getElementById('lmm-prev-style-img');
+    styleImg.src = stylePhoto;
+    styleImg.style.display = 'block';
+    styleImg.onload = function() { styleImg.classList.add('loaded'); };
     document.getElementById('lmm-prev-empty').style.display = 'none';
-    var img = document.getElementById('lmm-prev-tissu-img');
-    img.style.display = 'block';
-    img.src = tissuPhoto;
-    var lbl = document.getElementById('lmm-prev-tissu-label');
-    if (tissuNom) { lbl.textContent = tissuNom; lbl.style.display = 'block'; }
   }
 
-  // Lining
-  var liningPhoto = p.get('lining_photo');
-  var liningNom = p.get('lining');
-  if (liningPhoto) setImg(document.getElementById('lmm-prev-lining-img'), liningPhoto);
-  if (liningNom) setVal(document.getElementById('lmm-prev-lining-val'), liningNom);
+  // 2. Tissu
+  showImg(document.getElementById('lmm-prev-tissu-img'), p.get('tissu_photo'));
 
-  // Boutons
-  var boutonPhoto = p.get('bouton_photo');
-  var boutonNom = p.get('bouton');
-  if (boutonPhoto) setImg(document.getElementById('lmm-prev-bouton-img'), boutonPhoto);
-  if (boutonNom) setVal(document.getElementById('lmm-prev-bouton-val'), boutonNom);
+  // 3. Lining + Boutons
+  showImg(document.getElementById('lmm-prev-lining-img'), p.get('lining_photo'));
+  showImg(document.getElementById('lmm-prev-bouton-img'), p.get('bouton_photo'));
 
-  // Construction
-  var constPhoto = p.get('construction_photo');
-  var constNom = p.get('construction');
-  if (constPhoto) setImg(document.getElementById('lmm-prev-const-img'), constPhoto);
-  if (constNom) setVal(document.getElementById('lmm-prev-const-val'), constNom);
+  // 4. Textes
+  setVal('lmm-prev-const-val', p.get('construction'));
+  setVal('lmm-prev-hauteur', p.get('hauteur'));
+  setVal('lmm-prev-bas', p.get('bas'));
 
-  // Hauteur / Bas
-  var hauteur = p.get('hauteur');
-  var bas = p.get('bas');
-  if (hauteur) setVal(document.getElementById('lmm-prev-hauteur'), hauteur);
-  if (bas) setVal(document.getElementById('lmm-prev-bas'), bas);
+  // Cas 1 — bfcache : page servie depuis le cache navigateur (bouton retour)
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) window.location.reload(true);
+  });
+
+  // Cas 2 — CDN cache vide : contenu absent ou invisible
+  function checkBlankPage() {
+    var main = document.querySelector('.lmm-sm-main');
+    if (!main || main.getBoundingClientRect().height < 50) {
+      window.location.reload(true);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(checkBlankPage, 300); });
+  } else {
+    setTimeout(checkBlankPage, 300);
+  }
 })();
 </script>

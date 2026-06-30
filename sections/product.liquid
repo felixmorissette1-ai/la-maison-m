@@ -5,7 +5,7 @@
 <div class="lmm-product full-width">
   <div class="lmm-product__inner">
 
-    <a href="/collections/all" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#8C7B6E;text-decoration:none;padding:0;margin-bottom:20px;">
+    <a href="/collections/all" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--lmm-muted);text-decoration:none;padding:0;margin-bottom:20px;">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 2L4 7L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Retour
     </a>
@@ -39,7 +39,7 @@
 
         {% for tag in product.tags %}
           {% if tag == 'Prestige' or tag == 'Contemporain' or tag == 'Décontracté' %}
-            <p class="lmm-label" style="color:#C9A96E; margin-bottom:16px;">Collection {{ tag }}</p>
+            <p class="lmm-label" style="color:var(--lmm-gold); margin-bottom:16px;">Collection {{ tag }}</p>
           {% endif %}
         {% endfor %}
 
@@ -111,9 +111,18 @@
             <span>Commander ce complet</span>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </a>
-          <a href="/pages/configurateur" class="lmm-product__cta-secondary">
-            Personnaliser ce modèle
-          </a>
+          {% assign style_entry = product.metafields.custom.style.value %}
+          {% if style_entry %}
+            {% assign style_nom = style_entry.nom.value %}
+            {% assign style_photo = style_entry.photo.value | image_url: width: 800 %}
+            <a href="/pages/sur-mesure-tissu?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
+              Personnaliser ce complet
+            </a>
+          {% else %}
+            <a href="/pages/sur-mesure-tissu" class="lmm-product__cta-secondary">
+              Personnaliser ce complet
+            </a>
+          {% endif %}
         </div>
 
         <div class="lmm-product__trust">
@@ -171,12 +180,12 @@
     align-items: center;
     gap: 12px;
     font-size: 12px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     margin-bottom: 40px;
   }
 
-  .lmm-breadcrumb a { text-decoration: none; color: #8C7B6E; transition: color 0.2s; }
-  .lmm-breadcrumb a:hover { color: #1C1C1C; }
+  .lmm-breadcrumb a { text-decoration: none; color: var(--lmm-muted); transition: color 0.2s; }
+  .lmm-breadcrumb a:hover { color: var(--lmm-text); }
 
   .lmm-product__grid {
     display: grid;
@@ -189,7 +198,7 @@
   .lmm-product__visual { position: sticky; top: 100px; }
 
   .lmm-product__photo {
-    background: #EDE8E3;
+    background: var(--lmm-surface);
     border: 1px solid rgba(28,28,28,0.08);
     padding: 48px;
     display: flex;
@@ -210,27 +219,27 @@
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
   .lmm-product__title {
     font-family: Georgia, serif;
     font-size: 40px;
     font-weight: 400;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 8px;
   }
 
   .lmm-product__subtitle {
     font-size: 16px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-weight: 300;
     margin-bottom: 24px;
   }
 
   .lmm-divider-gold {
     height: 1px;
-    background: #C9A96E;
+    background: var(--lmm-gold);
     width: 48px;
     margin-bottom: 24px;
   }
@@ -245,12 +254,12 @@
   .lmm-product__price {
     font-family: Georgia, serif;
     font-size: 28px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-product__delivery {
     font-size: 13px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-weight: 300;
   }
 
@@ -266,7 +275,7 @@
     font-size: 10px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     margin-bottom: 12px;
   }
 
@@ -292,18 +301,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #E8E2DB;
+    background: var(--lmm-surface);
   }
 
   .lmm-photo-placeholder--swatch-lg span {
     font-size: 8px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
-  .lmm-product__tissu-name { font-size: 14px; font-weight: 500; color: #1C1C1C; }
-  .lmm-product__tissu-origine { font-size: 12px; color: #8C7B6E; }
+  .lmm-product__tissu-name { font-size: 14px; font-weight: 500; color: var(--lmm-text); }
+  .lmm-product__tissu-origine { font-size: 12px; color: var(--lmm-muted); }
 
   .lmm-product__features { margin-bottom: 28px; }
 
@@ -318,19 +327,19 @@
     align-items: center;
     gap: 8px;
     font-size: 12px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
   .lmm-dot {
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: #C9A96E;
+    background: var(--lmm-gold);
     flex-shrink: 0;
   }
 
   .lmm-product__table {
-    background: #EDE8E3;
+    background: var(--lmm-surface);
     padding: 20px 24px;
     margin-bottom: 32px;
     border: 1px solid rgba(28,28,28,0.06);
@@ -350,10 +359,10 @@
     font-size: 10px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
-  .lmm-product__table-row span:last-child { font-weight: 500; color: #1C1C1C; }
+  .lmm-product__table-row span:last-child { font-weight: 500; color: var(--lmm-text); }
 
   .lmm-product__ctas {
     display: flex;
@@ -368,8 +377,8 @@
     justify-content: center;
     gap: 12px;
     width: 100%;
-    background: #1C1C1C;
-    color: #F5F0EB;
+    background: var(--lmm-text);
+    color: #ffffff;
     text-decoration: none;
     padding: 20px 36px;
     font-size: 11px;
@@ -381,8 +390,8 @@
   }
 
   .lmm-product__cta-primary:hover {
-    background: #C9A96E;
-    color: #1C1C1C;
+    background: var(--lmm-gold);
+    color: var(--lmm-text);
     gap: 18px;
   }
 
@@ -391,7 +400,7 @@
     width: 100%;
     text-align: center;
     background: transparent;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     text-decoration: none;
     padding: 14px 36px;
     font-size: 11px;
@@ -404,8 +413,8 @@
   }
 
   .lmm-product__cta-secondary:hover {
-    border-color: #1C1C1C;
-    color: #1C1C1C;
+    border-color: var(--lmm-text);
+    color: var(--lmm-text);
   }
 
   .lmm-product__trust {
@@ -416,7 +425,7 @@
   }
 
   .lmm-trust-item span { font-size: 20px; display: block; margin-bottom: 6px; }
-  .lmm-trust-item p { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8C7B6E; }
+  .lmm-trust-item p { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
 
   .lmm-related {
     border-top: 1px solid rgba(28,28,28,0.08);
@@ -428,7 +437,7 @@
     font-size: 24px;
     font-weight: 400;
     margin-bottom: 32px;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-related__grid {
@@ -453,7 +462,7 @@
     height: 80px;
     flex-shrink: 0;
     overflow: hidden;
-    background: #EDE8E3;
+    background: var(--lmm-surface);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -465,11 +474,11 @@
     font-family: Georgia, serif;
     font-size: 15px;
     font-weight: 400;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 4px;
   }
 
-  .lmm-related__info p { font-size: 13px; font-weight: 500; color: #1C1C1C; }
+  .lmm-related__info p { font-size: 13px; font-weight: 500; color: var(--lmm-text); }
 
   @media (max-width: 768px) {
     .lmm-product__grid { grid-template-columns: 1fr; gap: 40px; }

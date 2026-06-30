@@ -1,26 +1,26 @@
 {% comment %} Paramètre: etape_active (1-7) — Configurateur Custom {% endcomment %}
 <style>
-  .lmm-filc { background: #F5F0EB; border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 4%; overflow-x: auto; }
+  .lmm-filc { background: var(--lmm-surface); border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 4%; overflow-x: auto; }
   .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
   .lmm-filc__step {
     display: flex; align-items: center; gap: 8px; padding: 0 10px;
-    text-decoration: none; color: #C8BBB0; font-size: 10px; letter-spacing: 0.1em;
+    text-decoration: none; color: var(--lmm-border); font-size: 10px; letter-spacing: 0.1em;
     text-transform: uppercase; border-bottom: 2px solid transparent;
     cursor: default; white-space: nowrap;
   }
   .lmm-filc__step:first-child { padding-left: 0; }
-  .lmm-filc__step--active { color: #1C1C1C; border-bottom-color: #C9A96E; }
-  .lmm-filc__step--done { color: #8C7B6E; cursor: pointer; text-decoration: none; }
-  .lmm-filc__step--done:hover { color: #1C1C1C; }
+  .lmm-filc__step--active { color: var(--lmm-text); border-bottom-color: var(--lmm-gold); }
+  .lmm-filc__step--done { color: var(--lmm-muted); cursor: pointer; text-decoration: none; }
+  .lmm-filc__step--done:hover { color: var(--lmm-text); }
   .lmm-filc__num {
     width: 18px; height: 18px; border-radius: 50%;
-    background: #E8E2DA; color: #8C7B6E; font-size: 9px;
+    background: var(--lmm-white); color: var(--lmm-muted); font-size: 9px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; font-weight: 600;
   }
-  .lmm-filc__step--active .lmm-filc__num { background: #C9A96E; color: #fff; }
-  .lmm-filc__step--done .lmm-filc__num { background: #1C1C1C; color: #fff; }
-  .lmm-filc__sep { color: #E8E2DA; font-size: 14px; display: flex; align-items: center; flex-shrink: 0; }
+  .lmm-filc__step--active .lmm-filc__num { background: var(--lmm-gold); color: #fff; }
+  .lmm-filc__step--done .lmm-filc__num { background: var(--lmm-text); color: #fff; }
+  .lmm-filc__sep { color: var(--lmm-border); font-size: 14px; display: flex; align-items: center; flex-shrink: 0; }
 </style>
 <nav class="lmm-filc">
   <div class="lmm-filc__inner">

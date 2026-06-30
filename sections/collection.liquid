@@ -95,7 +95,7 @@
 
     {% comment %} CTA configurateur {% endcomment %}
     <div class="lmm-collection__cta">
-      <p class="lmm-label" style="color:#C9A96E; margin-bottom:16px;">Vous ne trouvez pas ce que vous cherchez ?</p>
+      <p class="lmm-label" style="color:var(--lmm-gold); margin-bottom:16px;">Vous ne trouvez pas ce que vous cherchez ?</p>
       <h2 class="lmm-cta__title">Créez votre complet unique</h2>
       <p class="lmm-cta__sub">Notre configurateur vous permet de concevoir un complet entièrement personnalisé — coupe, tissu, doublure — selon vos préférences exactes.</p>
       <a href="/pages/configurateur" class="lmm-btn-primary">Lancer le configurateur</a>
@@ -105,7 +105,7 @@
 
 {% stylesheet %}
   .lmm-collection__hero {
-    background: #1C1C1C;
+    background: var(--lmm-text);
     padding: 80px 32px;
   }
 
@@ -118,7 +118,7 @@
     font-family: Georgia, serif;
     font-size: clamp(36px, 5vw, 64px);
     font-weight: 400;
-    color: #F5F0EB;
+    color: #ffffff;
     line-height: 1.1;
     margin-bottom: 20px;
   }
@@ -136,7 +136,7 @@
   }
 
   .lmm-collection__toolbar {
-    background: #F5F0EB;
+    background: var(--lmm-surface);
     border-bottom: 1px solid rgba(28,28,28,0.08);
     position: sticky;
     top: 72px;
@@ -163,24 +163,24 @@
     font-size: 11px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     padding-bottom: 4px;
     border-bottom: 2px solid transparent;
     transition: color 0.2s, border-color 0.2s;
   }
 
   .lmm-filter-btn:hover {
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-filter-btn--active {
-    color: #1C1C1C;
-    border-bottom-color: #C9A96E;
+    color: var(--lmm-text);
+    border-bottom-color: var(--lmm-gold);
   }
 
   .lmm-sort-select {
     font-size: 11px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -212,7 +212,8 @@
     position: relative;
     height: 320px;
     overflow: hidden;
-    background: #EDE8E3;
+    background: var(--lmm-surface);
+    border: 1px solid var(--lmm-border);
   }
 
   .lmm-suit-card__image img {
@@ -232,14 +233,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #E8E2DB;
+    background: var(--lmm-surface);
   }
 
   .lmm-photo-placeholder span {
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
   }
 
   .lmm-photo-placeholder--swatch {
@@ -262,7 +263,7 @@
     top: 16px;
     right: 16px;
     background: rgba(28,28,28,0.7);
-    color: #F5F0EB;
+    color: #ffffff;
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -277,13 +278,13 @@
     font-family: Georgia, serif;
     font-size: 18px;
     font-weight: 400;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 4px;
   }
 
   .lmm-suit-card__sub {
     font-size: 12px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-weight: 300;
     margin-bottom: 8px;
   }
@@ -291,19 +292,19 @@
   .lmm-suit-card__price {
     font-size: 14px;
     font-weight: 500;
-    color: #1C1C1C;
+    color: var(--lmm-text);
   }
 
   .lmm-collection__empty {
     grid-column: 1 / -1;
     text-align: center;
     padding: 80px 0;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-size: 14px;
   }
 
   .lmm-collection__cta {
-    background: #EDE8E3;
+    background: var(--lmm-surface);
     border: 1px solid rgba(28,28,28,0.08);
     padding: 80px;
     text-align: center;
@@ -313,13 +314,13 @@
     font-family: Georgia, serif;
     font-size: 36px;
     font-weight: 400;
-    color: #1C1C1C;
+    color: var(--lmm-text);
     margin-bottom: 16px;
   }
 
   .lmm-cta__sub {
     font-size: 14px;
-    color: #8C7B6E;
+    color: var(--lmm-muted);
     font-weight: 300;
     line-height: 1.7;
     max-width: 440px;
