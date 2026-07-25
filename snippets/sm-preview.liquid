@@ -310,8 +310,12 @@
     </div>
   </div>
 
-  <!-- 4. Construction · Hauteur · Bas -->
+  <!-- 4. Pièces · Construction · Hauteur · Bas -->
   <div class="lmm-sm-preview__texts">
+    <div class="lmm-sm-preview__text-row">
+      <span class="lmm-sm-preview__text-key">Pièces</span>
+      <span class="lmm-sm-preview__text-val lmm-sm-preview__text-val--empty" id="lmm-prev-pieces-val">—</span>
+    </div>
     <div class="lmm-sm-preview__text-row">
       <span class="lmm-sm-preview__text-key">Construction</span>
       <span class="lmm-sm-preview__text-val lmm-sm-preview__text-val--empty" id="lmm-prev-const-val">—</span>
@@ -373,6 +377,7 @@
   showImg(document.getElementById('lmm-prev-bouton-img'), p.get('bouton_photo'));
 
   // 4. Textes
+  setVal('lmm-prev-pieces-val', p.get('pieces'));
   setVal('lmm-prev-const-val', p.get('construction'));
   setVal('lmm-prev-hauteur', p.get('hauteur'));
   setVal('lmm-prev-bas', p.get('bas'));

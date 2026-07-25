@@ -1,0 +1,125 @@
+{% comment %} Pièces — Configurateur Custom {% endcomment %}
+{% render 'fil-ariane-custom', etape_active: 2 %}
+{% render 'sm-preview' %}
+
+<style>
+  .lmm-sm-pieces-wrap {
+    width: 90%; margin: 0 auto; padding: 20px 0 16px;
+    display: flex; flex-direction: column; box-sizing: border-box;
+  }
+  @media (min-width: 861px) { .lmm-sm-pieces-wrap { width: 86%; margin-right: 0; margin-left: 5%; } }
+  .lmm-sm-pieces__header { margin-bottom: 16px; }
+  .lmm-sm-pieces__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 4px; }
+  .lmm-sm-pieces__title { font-family: Georgia, serif; font-size: 24px; font-weight: 400; color: var(--lmm-text); margin-bottom: 3px; }
+  .lmm-sm-pieces__sub { font-size: 12px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
+  .lmm-sm-pieces__grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  .lmm-sm-pieces__card {
+    background: #fff; border: 1px solid rgba(28,28,28,0.1);
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .lmm-sm-pieces__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-sm-pieces__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-sm-pieces__card-photo {
+    width: 100%; aspect-ratio: 4/3;
+    background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .lmm-sm-pieces__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-sm-pieces__card:hover .lmm-sm-pieces__card-photo img { transform: scale(1.04); }
+  .lmm-sm-pieces__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
+  .lmm-sm-pieces__card-body { padding: 14px 18px 18px; }
+  .lmm-sm-pieces__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: var(--lmm-text); margin-bottom: 6px; }
+  .lmm-sm-pieces__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; }
+  @media (max-width: 540px) {
+    .lmm-sm-pieces__grid { grid-template-columns: 1fr; }
+    .lmm-sm-pieces-wrap { width: 92%; }
+  }
+</style>
+
+<div class="lmm-sm-pieces-wrap lmm-sm-main">
+  <div class="lmm-sm-pieces__header">
+    <p class="lmm-sm-pieces__label">Configurateur custom — Étape 2 sur 8</p>
+    <h1 class="lmm-sm-pieces__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-sm-pieces__sub">{{ section.settings.sous_titre }}</p>
+  </div>
+
+  <div class="lmm-sm-pieces__grid" id="pieces-grid">
+    <div class="lmm-sm-pieces__card" data-val="2 pièces" onclick="selectPieces(this, '2 pièces')">
+      <div class="lmm-sm-pieces__card-photo">
+        {% if section.settings.deux_photo %}
+          <img src="{{ section.settings.deux_photo | image_url: width: 600 }}" alt="{{ section.settings.deux_nom }}">
+        {% else %}
+          <span class="lmm-sm-pieces__card-photo-placeholder">Photo à venir</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-pieces__card-body">
+        <h2 class="lmm-sm-pieces__name">{{ section.settings.deux_nom }}</h2>
+        <p class="lmm-sm-pieces__desc">{{ section.settings.deux_desc }}</p>
+      </div>
+    </div>
+
+    <div class="lmm-sm-pieces__card" data-val="3 pièces" onclick="selectPieces(this, '3 pièces')">
+      <div class="lmm-sm-pieces__card-photo">
+        {% if section.settings.trois_photo %}
+          <img src="{{ section.settings.trois_photo | image_url: width: 600 }}" alt="{{ section.settings.trois_nom }}">
+        {% else %}
+          <span class="lmm-sm-pieces__card-photo-placeholder">Photo à venir</span>
+        {% endif %}
+      </div>
+      <div class="lmm-sm-pieces__card-body">
+        <h2 class="lmm-sm-pieces__name">{{ section.settings.trois_nom }}</h2>
+        <p class="lmm-sm-pieces__desc">{{ section.settings.trois_desc }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var selected = null;
+  var _p = new URLSearchParams(window.location.search);
+
+  var savedPieces = _p.get('pieces');
+  if (savedPieces) {
+    var savedCard = document.querySelector('#pieces-grid [data-val="' + savedPieces + '"]');
+    if (savedCard) selectPieces(savedCard, savedPieces);
+  }
+
+  function selectPieces(el, val) {
+    document.querySelectorAll('#pieces-grid .lmm-sm-pieces__card').forEach(function(c) { c.classList.remove('lmm-sm-pieces__card--selected'); });
+    el.classList.add('lmm-sm-pieces__card--selected');
+    selected = val;
+    var btn = document.getElementById('lmm-prev-btn-next');
+    if (btn) btn.classList.add('active');
+    _p.set('pieces', val);
+    history.replaceState(null, '', '?' + _p.toString());
+    var valEl = document.getElementById('lmm-prev-pieces-val');
+    if (valEl) { valEl.textContent = val; valEl.classList.remove('lmm-sm-preview__text-val--empty'); }
+  }
+
+  function goNext() {
+    if (!selected) return;
+    _p.set('_t', Date.now()); window.location.href = '/pages/sur-mesure-tissu?' + _p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Custom — Pièces",
+  "settings": [
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Combien de pièces ?" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Choisissez si vous désirez un complet 2 ou 3 pièces." },
+    { "type": "header", "content": "2 pièces" },
+    { "type": "text", "id": "deux_nom", "label": "Nom", "default": "2 pièces" },
+    { "type": "textarea", "id": "deux_desc", "label": "Description", "default": "Veston et pantalon. Une silhouette classique et polyvalente." },
+    { "type": "image_picker", "id": "deux_photo", "label": "Photo" },
+    { "type": "header", "content": "3 pièces" },
+    { "type": "text", "id": "trois_nom", "label": "Nom", "default": "3 pièces" },
+    { "type": "textarea", "id": "trois_desc", "label": "Description", "default": "Veston, gilet et pantalon. Pour une allure plus formelle et raffinée." },
+    { "type": "image_picker", "id": "trois_photo", "label": "Photo" }
+  ],
+  "presets": [{ "name": "Custom — Pièces" }]
+}
+{% endschema %}

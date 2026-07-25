@@ -8,6 +8,7 @@
       <a href="/" class="lmm-nav-link{% if request.path == '/' %} lmm-nav-link--active{% endif %}">Accueil</a>
       <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections' %} lmm-nav-link--active{% endif %}">Collection</a>
       <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Personnalisé</a>
+      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
     </nav>
 
     {% assign now_ts = 'now' | date: '%s' %}

@@ -1,5 +1,5 @@
 {% comment %} Récapitulatif — Collection La Maison M. {% endcomment %}
-{% render 'fil-ariane-collection', etape_active: 4 %}
+{% render 'fil-ariane-collection', etape_active: 5 %}
 
 <style>
   .lmm-recap-wrap { width: 90%; max-width: 900px; margin: 0 auto; padding: 40px 0 60px; }
@@ -30,6 +30,7 @@
   <div class="lmm-recap__table">
     <div class="lmm-recap__row"><span class="lmm-recap__key">Modèle</span><span class="lmm-recap__val" id="r-modele">—</span></div>
     <div class="lmm-recap__row"><span class="lmm-recap__key">Construction</span><span class="lmm-recap__val" id="r-canva">—</span></div>
+    <div class="lmm-recap__row"><span class="lmm-recap__key">Pièces</span><span class="lmm-recap__val" id="r-pieces">—</span></div>
     <div class="lmm-recap__row"><span class="lmm-recap__key">Bas de pantalon</span><span class="lmm-recap__val" id="r-bas">—</span></div>
     <div class="lmm-recap__row"><span class="lmm-recap__key">Hauteur du pantalon</span><span class="lmm-recap__val" id="r-hauteur">—</span></div>
   </div>
@@ -52,6 +53,7 @@
 
   document.getElementById('r-modele').textContent = params.get('modele') || '—';
   document.getElementById('r-canva').textContent = canvaChoisi ? (canvaLabels[canvaChoisi] || canvaChoisi) : '—';
+  document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
   document.getElementById('r-bas').textContent = params.get('bas') || '—';
   document.getElementById('r-hauteur').textContent = params.get('hauteur') || '—';
   var prixCents = parseInt(params.get('prix') || '0');
@@ -67,6 +69,7 @@
     var props = {
       'Modèle': params.get('modele') || '',
       'Construction': document.getElementById('r-canva').textContent,
+      'Pièces': params.get('pieces') || '',
       'Bas de pantalon': params.get('bas') || '',
       'Hauteur du pantalon': params.get('hauteur') || ''
     };

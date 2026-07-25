@@ -115,11 +115,11 @@
           {% if style_entry %}
             {% assign style_nom = style_entry.nom.value %}
             {% assign style_photo = style_entry.photo.value | image_url: width: 800 %}
-            <a href="/pages/sur-mesure-tissu?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
+            <a href="/pages/sur-mesure-pieces?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
               Personnaliser ce complet
             </a>
           {% else %}
-            <a href="/pages/sur-mesure-tissu" class="lmm-product__cta-secondary">
+            <a href="/pages/sur-mesure-pieces" class="lmm-product__cta-secondary">
               Personnaliser ce complet
             </a>
           {% endif %}

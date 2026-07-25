@@ -1,0 +1,123 @@
+{% comment %} Pièces — Collection La Maison M. {% endcomment %}
+{% render 'fil-ariane-collection', etape_active: 2 %}
+
+<style>
+  .lmm-pieces-wrap {
+    width: 90%; margin: 0 auto; padding: 28px 0 20px;
+    display: flex; flex-direction: column; box-sizing: border-box;
+  }
+  .lmm-pieces__header { margin-bottom: 16px; flex-shrink: 0; }
+  .lmm-pieces__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 6px; }
+  .lmm-pieces__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
+  .lmm-pieces__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
+  .lmm-pieces__grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px; flex: 1; min-height: 0; margin-bottom: 16px;
+  }
+  .lmm-pieces__card {
+    background: #fff; border: 1px solid rgba(28,28,28,0.1);
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
+    display: flex; flex-direction: column; overflow: hidden; min-height: 0;
+  }
+  .lmm-pieces__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-pieces__card--selected { border: 2px solid var(--lmm-text) !important; }
+  .lmm-pieces__card-photo {
+    width: 100%; flex: 1; min-height: 0;
+    background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .lmm-pieces__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .lmm-pieces__card:hover .lmm-pieces__card-photo img { transform: scale(1.04); }
+  .lmm-pieces__card-photo-placeholder { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
+  .lmm-pieces__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
+  .lmm-pieces__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: var(--lmm-text); margin-bottom: 8px; }
+  .lmm-pieces__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; margin-bottom: 0; }
+  .lmm-pieces__nav { display: flex; justify-content: center; flex-shrink: 0; }
+  #pieces-next { opacity: 0.4; pointer-events: none; }
+  #pieces-next.active { opacity: 1; pointer-events: auto; }
+  @media (max-width: 860px) {
+    .lmm-pieces-wrap { height: auto; width: 92%; }
+    .lmm-pieces__grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="lmm-pieces-wrap">
+
+  <div class="lmm-pieces__header">
+    <p class="lmm-pieces__label">Collection — Étape 2 sur 5</p>
+    <h1 class="lmm-pieces__title">Combien de pièces ?</h1>
+    <p class="lmm-pieces__sub">Choisissez si vous désirez un complet 2 ou 3 pièces.</p>
+  </div>
+
+  <div class="lmm-pieces__grid" id="pieces-grid">
+
+    <div class="lmm-pieces__card" data-val="2 pièces" onclick="selectCard(this, '2 pièces')">
+      <div class="lmm-pieces__card-photo">
+        <span class="lmm-pieces__card-photo-placeholder">Photo à venir</span>
+      </div>
+      <div class="lmm-pieces__card-body">
+        <h2 class="lmm-pieces__name">2 pièces</h2>
+        <p class="lmm-pieces__desc">Veston et pantalon. Une silhouette classique et polyvalente.</p>
+      </div>
+    </div>
+
+    <div class="lmm-pieces__card" data-val="3 pièces" onclick="selectCard(this, '3 pièces')">
+      <div class="lmm-pieces__card-photo">
+        <span class="lmm-pieces__card-photo-placeholder">Photo à venir</span>
+      </div>
+      <div class="lmm-pieces__card-body">
+        <h2 class="lmm-pieces__name">3 pièces</h2>
+        <p class="lmm-pieces__desc">Veston, gilet et pantalon. Pour une allure plus formelle et raffinée.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="lmm-pieces__nav">
+    <button class="lmm-btn-primary" id="pieces-next" onclick="goNext()">Continuer →</button>
+  </div>
+
+</div>
+
+<script>
+  function ajusterHauteur() {
+    var wrap = document.querySelector('.lmm-pieces-wrap');
+    if (!wrap) return;
+    var top = wrap.getBoundingClientRect().top + window.scrollY;
+    wrap.style.height = (window.innerHeight - top - 8) + 'px';
+  }
+  ajusterHauteur();
+  window.addEventListener('resize', ajusterHauteur);
+
+  var selected = null;
+
+  var savedPieces = new URLSearchParams(window.location.search).get('pieces');
+  if (savedPieces) {
+    var savedCard = document.querySelector('#pieces-grid [data-val="' + savedPieces + '"]');
+    if (savedCard) selectCard(savedCard, savedPieces);
+  }
+
+  function selectCard(el, val) {
+    document.querySelectorAll('#pieces-grid .lmm-pieces__card').forEach(function(c) { c.classList.remove('lmm-pieces__card--selected'); });
+    el.classList.add('lmm-pieces__card--selected');
+    selected = val;
+    document.getElementById('pieces-next').classList.add('active');
+    var _p = new URLSearchParams(window.location.search);
+    _p.set('pieces', val);
+    history.replaceState(null, '', '?' + _p.toString());
+  }
+
+  function goNext() {
+    if (!selected) return;
+    var p = new URLSearchParams(window.location.search);
+    p.set('pieces', selected);
+    window.location.href = '/pages/configurateur-pantalon?' + p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection — Pièces",
+  "settings": [],
+  "presets": [{ "name": "Collection — Pièces" }]
+}
+{% endschema %}

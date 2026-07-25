@@ -1,39 +1,197 @@
-<footer>
-  <div class="footer__copyright">
-    &copy;
-    {{ 'now' | date: '%Y' }}
-    {{ shop.name | link_to: routes.root_url }}
+<footer class="lmm-footer full-width">
+  <div class="lmm-footer__inner">
+
+    <div class="lmm-footer__col lmm-footer__brand">
+      <span class="lmm-footer__logo">La Maison M.</span>
+      {% if section.settings.tagline != blank %}
+        <p class="lmm-footer__tagline">{{ section.settings.tagline }}</p>
+      {% endif %}
+    </div>
+
+    <div class="lmm-footer__col">
+      <h3 class="lmm-footer__heading">{{ section.settings.about_heading }}</h3>
+      <ul class="lmm-footer__links">
+        {% for link in section.settings.about_menu.links %}
+          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="lmm-footer__col">
+      <h3 class="lmm-footer__heading">{{ section.settings.magasine_heading }}</h3>
+      <ul class="lmm-footer__links">
+        <li><a href="{{ section.settings.magasine_url }}">{{ section.settings.magasine_label }}</a></li>
+      </ul>
+    </div>
+
+    <div class="lmm-footer__col lmm-footer__contact">
+      <h3 class="lmm-footer__heading">{{ section.settings.contact_heading }}</h3>
+      {% if section.settings.contact_address != blank %}
+        <p class="lmm-footer__contact-line">{{ section.settings.contact_address }}</p>
+      {% endif %}
+      {% if section.settings.contact_phone != blank %}
+        <p class="lmm-footer__contact-line"><a href="tel:{{ section.settings.contact_phone | remove: ' ' }}">{{ section.settings.contact_phone }}</a></p>
+      {% endif %}
+      {% if section.settings.contact_email != blank %}
+        <p class="lmm-footer__contact-line"><a href="mailto:{{ section.settings.contact_email }}">{{ section.settings.contact_email }}</a></p>
+      {% endif %}
+      {% if section.settings.contact_hours != blank %}
+        <div class="lmm-footer__hours">{{ section.settings.contact_hours }}</div>
+      {% endif %}
+    </div>
+
   </div>
 
-  <div class="footer__links">
-    {% for link in section.settings.menu.links %}
-      {{ link.title | link_to: link.url }}
-    {% endfor %}
-  </div>
+  <div class="lmm-footer__bottom">
+    <div class="lmm-footer__copyright">
+      &copy;
+      {{ 'now' | date: '%Y' }}
+      {{ shop.name | link_to: routes.root_url }}
+    </div>
 
-  <div class="footer__payment">
-    {% if section.settings.show_payment_icons %}
-      {% for type in shop.enabled_payment_types %}
-        {{ type | payment_type_svg_tag }}
-      {% endfor %}
-    {% endif %}
+    <div class="lmm-footer__payment">
+      {% if section.settings.show_payment_icons %}
+        {% for type in shop.enabled_payment_types %}
+          {{ type | payment_type_svg_tag }}
+        {% endfor %}
+      {% endif %}
+    </div>
   </div>
 </footer>
 
 {% stylesheet %}
-  footer {
+  .lmm-footer {
+    background: var(--lmm-text);
+    color: rgba(245, 240, 235, 0.65);
+  }
+
+  .lmm-footer__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 56px 32px 40px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
+    gap: 32px;
+  }
+
+  .lmm-footer__logo {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    color: #ffffff;
+    letter-spacing: 0.04em;
+  }
+
+  .lmm-footer__tagline {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 12px 0 0;
+    max-width: 32ch;
+  }
+
+  .lmm-footer__heading {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 400;
+    margin: 0 0 16px;
+  }
+
+  .lmm-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .lmm-footer__links a {
+    text-decoration: none;
+    color: rgba(245, 240, 235, 0.65);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+
+  .lmm-footer__links a:hover {
+    color: #ffffff;
+  }
+
+  .lmm-footer__contact-line {
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 0 0 6px;
+  }
+
+  .lmm-footer__contact-line a {
+    color: rgba(245, 240, 235, 0.65);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .lmm-footer__contact-line a:hover {
+    color: #ffffff;
+  }
+
+  .lmm-footer__hours {
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 8px;
+    color: rgba(245, 240, 235, 0.65);
+  }
+
+  .lmm-footer__bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 20px 32px 28px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     justify-content: space-between;
-    margin-top: 2rem;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
   }
-  footer a {
+
+  .lmm-footer__copyright {
+    font-size: 11px;
+    letter-spacing: 0.04em;
+  }
+
+  .lmm-footer__copyright a {
+    color: rgba(245, 240, 235, 0.65);
     text-decoration: none;
-    color: var(--color-foreground);
   }
-  footer .footer__links,
-  footer .footer__payment {
+
+  .lmm-footer__payment {
     display: flex;
-    gap: 1rem;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .lmm-footer__payment svg {
+    height: 20px;
+    width: auto;
+  }
+
+  @media (max-width: 860px) {
+    .lmm-footer__inner {
+      grid-template-columns: 1fr 1fr;
+      padding: 40px 24px 24px;
+      gap: 28px;
+    }
+  }
+
+  @media (max-width: 540px) {
+    .lmm-footer__inner {
+      grid-template-columns: 1fr;
+      padding: 32px 20px 20px;
+    }
+    .lmm-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 16px 20px 24px;
+    }
   }
 {% endstylesheet %}
 
@@ -41,17 +199,25 @@
 {
   "name": "t:general.footer",
   "settings": [
-    {
-      "type": "link_list",
-      "id": "menu",
-      "label": "t:labels.menu"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_payment_icons",
-      "label": "t:labels.show_payment_icons",
-      "default": true
-    }
+    { "type": "text", "id": "tagline", "label": "Tagline (sous le nom)", "default": "Complets sur mesure, faits à la main." },
+
+    { "type": "header", "content": "À propos" },
+    { "type": "text", "id": "about_heading", "label": "Titre de la colonne", "default": "À propos" },
+    { "type": "link_list", "id": "about_menu", "label": "Liens (à gérer dans Navigation)" },
+
+    { "type": "header", "content": "Magasine" },
+    { "type": "text", "id": "magasine_heading", "label": "Titre de la colonne", "default": "Magasine" },
+    { "type": "text", "id": "magasine_label", "label": "Texte du lien", "default": "Voir les articles" },
+    { "type": "url", "id": "magasine_url", "label": "Lien du Magasine", "default": "/blogs/magasine" },
+
+    { "type": "header", "content": "Contact" },
+    { "type": "text", "id": "contact_heading", "label": "Titre de la colonne", "default": "Contact" },
+    { "type": "textarea", "id": "contact_address", "label": "Adresse" },
+    { "type": "text", "id": "contact_phone", "label": "Téléphone" },
+    { "type": "text", "id": "contact_email", "label": "Courriel" },
+    { "type": "richtext", "id": "contact_hours", "label": "Heures d'ouverture" },
+
+    { "type": "checkbox", "id": "show_payment_icons", "label": "t:labels.show_payment_icons", "default": true }
   ]
 }
 {% endschema %}

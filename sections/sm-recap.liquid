@@ -1,5 +1,5 @@
 {% comment %} Récapitulatif — Configurateur Custom {% endcomment %}
-{% render 'fil-ariane-custom', etape_active: 7 %}
+{% render 'fil-ariane-custom', etape_active: 8 %}
 {% render 'sm-preview' %}
 
 <style>
@@ -34,6 +34,10 @@
     <div class="lmm-sm-recap__row">
       <span class="lmm-sm-recap__key">Style</span>
       <span class="lmm-sm-recap__val" id="r-style">—</span>
+    </div>
+    <div class="lmm-sm-recap__row">
+      <span class="lmm-sm-recap__key">Pièces</span>
+      <span class="lmm-sm-recap__val" id="r-pieces">—</span>
     </div>
     <div class="lmm-sm-recap__row">
       <span class="lmm-sm-recap__key">Tissu</span>
@@ -84,6 +88,7 @@
   var SM_VARIANT_ID = {{ sm_variant_id }};
 
   document.getElementById('r-style').textContent = params.get('style') || '—';
+  document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
   document.getElementById('r-tissu').textContent = params.get('tissu') || '—';
   document.getElementById('r-lining').textContent = params.get('lining') || '—';
   document.getElementById('r-bouton').textContent = params.get('bouton') || '—';
@@ -105,6 +110,7 @@
 
     var properties = {};
     if (params.get('style')) properties['Style'] = params.get('style');
+    if (params.get('pieces')) properties['Pièces'] = params.get('pieces');
     if (params.get('tissu')) properties['Tissu'] = params.get('tissu');
     if (params.get('lining')) properties['Lining'] = params.get('lining');
     if (params.get('bouton')) properties['Boutons'] = params.get('bouton');

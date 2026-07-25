@@ -1,7 +1,7 @@
-{% comment %} Paramètre: etape_active (1-4) {% endcomment %}
+{% comment %} Paramètre: etape_active (1-5) {% endcomment %}
 <style>
-  .lmm-fil { background: var(--lmm-surface); border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 5%; }
-  .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; }
+  .lmm-fil { background: var(--lmm-surface); border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 5%; overflow-x: auto; }
+  .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
   .lmm-fil__step {
     display: flex; align-items: center; gap: 10px; padding: 0 20px;
     text-decoration: none; color: var(--lmm-border); font-size: 11px; letter-spacing: 0.1em;
@@ -35,40 +35,54 @@
     {% endif %}
     <span class="lmm-fil__sep">›</span>
     {% if etape_active > 2 %}
-      <a href="/pages/configurateur-pantalon" class="lmm-fil__step lmm-fil__step--done" id="fil-step-2">
-        <span class="lmm-fil__num">✓</span>Pantalon
+      <a href="/pages/configurateur-pieces" class="lmm-fil__step lmm-fil__step--done" id="fil-step-2">
+        <span class="lmm-fil__num">✓</span>Pièces
       </a>
     {% elsif etape_active == 2 %}
       <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-2">
-        <span class="lmm-fil__num">2</span>Pantalon
+        <span class="lmm-fil__num">2</span>Pièces
       </span>
     {% else %}
       <span class="lmm-fil__step" id="fil-step-2">
-        <span class="lmm-fil__num">2</span>Pantalon
+        <span class="lmm-fil__num">2</span>Pièces
       </span>
     {% endif %}
     <span class="lmm-fil__sep">›</span>
     {% if etape_active > 3 %}
-      <a href="/pages/configurateur-ourlet" class="lmm-fil__step lmm-fil__step--done" id="fil-step-3">
-        <span class="lmm-fil__num">✓</span>Ourlet
+      <a href="/pages/configurateur-pantalon" class="lmm-fil__step lmm-fil__step--done" id="fil-step-3">
+        <span class="lmm-fil__num">✓</span>Pantalon
       </a>
     {% elsif etape_active == 3 %}
       <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-3">
-        <span class="lmm-fil__num">3</span>Ourlet
+        <span class="lmm-fil__num">3</span>Pantalon
       </span>
     {% else %}
       <span class="lmm-fil__step" id="fil-step-3">
-        <span class="lmm-fil__num">3</span>Ourlet
+        <span class="lmm-fil__num">3</span>Pantalon
       </span>
     {% endif %}
     <span class="lmm-fil__sep">›</span>
-    {% if etape_active == 4 %}
+    {% if etape_active > 4 %}
+      <a href="/pages/configurateur-ourlet" class="lmm-fil__step lmm-fil__step--done" id="fil-step-4">
+        <span class="lmm-fil__num">✓</span>Ourlet
+      </a>
+    {% elsif etape_active == 4 %}
       <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-4">
-        <span class="lmm-fil__num">4</span>Récapitulatif
+        <span class="lmm-fil__num">4</span>Ourlet
       </span>
     {% else %}
       <span class="lmm-fil__step" id="fil-step-4">
-        <span class="lmm-fil__num">4</span>Récapitulatif
+        <span class="lmm-fil__num">4</span>Ourlet
+      </span>
+    {% endif %}
+    <span class="lmm-fil__sep">›</span>
+    {% if etape_active == 5 %}
+      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-5">
+        <span class="lmm-fil__num">5</span>Récapitulatif
+      </span>
+    {% else %}
+      <span class="lmm-fil__step" id="fil-step-5">
+        <span class="lmm-fil__num">5</span>Récapitulatif
       </span>
     {% endif %}
   </div>
@@ -76,11 +90,11 @@
 <script>
   (function() {
     var params = new URLSearchParams(window.location.search);
-    var pages = { 2: '/pages/configurateur-pantalon', 3: '/pages/configurateur-ourlet' };
-    var completed = { 2: !!params.get('hauteur'), 3: !!params.get('bas') };
+    var pages = { 2: '/pages/configurateur-pieces', 3: '/pages/configurateur-pantalon', 4: '/pages/configurateur-ourlet' };
+    var completed = { 2: !!params.get('pieces'), 3: !!params.get('hauteur'), 4: !!params.get('bas') };
 
     // Mettre à jour les étapes déjà complétées (même si elles sont "futures" sur cette page)
-    [2, 3].forEach(function(step) {
+    [2, 3, 4].forEach(function(step) {
       var el = document.getElementById('fil-step-' + step);
       if (!el) return;
       if (completed[step] && !el.classList.contains('lmm-fil__step--active') && !el.classList.contains('lmm-fil__step--done')) {

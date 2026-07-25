@@ -218,7 +218,7 @@
   function goNext() {
     if (!selectedCanva) return;
     _p.set('canva', selectedCanva);
-    window.location.href = '/pages/configurateur-pantalon?' + _p.toString();
+    window.location.href = '/pages/configurateur-pieces?' + _p.toString();
   }
 </script>
 
@@ -227,7 +227,7 @@
   "name": "Choix de construction",
   "settings": [
     { "type": "header", "content": "Textes" },
-    { "type": "text", "id": "etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 1 sur 4" },
+    { "type": "text", "id": "etape_label", "label": "Étiquette d'étape", "default": "Sur mesure — Étape 1 sur 5" },
     { "type": "text", "id": "titre", "label": "Titre", "default": "Choisissez votre construction" },
     { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "La construction intérieure détermine le tombé, la durabilité et le prix de votre complet." },
     { "type": "text", "id": "badge_recommande", "label": "Texte du badge recommandé", "default": "Recommandé" },
