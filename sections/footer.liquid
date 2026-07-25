@@ -20,7 +20,7 @@
     <div class="lmm-footer__col">
       <h3 class="lmm-footer__heading">{{ section.settings.magasine_heading }}</h3>
       <ul class="lmm-footer__links">
-        <li><a href="{{ section.settings.magasine_url }}">{{ section.settings.magasine_label }}</a></li>
+        <li><a href="{{ section.settings.magasine_url | default: '/blogs/magasine' }}">{{ section.settings.magasine_label }}</a></li>
       </ul>
     </div>
 
@@ -208,7 +208,7 @@
     { "type": "header", "content": "Magasine" },
     { "type": "text", "id": "magasine_heading", "label": "Titre de la colonne", "default": "Magasine" },
     { "type": "text", "id": "magasine_label", "label": "Texte du lien", "default": "Voir les articles" },
-    { "type": "url", "id": "magasine_url", "label": "Lien du Magasine", "default": "/blogs/magasine" },
+    { "type": "url", "id": "magasine_url", "label": "Lien du Magasine" },
 
     { "type": "header", "content": "Contact" },
     { "type": "text", "id": "contact_heading", "label": "Titre de la colonne", "default": "Contact" },
