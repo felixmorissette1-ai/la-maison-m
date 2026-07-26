@@ -234,8 +234,7 @@
   }
 
   .lmm-cart__upsell {
-    grid-column: 1 / -1;
-    margin-top: 32px;
+    margin-top: 8px;
     padding-top: 24px;
     border-top: 1px solid var(--lmm-border);
   }
@@ -376,6 +375,39 @@
 
           </div>
         {% endfor %}
+
+        {% assign has_complet = false %}
+        {% assign has_chemise = false %}
+        {% for item in cart.items %}
+          {% if item.product.type == 'Chemise' %}
+            {% assign has_chemise = true %}
+          {% else %}
+            {% assign has_complet = true %}
+          {% endif %}
+        {% endfor %}
+
+        {% assign chemises_collection = collections['chemises'] %}
+        {% if has_complet and has_chemise == false and chemises_collection and chemises_collection.products.size > 0 %}
+          <div class="lmm-cart__upsell">
+            <p class="lmm-cart__upsell-label">Vous aimerez aussi</p>
+            <h2 class="lmm-cart__upsell-title">Complétez votre tenue avec une chemise</h2>
+            <div class="lmm-cart__upsell-grid">
+              {% for p in chemises_collection.products limit: 3 %}
+                <a href="{{ p.url }}" class="lmm-cart__upsell-card">
+                  <div class="lmm-cart__upsell-photo">
+                    {% if p.featured_image %}
+                      {{ p.featured_image | image_url: width: 500 | image_tag: alt: p.title, loading: 'lazy' }}
+                    {% else %}
+                      <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
+                    {% endif %}
+                  </div>
+                  <p class="lmm-cart__upsell-name">{{ p.title }}</p>
+                  <p class="lmm-cart__upsell-price">{{ p.price | money_without_trailing_zeros }}</p>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
       </div>
 
       <div class="lmm-cart__footer">
@@ -430,39 +462,6 @@
         <a href="/collections/all" class="lmm-cart__continue">← Continuer mes achats</a>
       </div>
       </div>
-
-      {% assign has_complet = false %}
-      {% assign has_chemise = false %}
-      {% for item in cart.items %}
-        {% if item.product.type == 'Chemise' %}
-          {% assign has_chemise = true %}
-        {% else %}
-          {% assign has_complet = true %}
-        {% endif %}
-      {% endfor %}
-
-      {% assign chemises_collection = collections['chemises'] %}
-      {% if has_complet and has_chemise == false and chemises_collection and chemises_collection.products.size > 0 %}
-        <div class="lmm-cart__upsell">
-          <p class="lmm-cart__upsell-label">Vous aimerez aussi</p>
-          <h2 class="lmm-cart__upsell-title">Complétez votre tenue avec une chemise</h2>
-          <div class="lmm-cart__upsell-grid">
-            {% for p in chemises_collection.products limit: 3 %}
-              <a href="{{ p.url }}" class="lmm-cart__upsell-card">
-                <div class="lmm-cart__upsell-photo">
-                  {% if p.featured_image %}
-                    {{ p.featured_image | image_url: width: 500 | image_tag: alt: p.title, loading: 'lazy' }}
-                  {% else %}
-                    <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
-                  {% endif %}
-                </div>
-                <p class="lmm-cart__upsell-name">{{ p.title }}</p>
-                <p class="lmm-cart__upsell-price">{{ p.price | money_without_trailing_zeros }}</p>
-              </a>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
     </form>
   {% endif %}
 </div>
