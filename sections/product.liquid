@@ -57,19 +57,41 @@
           {{ product.description }}
         </div>
 
-        {% comment %} Tissu swatch {% endcomment %}
-        <div class="lmm-product__tissu">
-          <p class="lmm-product__section-label">Tissu</p>
-          <div class="lmm-product__tissu-row">
-            <div class="lmm-product__tissu-swatch">
-              <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch-lg"><span>Photo</span></div>
+        {% if product.type == 'Chemise' %}
+          {% comment %} Variantes couleur — photos {% endcomment %}
+          <div class="lmm-product__tissu">
+            <p class="lmm-product__section-label">Couleur</p>
+            <div class="lmm-product__variant-swatches" id="chemise-variant-swatches">
+              {% for variant in product.variants %}
+                <div class="lmm-product__variant-swatch{% if variant.id == product.selected_or_first_available_variant.id %} lmm-product__variant-swatch--selected{% endif %}{% unless variant.available %} lmm-product__variant-swatch--disabled{% endunless %}"
+                     data-variant-id="{{ variant.id }}"
+                     title="{{ variant.title }}"
+                     onclick="selectChemiseVariant(this, {{ variant.id }})">
+                  {% if variant.featured_image %}
+                    <img src="{{ variant.featured_image | image_url: width: 100 }}" alt="{{ variant.title }}">
+                  {% else %}
+                    <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch-lg"><span>{{ variant.title }}</span></div>
+                  {% endif %}
+                </div>
+              {% endfor %}
             </div>
-            <div>
-              <p class="lmm-product__tissu-name">{{ product.metafields.custom.tissu | default: product.type }}</p>
-              <p class="lmm-product__tissu-origine">{{ product.metafields.custom.origine }}</p>
+            <p class="lmm-product__tissu-name" id="chemise-variant-label">{{ product.selected_or_first_available_variant.title }}</p>
+          </div>
+        {% else %}
+          {% comment %} Tissu swatch {% endcomment %}
+          <div class="lmm-product__tissu">
+            <p class="lmm-product__section-label">Tissu</p>
+            <div class="lmm-product__tissu-row">
+              <div class="lmm-product__tissu-swatch">
+                <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch-lg"><span>Photo</span></div>
+              </div>
+              <div>
+                <p class="lmm-product__tissu-name">{{ product.metafields.custom.tissu | default: '—' }}</p>
+                <p class="lmm-product__tissu-origine">{{ product.metafields.custom.origine }}</p>
+              </div>
             </div>
           </div>
-        </div>
+        {% endif %}
 
         {% comment %} Caractéristiques {% endcomment %}
         {% if product.metafields.custom.caracteristiques %}
@@ -87,39 +109,16 @@
           </div>
         {% endif %}
 
-        <div class="lmm-product__table">
-          <div class="lmm-product__table-row">
-            <span>Tissu</span>
-            <span>{{ product.metafields.custom.tissu | default: '—' }}</span>
+        {% if product.metafields.custom.description_complementaire != blank %}
+          <div class="lmm-product__details-box">
+            {{ product.metafields.custom.description_complementaire | newline_to_br }}
           </div>
-          <div class="lmm-product__table-row">
-            <span>Origine</span>
-            <span>{{ product.metafields.custom.origine | default: '—' }}</span>
-          </div>
-          <div class="lmm-product__table-row">
-            <span>Délai</span>
-            <span>{{ product.metafields.custom.delai | default: '6–8' }} semaines</span>
-          </div>
-          <div class="lmm-product__table-row">
-            <span>Retouches</span>
-            <span>Incluses</span>
-          </div>
-        </div>
+        {% endif %}
 
         <div class="lmm-product__ctas">
           {% if product.type == 'Chemise' %}
             {% form 'product', product %}
-              {% if product.variants.size > 1 %}
-                <select name="id" class="lmm-product__variant-select">
-                  {% for variant in product.variants %}
-                    <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
-                      {{ variant.title }}{% unless variant.available %} — Épuisé{% endunless %}
-                    </option>
-                  {% endfor %}
-                </select>
-              {% else %}
-                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
-              {% endif %}
+              <input type="hidden" name="id" id="chemise-selected-variant" value="{{ product.selected_or_first_available_variant.id }}">
               <button type="submit" class="lmm-product__cta-primary" {% unless product.available %}disabled{% endunless %}>
                 <span>{% if product.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
                 {{ 'icon-cart.svg' | inline_asset_content }}
@@ -143,12 +142,6 @@
               </a>
             {% endif %}
           {% endif %}
-        </div>
-
-        <div class="lmm-product__trust">
-          <div class="lmm-trust-item"><span>🧵</span><p>Cousu main</p></div>
-          <div class="lmm-trust-item"><span>📏</span><p>Sur mesure</p></div>
-          <div class="lmm-trust-item"><span>✂️</span><p>Retouches offertes</p></div>
         </div>
 
       </div>
@@ -187,6 +180,19 @@
 
   </div>
 </div>
+
+<script>
+  function selectChemiseVariant(el, variantId) {
+    document.querySelectorAll('.lmm-product__variant-swatch').forEach(function(s) {
+      s.classList.remove('lmm-product__variant-swatch--selected');
+    });
+    el.classList.add('lmm-product__variant-swatch--selected');
+    var input = document.getElementById('chemise-selected-variant');
+    if (input) input.value = variantId;
+    var label = document.getElementById('chemise-variant-label');
+    if (label) label.textContent = el.getAttribute('title');
+  }
+</script>
 
 {% stylesheet %}
   .lmm-product__inner {
@@ -358,31 +364,50 @@
     flex-shrink: 0;
   }
 
-  .lmm-product__table {
+  .lmm-product__details-box {
     background: var(--lmm-surface);
     padding: 20px 24px;
     margin-bottom: 32px;
     border: 1px solid rgba(28,28,28,0.06);
+    font-size: 13px;
+    color: rgba(28,28,28,0.75);
+    font-weight: 300;
+    line-height: 1.8;
   }
 
-  .lmm-product__table-row {
+  .lmm-product__variant-swatches {
     display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(28,28,28,0.06);
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
   }
 
-  .lmm-product__table-row:last-child { border-bottom: none; }
-
-  .lmm-product__table-row span:first-child {
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--lmm-muted);
+  .lmm-product__variant-swatch {
+    width: 48px;
+    height: 48px;
+    border: 1px solid rgba(28,28,28,0.12);
+    overflow: hidden;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color 0.2s;
   }
 
-  .lmm-product__table-row span:last-child { font-weight: 500; color: var(--lmm-text); }
+  .lmm-product__variant-swatch img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .lmm-product__variant-swatch--selected {
+    border: 2px solid var(--lmm-text);
+  }
+
+  .lmm-product__variant-swatch--disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 
   .lmm-product__ctas {
     display: flex;
@@ -423,19 +448,6 @@
     pointer-events: none;
   }
 
-  .lmm-product__variant-select {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    font-size: 12px;
-    letter-spacing: 0.04em;
-    color: var(--lmm-text);
-    background: #fff;
-    border: 1px solid rgba(28,28,28,0.15);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
   .lmm-product__cta-secondary {
     display: block;
     width: 100%;
@@ -457,16 +469,6 @@
     border-color: var(--lmm-text);
     color: var(--lmm-text);
   }
-
-  .lmm-product__trust {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    text-align: center;
-  }
-
-  .lmm-trust-item span { font-size: 20px; display: block; margin-bottom: 6px; }
-  .lmm-trust-item p { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
 
   .lmm-related {
     border-top: 1px solid rgba(28,28,28,0.08);

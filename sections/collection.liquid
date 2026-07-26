@@ -52,15 +52,24 @@
               {% else %}
                 <div class="lmm-photo-placeholder"><span>Photo à venir</span></div>
               {% endif %}
-              <div class="lmm-suit-card__swatch">
-                <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch"><span>Tissu</span></div>
-              </div>
+              {% unless product.type == 'Chemise' %}
+                <div class="lmm-suit-card__swatch">
+                  <div class="lmm-photo-placeholder lmm-photo-placeholder--swatch"><span>Tissu</span></div>
+                </div>
+              {% endunless %}
               {% for tag in product.tags %}
                 {% if tag == 'Prestige' or tag == 'Contemporain' or tag == 'Décontracté' %}
                   <span class="lmm-suit-card__badge">{{ tag }}</span>
                 {% endif %}
               {% endfor %}
             </div>
+            {% if product.type == 'Chemise' and product.variants.size > 1 %}
+              <div class="lmm-suit-card__colors">
+                {% for variant in product.variants %}
+                  <span class="lmm-suit-card__color-dot"{% if variant.featured_image %} style="background-image:url('{{ variant.featured_image | image_url: width: 40 }}');"{% endif %} title="{{ variant.title }}"></span>
+                {% endfor %}
+              </div>
+            {% endif %}
             <div class="lmm-suit-card__info">
               <h2 class="lmm-suit-card__name">{{ product.title }}</h2>
               <p class="lmm-suit-card__sub">{{ product.metafields.custom.subtitle }}</p>
@@ -268,6 +277,23 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 4px 10px;
+  }
+
+  .lmm-suit-card__colors {
+    display: flex;
+    gap: 6px;
+    padding: 12px 20px 0;
+  }
+
+  .lmm-suit-card__color-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid rgba(28,28,28,0.15);
+    background-color: var(--lmm-surface);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
   }
 
   .lmm-suit-card__info {
