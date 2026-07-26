@@ -447,7 +447,7 @@
       {% if has_complet and has_chemise == false and chemises_collection and chemises_collection.products.size > 0 %}
         <div class="lmm-cart__upsell">
           <p class="lmm-cart__upsell-label">
-            <span class="lmm-cart__upsell-plus">+</span> Complétez votre tenue
+            <span class="lmm-cart__upsell-plus"></span> Complétez votre tenue
           </p>
           <div class="lmm-cart__upsell-grid">
             {% for p in chemises_collection.products limit: 3 %}
