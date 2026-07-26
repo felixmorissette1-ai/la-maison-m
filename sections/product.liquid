@@ -105,12 +105,6 @@
           </div>
         {% endif %}
 
-        {% if product.description != blank %}
-          <div class="lmm-product__details-box">
-            {{ product.description }}
-          </div>
-        {% endif %}
-
         <div class="lmm-product__ctas">
           {% if product.type == 'Chemise' %}
             {% form 'product', product %}
@@ -139,6 +133,13 @@
             {% endif %}
           {% endif %}
         </div>
+
+        {% if product.description != blank %}
+          <div class="lmm-product__description-section">
+            <p class="lmm-product__section-label">Description</p>
+            <div class="lmm-product__description-text">{{ product.description }}</div>
+          </div>
+        {% endif %}
 
       </div>
     </div>
@@ -352,16 +353,22 @@
     flex-shrink: 0;
   }
 
-  .lmm-product__details-box {
-    background: var(--lmm-surface);
-    padding: 20px 24px;
-    margin-bottom: 32px;
-    border: 1px solid rgba(28,28,28,0.06);
-    font-size: 13px;
-    color: rgba(28,28,28,0.75);
-    font-weight: 300;
-    line-height: 1.8;
+  .lmm-product__description-section {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(28,28,28,0.08);
   }
+
+  .lmm-product__description-text {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(28,28,28,0.75);
+    line-height: 1.9;
+  }
+
+  .lmm-product__description-text p { margin: 0 0 14px; }
+  .lmm-product__description-text p:last-child { margin-bottom: 0; }
 
   .lmm-product__variant-swatches {
     display: flex;
