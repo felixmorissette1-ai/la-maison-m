@@ -269,7 +269,7 @@
 
   .lmm-cart__upsell-photo {
     width: 100%;
-    aspect-ratio: 16/9;
+    aspect-ratio: 3/4;
     background: var(--lmm-surface);
     overflow: hidden;
     margin-bottom: 12px;
@@ -311,13 +311,6 @@
     font-weight: 400;
     color: var(--lmm-text);
     margin: 0 0 4px;
-  }
-
-  .lmm-cart__upsell-price {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--lmm-text);
-    margin: 0;
   }
 
   @media (max-width: 768px) {
@@ -402,7 +395,6 @@
                     {% endif %}
                   </div>
                   <p class="lmm-cart__upsell-name">{{ p.title }}</p>
-                  <p class="lmm-cart__upsell-price">{{ p.price | money_without_trailing_zeros }}</p>
                 </a>
               {% endfor %}
             </div>
