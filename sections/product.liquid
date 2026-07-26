@@ -107,21 +107,41 @@
         </div>
 
         <div class="lmm-product__ctas">
-          <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}" class="lmm-product__cta-primary">
-            <span>Commander ce complet</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-          {% assign style_entry = product.metafields.custom.style.value %}
-          {% if style_entry %}
-            {% assign style_nom = style_entry.nom.value %}
-            {% assign style_photo = style_entry.photo.value | image_url: width: 800 %}
-            <a href="/pages/sur-mesure-pieces?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
-              Personnaliser ce complet
-            </a>
+          {% if product.type == 'Chemise' %}
+            {% form 'product', product %}
+              {% if product.variants.size > 1 %}
+                <select name="id" class="lmm-product__variant-select">
+                  {% for variant in product.variants %}
+                    <option value="{{ variant.id }}" {% unless variant.available %}disabled{% endunless %}>
+                      {{ variant.title }}{% unless variant.available %} — Épuisé{% endunless %}
+                    </option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                <input type="hidden" name="id" value="{{ product.variants.first.id }}">
+              {% endif %}
+              <button type="submit" class="lmm-product__cta-primary" {% unless product.available %}disabled{% endunless %}>
+                <span>{% if product.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
+                {{ 'icon-cart.svg' | inline_asset_content }}
+              </button>
+            {% endform %}
           {% else %}
-            <a href="/pages/sur-mesure-pieces" class="lmm-product__cta-secondary">
-              Personnaliser ce complet
+            <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}" class="lmm-product__cta-primary">
+              <span>Commander ce complet</span>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
+            {% assign style_entry = product.metafields.custom.style.value %}
+            {% if style_entry %}
+              {% assign style_nom = style_entry.nom.value %}
+              {% assign style_photo = style_entry.photo.value | image_url: width: 800 %}
+              <a href="/pages/sur-mesure-pieces?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
+                Personnaliser ce complet
+              </a>
+            {% else %}
+              <a href="/pages/sur-mesure-pieces" class="lmm-product__cta-secondary">
+                Personnaliser ce complet
+              </a>
+            {% endif %}
           {% endif %}
         </div>
 
@@ -393,6 +413,27 @@
     background: var(--lmm-gold);
     color: var(--lmm-text);
     gap: 18px;
+  }
+
+  .lmm-product__cta-primary svg { width: 16px; height: 16px; flex-shrink: 0; }
+
+  .lmm-product__cta-primary[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .lmm-product__variant-select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--lmm-text);
+    background: #fff;
+    border: 1px solid rgba(28,28,28,0.15);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .lmm-product__cta-secondary {
