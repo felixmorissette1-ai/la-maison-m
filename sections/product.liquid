@@ -53,10 +53,6 @@
           <span class="lmm-product__delivery">Livraison en {{ product.metafields.custom.delai | default: '6–8' }} semaines</span>
         </div>
 
-        <div class="lmm-product__desc">
-          {{ product.description }}
-        </div>
-
         {% if product.type == 'Chemise' %}
           {% comment %} Variantes couleur — photos {% endcomment %}
           <div class="lmm-product__tissu">
@@ -109,9 +105,9 @@
           </div>
         {% endif %}
 
-        {% if product.metafields.custom.description_complementaire != blank %}
+        {% if product.description != blank %}
           <div class="lmm-product__details-box">
-            {{ product.metafields.custom.description_complementaire | newline_to_br }}
+            {{ product.description }}
           </div>
         {% endif %}
 
@@ -287,14 +283,6 @@
     font-size: 13px;
     color: var(--lmm-muted);
     font-weight: 300;
-  }
-
-  .lmm-product__desc {
-    font-size: 14px;
-    color: rgba(28,28,28,0.7);
-    font-weight: 300;
-    line-height: 1.8;
-    margin-bottom: 32px;
   }
 
   .lmm-product__section-label {
