@@ -1,15 +1,19 @@
 <header class="lmm-header full-width">
   <div class="lmm-header__inner">
     <a href="{{ routes.root_url }}" class="lmm-header__logo">
-      <span class="lmm-logo-main">La Maison M.</span>
+      {% if section.settings.logo_image %}
+        <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
+      {% else %}
+        <span class="lmm-logo-main">La Maison M.</span>
+      {% endif %}
     </a>
 
     <nav class="lmm-header__nav">
+      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
       <a href="/" class="lmm-nav-link{% if request.path == '/' %} lmm-nav-link--active{% endif %}">Accueil</a>
       <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
       <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemises</a>
       <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Personnalisé</a>
-      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
     </nav>
 
     {% assign now_ts = 'now' | date: '%s' %}
@@ -518,6 +522,13 @@
 
   .lmm-header__logo {
     text-decoration: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .lmm-header__logo-img {
+    display: block;
+    width: auto;
   }
 
   .lmm-logo-main {
@@ -677,6 +688,21 @@
 {
   "name": "En-tête",
   "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo (laisser vide pour afficher le texte)"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "Hauteur du logo",
+      "min": 20,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
     {
       "type": "link_list",
       "id": "menu",
