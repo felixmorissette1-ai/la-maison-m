@@ -55,6 +55,9 @@
           {{ type | payment_type_svg_tag }}
         {% endfor %}
       {% endif %}
+      {% if customer and customer.metafields.custom.acces_formulaires %}
+        <a href="https://lmm-backend.vercel.app/mensurations.html" target="_blank" rel="noopener" class="lmm-footer__staff-link">Mensurations</a>
+      {% endif %}
     </div>
   </div>
 </footer>
@@ -172,6 +175,21 @@
   .lmm-footer__payment svg {
     height: 20px;
     width: auto;
+  }
+
+  .lmm-footer__staff-link {
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(245, 240, 235, 0.4);
+    text-decoration: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.15);
+    padding-left: 12px;
+    margin-left: 4px;
+  }
+
+  .lmm-footer__staff-link:hover {
+    color: var(--lmm-gold);
   }
 
   @media (max-width: 860px) {
