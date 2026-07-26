@@ -14,7 +14,11 @@
     <div class="lmm-breadcrumb">
       <a href="/">Accueil</a>
       <span>/</span>
-      <a href="/collections/all">Collection</a>
+      {% if product.type == 'Chemise' %}
+        <a href="/collections/chemises">Chemises</a>
+      {% else %}
+        <a href="/collections/frontpage">Collection</a>
+      {% endif %}
       <span>/</span>
       <span>{{ product.title }}</span>
     </div>
