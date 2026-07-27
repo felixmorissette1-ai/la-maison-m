@@ -493,7 +493,22 @@
       var overlay = document.getElementById('lmm-booking-overlay');
       overlay.querySelector('p:first-child').textContent = 'Rendez-vous confirmé';
       overlay.style.display = 'flex';
-      setTimeout(function() { window.location.href = '/cart'; }, 3000);
+
+      // On attend la confirmation réelle de la synchronisation (au lieu d'un
+      // délai fixe qui peut recharger la page avant que le webhook Cal.com
+      // ait fini d'écrire les metafields) avant de rediriger. Un filet de
+      // sécurité limite l'attente maximale pour ne jamais bloquer l'utilisateur.
+      var syncTermine = fetch(tunnelUrl + '/api/cal-sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: '{{ customer.email }}' })
+      }).catch(function() {});
+
+      var delaiMax = new Promise(function(resolve) { setTimeout(resolve, 6000); });
+
+      Promise.race([syncTermine, delaiMax]).then(function() {
+        window.location.href = '/cart';
+      });
     {% endunless %}
   }
 </script>
