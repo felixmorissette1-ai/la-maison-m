@@ -26,6 +26,15 @@
 
 ## Futur
 - [ ] Option de basculer le site complet en anglais (bilingue FR/EN)
+- [ ] Page "Choisis le nom que tu veux faire coudre dans la manche" (monogramme/broderie personnalisée)
+- [ ] Livraison : définir les délais, et voir si un suivi de commande est possible (avec quel transporteur ?)
+- [ ] Comptabilité : comprendre comment Shopify gère la comptabilité (taxes, rapports de vente, etc.) — recherche à faire avec Felix, pas du code
+- [ ] Esthétique + adaptabilité mobile/tablette — révision visuelle générale du site sur tous les appareils
+
+## Branding / liens à corriger
+- [ ] Mettre le bon logo partout sur le site (actuellement incohérent ou manquant à certains endroits)
+- [ ] Le bouton/lien "Voir la collection" doit pointer vers la vraie page de collection (actuellement incorrect)
+- [ ] Footer : le lien actuellement nommé "Magasine" (`sections/footer.liquid:221-224`, réglage `magasine_url`) est une coquille pour "Magasiner" (Shop) — à corriger. Felix veut aussi des liens footer distincts pour "Personnalisé", "Collection", et "Chemise" qui mènent chacun vers la bonne page.
 
 ## Déjà construit (retiré de la liste "à construire")
 - [x] Navigation principale (`sections/header.liquid` — Accueil / Collection / Personnalisé)
