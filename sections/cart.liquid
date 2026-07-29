@@ -407,6 +407,7 @@
               Procéder au paiement
               <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
+            <button type="button" id="lmm-remeasure-btn" onclick="lmmDemanderReprise()" style="background:none; border:none; color:var(--lmm-muted); font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 0; align-self:center;">Besoin de nouvelles mensurations ?</button>
 
           {% elsif customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
             <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
@@ -477,6 +478,18 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: key, quantity: qty })
     }).then(function() { window.location.reload(); });
+  }
+
+  function lmmDemanderReprise() {
+    if (!confirm("Confirmer que vous voulez reprendre vos mensurations ? Vous devrez reprendre rendez-vous avant de pouvoir passer une nouvelle commande.")) return;
+    var btn = document.getElementById('lmm-remeasure-btn');
+    if (btn) btn.disabled = true;
+    fetch('https://lmm-backend.vercel.app/api/couturiere-actions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'request-remeasure', customer_id: {{ customer.id | json }} })
+    }).then(function() { window.location.reload(); })
+      .catch(function() { if (btn) btn.disabled = false; });
   }
 
 </script>
