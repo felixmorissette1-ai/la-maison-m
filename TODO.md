@@ -22,7 +22,7 @@
 
 ## Prise de rendez-vous
 - [x] Système de réservation en place — **intégré via Cal.com** (pas Calendly comme prévu à l'origine), directement dans le header et la modale de localisation/couturière (`sections/header.liquid`), avec sync automatique des metafields rdv via `llm-backend/api/cal-sync.js` et `cal-webhook.js`
-- [ ] Nettoyer le champ de réglage "Lien Calendly" resté dans le schema de `sections/page.liquid:768` — obsolète depuis le passage à Cal.com
+- [x] Champ de réglage "Lien Calendly" retiré du schema de `sections/page.liquid` (obsolète depuis le passage à Cal.com)
 
 ## Futur
 - [ ] Option de basculer le site complet en anglais (bilingue FR/EN)
