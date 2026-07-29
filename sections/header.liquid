@@ -136,6 +136,10 @@
 <div class="lmm-cal-modal" id="lmm-cal-modal" onclick="if(event.target===this) fermerCalModal()">
   <div class="lmm-cal-modal__inner">
     <button class="lmm-cal-modal__close" onclick="fermerCalModal()">×</button>
+    <button onclick="retourSelectionCouturiere()" style="position:absolute; top:16px; left:16px; z-index:2; background:none; border:none; color:var(--lmm-muted); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
+      <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M15 9H3M3 9L8 4M3 9L8 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Changer de couturière
+    </button>
     <iframe id="lmm-cal-iframe" src="" frameborder="0" allow="camera; microphone; fullscreen" style="width:100%; min-height:600px; display:block;"></iframe>
   </div>
 </div>
@@ -162,6 +166,9 @@
         <button onclick="ouvrirRescheduleModal()" style="display:flex; align-items:center; justify-content:center; gap:10px; background:var(--lmm-text); color:#ffffff; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Modifier le rendez-vous
           <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="ouvrirChangementCouturiere()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+          Changer de couturière
         </button>
         <button onclick="ouvrirAnnulationModal()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Annuler le rendez-vous
@@ -385,6 +392,10 @@
   function fermerCalModal() {
     document.getElementById('lmm-cal-modal').classList.remove('open');
   }
+  function retourSelectionCouturiere() {
+    document.getElementById('lmm-cal-modal').classList.remove('open');
+    document.getElementById('lmm-localisation-modal').classList.add('open');
+  }
 
   var rescheduleCharge = false;
   function ouvrirRescheduleModal() {
@@ -410,7 +421,17 @@
   }
 
   function ouvrirAnnulationModal() {
+    lmmAnnulationPourChangement = false;
     fermerGestionModal();
+    document.getElementById('lmm-annulation-raison').value = '';
+    document.getElementById('lmm-annulation-modal').classList.add('open');
+  }
+
+  var lmmAnnulationPourChangement = false;
+  function ouvrirChangementCouturiere() {
+    lmmAnnulationPourChangement = true;
+    fermerGestionModal();
+    document.getElementById('lmm-annulation-raison').value = 'Changement de couturière';
     document.getElementById('lmm-annulation-modal').classList.add('open');
   }
 
@@ -423,6 +444,7 @@
   function confirmerAnnulation() {
     var raison = document.getElementById('lmm-annulation-raison').value;
     var uid = '{{ customer.metafields.custom.rdv_uid }}';
+    var pourChangement = lmmAnnulationPourChangement;
 
     // Afficher l'overlay immédiatement
     fermerAnnulationModal();
@@ -438,8 +460,13 @@
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
-        overlay.querySelector('p:first-child').textContent = 'Rendez-vous annulé';
-        setTimeout(function() { window.location.reload(); }, 2000);
+        if (pourChangement) {
+          overlay.style.display = 'none';
+          ouvrirLocalisationModal();
+        } else {
+          overlay.querySelector('p:first-child').textContent = 'Rendez-vous annulé';
+          setTimeout(function() { window.location.reload(); }, 2000);
+        }
       } else {
         overlay.style.display = 'none';
         document.getElementById('lmm-annulation-modal').classList.add('open');
@@ -447,6 +474,8 @@
       }
     })
     .catch(function() {
+      overlay.style.display = 'none';
+      document.getElementById('lmm-annulation-modal').classList.add('open');
       document.getElementById('lmm-annulation-erreur').style.display = 'block';
     });
   }
