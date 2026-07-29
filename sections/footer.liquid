@@ -58,6 +58,9 @@
       {% if customer and customer.metafields.custom.acces_formulaires %}
         <a href="https://lmm-backend.vercel.app/mensurations.html?email={{ customer.email | url_encode }}" target="_blank" rel="noopener" class="lmm-footer__staff-link">Mensurations</a>
       {% endif %}
+      {% if customer and customer.metafields.custom.acces_rapport_paiement %}
+        <a href="https://lmm-backend.vercel.app/rapport.html" target="_blank" rel="noopener" class="lmm-footer__staff-link">Rapport de paiement</a>
+      {% endif %}
     </div>
   </div>
 </footer>
