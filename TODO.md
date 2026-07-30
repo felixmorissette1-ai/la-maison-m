@@ -1,14 +1,34 @@
 # À faire — La Maison M. (Shopify)
 
-## Contenu (admin Shopify / rédaction — pas du code)
+## Gestion des stocks
+- [x] Stock illimité tant que Felix ne bloque pas manuellement un item — appliqué aux 5 variantes existantes (Chemise en coton ×4 couleurs, Complet pure laine test) : suivi de quantité désactivé (`inventory_management: null`) sur chaque variante.
+- **Pour les futurs produits** : ne pas activer "Suivre la quantité" dans Shopify Admin (section Inventaire de la variante) — laissé désactivé, le produit reste toujours achetable. Le contrôle manuel de Felix se fait en passant le produit à "Brouillon" (Draft) ou en le désactivant, pas via une quantité qui tombe à zéro.
+
+## Contenu à ajouter — photos & descriptions (admin Shopify / rédaction, pas du code)
 - [ ] Créer l'histoire et le fil narratif de la page d'accueil (textes + photos)
 - [ ] Ajouter les 8 produits dans l'admin Shopify avec vrais prix, descriptions, tissu, origine
-- [ ] Ajouter les photos des complets (page produit + cartes collection)
-- [ ] Ajouter les photos de tissus (swatches sur les cartes et pages produit)
+
+**1. Collection**
+- [ ] Photos des items de la collection
+- [ ] Information / description des items de la collection
+- [ ] Photos Fused, Half, Full canvas
+- [ ] Description Fused, Half, Full canvas
+- [ ] Photos liées aux pantalons
+- [ ] Descriptions liées aux pantalons
+- [ ] Photos 2 pièces / 3 pièces
+
+**2. Personnalisé** (photos supplémentaires)
+- [ ] Photos Styles
+- [ ] Photos Tissus
+- [ ] Photos Lining
+- [ ] Photos Boutons
+
+**3. Chemises**
+- [ ] Photos tissus chemises
 
 ## Configurateur
 - [x] Page configurateur sur mesure (choix de canevas → étapes) — construit (`configurateur-style`, `-tissu`, `-lining`, `-boutons`, `-construction`, `-resume`)
-- [ ] Ajouter les vraies photos de chaque type de canevas (Fused, Half, Full) — le système est prêt (metaobjects avec champ `photo`, voir `sections/configurateur-construction.liquid:18-19`), il manque juste l'upload des photos dans l'admin
+- [ ] Ajouter les vraies photos de chaque type de canevas (Fused, Half, Full) — le système est prêt (metaobjects avec champ `photo`, voir `sections/configurateur-construction.liquid:18-19`), il manque juste l'upload des photos dans l'admin (même item que "Photos Fused, Half, Full canvas" ci-dessus)
 
 ## Mensurations
 - [x] Metafields de mensurations sur le profil client (`custom.mensurations`, utilisé activement pour débloquer le paiement — voir `sections/cart.liquid`)
@@ -33,10 +53,12 @@
 
 ## Branding / liens à corriger
 - [ ] Mettre le bon logo partout sur le site (actuellement incohérent ou manquant à certains endroits)
-- [ ] Le bouton/lien "Voir la collection" doit pointer vers la vraie page de collection (actuellement incorrect)
+- [x] Le bouton/lien "Voir la collection" pointe maintenant vers `/collections/frontpage` (même page que le lien "Collection" du header/footer)
 - [x] Footer : "Magasine" corrigé en "Magasiner", avec 3 liens distincts (Personnalisé, Collection, Chemise) menant chacun vers la bonne page.
 
 ## Déjà construit (retiré de la liste "à construire")
-- [x] Navigation principale (`sections/header.liquid` — Accueil / Collection / Personnalisé)
+- [x] Navigation principale (`sections/header.liquid` — À propos / Collection / Personnalisé / Chemise, logo = retour accueil)
 - [x] Footer (`sections/footer.liquid` + `footer-group.json`)
 - [x] Distinction couturière vendeuse (livres de tissus) vs mensurations seulement — pastille dorée dédiée sur la carte, légende, toggle de filtre, texte clair sur chaque carte (`sections/header.liquid`, champ `vendeuse` sur le metaobjet `couturiere`). Felix doit cocher "vendeuse" sur ses vraies couturières concernées dans l'Admin Shopify.
+- [x] Classe `.lmm-btn-primary` unifiée dans `snippets/css-variables.liquid` — corrige un vrai bug où les boutons "Continuer" de tout le parcours Collection (pieces/pantalon/ourlet/monogramme/page.liquid) étaient non stylés (la seule définition existante était locale à `home-hero.liquid`, renommée `.lmm-btn-hero-light` pour éviter la collision).
+- [x] Étape monogramme (Personnalisé) et récapitulatif final réutilisent maintenant le même bouton partagé du panneau preview (`#lmm-prev-btn-next` dans `snippets/sm-preview.liquid`) au lieu de boutons locaux non stylés/incohérents. Le texte "un membre de notre équipe vous contactera" a été retiré du récapitulatif.
