@@ -26,7 +26,7 @@
 
 ## Futur
 - [ ] Option de basculer le site complet en anglais (bilingue FR/EN)
-- [ ] Page "Choisis le nom que tu veux faire coudre dans la manche" (monogramme/broderie personnalisée)
+- [x] Page monogramme (nom brodé à l'intérieur du veston) — ajoutée à la fin des parcours Collection et Personnalisé, 20$.
 - [ ] Livraison : définir les délais, et voir si un suivi de commande est possible (avec quel transporteur ?)
 - [ ] Comptabilité : comprendre comment Shopify gère la comptabilité (taxes, rapports de vente, etc.) — recherche à faire avec Felix, pas du code
 - [ ] Esthétique + adaptabilité mobile/tablette — révision visuelle générale du site sur tous les appareils
@@ -34,8 +34,9 @@
 ## Branding / liens à corriger
 - [ ] Mettre le bon logo partout sur le site (actuellement incohérent ou manquant à certains endroits)
 - [ ] Le bouton/lien "Voir la collection" doit pointer vers la vraie page de collection (actuellement incorrect)
-- [ ] Footer : le lien actuellement nommé "Magasine" (`sections/footer.liquid:221-224`, réglage `magasine_url`) est une coquille pour "Magasiner" (Shop) — à corriger. Felix veut aussi des liens footer distincts pour "Personnalisé", "Collection", et "Chemise" qui mènent chacun vers la bonne page.
+- [x] Footer : "Magasine" corrigé en "Magasiner", avec 3 liens distincts (Personnalisé, Collection, Chemise) menant chacun vers la bonne page.
 
 ## Déjà construit (retiré de la liste "à construire")
 - [x] Navigation principale (`sections/header.liquid` — Accueil / Collection / Personnalisé)
 - [x] Footer (`sections/footer.liquid` + `footer-group.json`)
+- [x] Distinction couturière vendeuse (livres de tissus) vs mensurations seulement — pastille dorée dédiée sur la carte, légende, toggle de filtre, texte clair sur chaque carte (`sections/header.liquid`, champ `vendeuse` sur le metaobjet `couturiere`). Felix doit cocher "vendeuse" sur ses vraies couturières concernées dans l'Admin Shopify.
