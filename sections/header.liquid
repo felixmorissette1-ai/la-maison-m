@@ -1,10 +1,8 @@
 <header class="lmm-header full-width">
   <div class="lmm-header__inner">
-    <nav class="lmm-header__nav lmm-header__nav--left">
-      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
-      <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
-      <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemise</a>
-    </nav>
+    <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
+    <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
+    <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemise</a>
 
     <a href="{{ routes.root_url }}" class="lmm-header__logo">
       {% if section.settings.logo_image %}
@@ -15,31 +13,29 @@
       <span class="lmm-logo-sub">Tailleur sur mesure</span>
     </a>
 
-    <div class="lmm-header__nav lmm-header__nav--right">
-      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
+    <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
 
-      {% assign now_ts = 'now' | date: '%s' %}
-      {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
-      {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
-        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion du rendez-vous</a>
-      {% else %}
-        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
-      {% endif %}
+    {% assign now_ts = 'now' | date: '%s' %}
+    {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
+    {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+      <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion du rendez-vous</a>
+    {% else %}
+      <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
+    {% endif %}
 
-      <div class="lmm-header__icons">
-        <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
-          {{ 'icon-cart.svg' | inline_asset_content }}
-          {% if cart.item_count > 0 %}
-            <span class="lmm-cart-count">{{ cart.item_count }}</span>
-          {% endif %}
-        </a>
-
-        {% if shop.customer_accounts_enabled %}
-          <shopify-account menu="{{ section.settings.customer_account_menu }}" class="lmm-icon-btn">
-            {{ 'icon-account.svg' | inline_asset_content }}
-          </shopify-account>
+    <div class="lmm-header__icons">
+      <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
+        {{ 'icon-cart.svg' | inline_asset_content }}
+        {% if cart.item_count > 0 %}
+          <span class="lmm-cart-count">{{ cart.item_count }}</span>
         {% endif %}
-      </div>
+      </a>
+
+      {% if shop.customer_accounts_enabled %}
+        <shopify-account menu="{{ section.settings.customer_account_menu }}" class="lmm-icon-btn">
+          {{ 'icon-account.svg' | inline_asset_content }}
+        </shopify-account>
+      {% endif %}
     </div>
   </div>
 </header>
@@ -661,9 +657,9 @@
     margin: 0 auto;
     padding: 0 32px;
     height: 100%;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .lmm-header__logo {
@@ -671,7 +667,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-self: center;
   }
 
   .lmm-header__logo-img {
@@ -693,20 +688,6 @@
     text-transform: uppercase;
     color: var(--lmm-bordeaux-pale);
     margin-top: 3px;
-  }
-
-  .lmm-header__nav {
-    display: flex;
-    align-items: center;
-    gap: 28px;
-  }
-
-  .lmm-header__nav--left {
-    justify-self: start;
-  }
-
-  .lmm-header__nav--right {
-    justify-self: end;
   }
 
   .lmm-nav-link {
