@@ -145,8 +145,8 @@
   .lmm-plan__grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    align-items: start;
+    gap: 24px;
+    align-items: stretch;
   }
 
   .lmm-plan__card {
@@ -154,20 +154,25 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 10px;
+    gap: 12px;
+    background: var(--lmm-ivoire-deep);
+    border: 1px solid var(--lmm-ivoire-line);
+    border-radius: 12px;
+    padding: 36px 26px;
   }
 
   .lmm-plan__num {
-    width: 26px;
-    height: 26px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 11px;
+    font-size: 12px;
     margin-bottom: 4px;
     border: 1px solid var(--lmm-muted);
     color: var(--lmm-muted);
+    background: var(--lmm-ivoire);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 

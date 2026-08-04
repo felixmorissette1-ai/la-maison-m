@@ -45,6 +45,7 @@
 - [x] Champ de réglage "Lien Calendly" retiré du schema de `sections/page.liquid` (obsolète depuis le passage à Cal.com)
 
 ## Futur
+- [ ] Page d'accueil : transition entre sections façon Apple (dégradé de couleur qui évolue en scrollant) — demandé par Felix le 2026-08-04, explicitement pas une priorité immédiate.
 - [ ] Option de basculer le site complet en anglais (bilingue FR/EN)
 - [x] Page monogramme (nom brodé à l'intérieur du veston) — ajoutée à la fin des parcours Collection et Personnalisé, 20$.
 - [ ] Livraison : définir les délais, et voir si un suivi de commande est possible (avec quel transporteur ?)
