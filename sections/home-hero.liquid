@@ -16,9 +16,7 @@
     <div class="lmm-plan__row">
       <div class="lmm-plan__step">
         <span class="lmm-plan__num">01</span>
-        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
-          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-        </a>
+        <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
           {% for line in step1_lines %}
@@ -26,6 +24,9 @@
           {% endfor %}
           <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
         </ul>
+        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
+          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+        </a>
       </div>
 
       <div class="lmm-plan__line"></div>
@@ -35,6 +36,7 @@
         <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
           <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
         </a>
+        <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
           {% for line in step2_lines %}
@@ -51,6 +53,7 @@
         <div class="lmm-plan__step-head">
           <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
         </div>
+        <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
           {% for line in step3_lines %}
@@ -248,30 +251,45 @@
     color: var(--lmm-bordeaux-soft);
   }
 
+  /* Phrase d'intro : donne le contexte en une phrase claire. Les puces qui
+     suivent ne portent que les détails concrets — jamais les deux à
+     répéter la même idée. */
+  .lmm-plan__intro {
+    font-size: 15.5px;
+    color: var(--lmm-text);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 26ch;
+  }
+
   .lmm-plan__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: inline-flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     text-align: left;
   }
 
   .lmm-plan__list li {
     position: relative;
-    padding-left: 20px;
-    font-size: 17px;
-    color: var(--lmm-text);
-    line-height: 1.6;
+    padding-left: 16px;
+    font-size: 13.5px;
+    color: var(--lmm-muted);
+    line-height: 1.5;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .lmm-plan__list li::before {
-    content: '–';
+    content: '';
     position: absolute;
     left: 0;
-    color: var(--lmm-bordeaux-soft);
+    top: 8px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--lmm-bordeaux-soft);
   }
 
   .lmm-plan__link {
@@ -293,13 +311,16 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "Configurez de A à Z, ou choisissez dans la collection" },
+    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet à votre rythme." },
+    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "De A à Z, ou directement dans la collection" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "Mensurations prises par des professionnels\nPrès de chez vous" },
+    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Vos mensurations sont prises par des professionnels." },
+    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "Près de chez vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Cousu à la main\nPrêt en quelques semaines\nLivré chez vous" }
+    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Votre complet est cousu à la main." },
+    { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Prêt en quelques semaines\nLivré chez vous" }
   ],
   "presets": [
     { "name": "Hero — Accueil" }

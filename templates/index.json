@@ -7,11 +7,14 @@
         "plan_title": "Comment ça fonctionne",
         "step1_label": "Configurez votre complet",
         "step1_url": "/pages/sur-mesure",
-        "step1_bullets": "Configurez de A à Z, ou choisissez dans la collection",
+        "step1_intro": "Configurez votre complet à votre rythme.",
+        "step1_bullets": "De A à Z, ou directement dans la collection",
         "step2_label": "Rendez-vous mensurations",
-        "step2_bullets": "Mensurations prises par des professionnels\nPrès de chez vous",
+        "step2_intro": "Vos mensurations sont prises par des professionnels.",
+        "step2_bullets": "Près de chez vous",
         "step3_label": "Recevez votre complet",
-        "step3_bullets": "Cousu à la main\nPrêt en quelques semaines\nLivré chez vous"
+        "step3_intro": "Votre complet est cousu à la main.",
+        "step3_bullets": "Prêt en quelques semaines\nLivré chez vous"
       }
     }
   },
