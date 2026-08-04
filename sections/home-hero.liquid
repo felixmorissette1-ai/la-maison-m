@@ -221,11 +221,18 @@
 
   .lmm-plan__step-head--btn {
     background: var(--lmm-bordeaux);
-    border-radius: 12px;
-    padding: 16px 24px;
+    border-radius: 8px;
+    padding: 13px 26px;
   }
 
+  /* Un vrai bouton a la typo des autres boutons du site (petit, sans-serif,
+     majuscules espacées) — pas la police "titre" serif des étapes 2 et 3. */
   .lmm-plan__step-head--btn .lmm-plan__step-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
     color: var(--lmm-ivoire);
   }
 
