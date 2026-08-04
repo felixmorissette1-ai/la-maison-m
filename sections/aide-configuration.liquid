@@ -1,0 +1,125 @@
+{% comment %} Aide pour configurer — formulaire réservé aux clients connectés {% endcomment %}
+<div class="lmm-partenaire-wrap">
+  <div class="lmm-partenaire__header">
+    <p class="lmm-partenaire__label">{{ section.settings.label }}</p>
+    <h1 class="lmm-partenaire__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-partenaire__sub">{{ section.settings.sous_titre }}</p>
+  </div>
+
+  {% if customer %}
+    <form id="aide-config-form" class="lmm-partenaire__form" onsubmit="event.preventDefault(); lmmSoumettreAideConfig();">
+      <div class="lmm-partenaire__field">
+        <label for="ac-prenom">Prénom</label>
+        <input type="text" id="ac-prenom" name="prenom" value="{{ customer.first_name | escape }}" required>
+      </div>
+      <div class="lmm-partenaire__field">
+        <label for="ac-nom">Nom</label>
+        <input type="text" id="ac-nom" name="nom" value="{{ customer.last_name | escape }}" required>
+      </div>
+      <div class="lmm-partenaire__field">
+        <label for="ac-evenement">Événement</label>
+        <input type="text" id="ac-evenement" name="evenement" placeholder="Mariage, travail, occasion spéciale…">
+      </div>
+      <div class="lmm-partenaire__field">
+        <label for="ac-note">Note</label>
+        <textarea id="ac-note" name="note" rows="5" placeholder="Dites-nous en un peu plus sur ce que vous cherchez."></textarea>
+      </div>
+      <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
+      <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma demande</button>
+      <p class="lmm-partenaire__error" id="aide-config-error"></p>
+      <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
+    </form>
+  {% else %}
+    <div class="lmm-partenaire__gate">
+      <p>Connectez-vous ou créez un compte pour nous écrire.</p>
+      <div class="lmm-partenaire__gate-actions">
+        <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary">Se connecter</a>
+        <a href="/account/register?return_url={{ request.path | url_encode }}" class="lmm-partenaire__gate-link">Créer un compte</a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .lmm-partenaire-wrap {
+    width: 90%; max-width: 560px; margin: 0 auto; padding: 56px 0 80px;
+  }
+  .lmm-partenaire__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 8px; }
+  .lmm-partenaire__title { font-family: Georgia, serif; font-size: 32px; font-weight: 400; color: var(--lmm-text); margin: 0 0 12px; }
+  .lmm-partenaire__sub { font-size: 14px; color: var(--lmm-muted); line-height: 1.7; margin: 0 0 40px; }
+  .lmm-partenaire__field { margin-bottom: 20px; }
+  .lmm-partenaire__field label {
+    display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--lmm-muted); margin-bottom: 8px;
+  }
+  .lmm-partenaire__field input,
+  .lmm-partenaire__field textarea {
+    width: 100%; box-sizing: border-box; border: 1px solid var(--lmm-border); background: #fff;
+    padding: 14px 16px; font-family: inherit; font-size: 15px; color: var(--lmm-text);
+  }
+  .lmm-partenaire__field textarea { resize: vertical; }
+  .lmm-partenaire__field input:focus,
+  .lmm-partenaire__field textarea:focus { outline: none; border-color: var(--lmm-gold); }
+  .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
+  .lmm-partenaire__success { color: #4A7A4A; font-size: 13px; margin-top: 14px; display: none; }
+  .lmm-partenaire__gate { text-align: center; padding: 32px 0; }
+  .lmm-partenaire__gate p { font-size: 15px; color: var(--lmm-muted); margin: 0 0 24px; }
+  .lmm-partenaire__gate-actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .lmm-partenaire__gate-link { font-size: 12px; letter-spacing: 0.06em; color: var(--lmm-muted); text-decoration: underline; }
+</style>
+
+<script>
+  function lmmSoumettreAideConfig() {
+    var btn = document.getElementById('aide-config-submit-btn');
+    var errEl = document.getElementById('aide-config-error');
+    var okEl = document.getElementById('aide-config-success');
+    errEl.style.display = 'none';
+    okEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    fetch('https://lmm-backend.vercel.app/api/aide-configuration', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prenom: document.getElementById('ac-prenom').value,
+        nom: document.getElementById('ac-nom').value,
+        email: document.getElementById('ac-email').value,
+        evenement: document.getElementById('ac-evenement').value,
+        note: document.getElementById('ac-note').value
+      })
+    })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, d: d }; }); })
+    .then(function(res) {
+      if (!res.ok) {
+        errEl.textContent = res.d.error || 'Une erreur est survenue. Réessayez.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Envoyer ma demande';
+        return;
+      }
+      document.getElementById('aide-config-form').reset();
+      okEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+    })
+    .catch(function() {
+      errEl.textContent = 'Erreur réseau. Réessayez.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Aide pour configurer",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Étiquette", "default": "Besoin d'aide" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Aide pour configurer votre complet" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Dites-nous en un peu plus sur ce que vous cherchez, et nous vous répondrons sous peu." }
+  ],
+  "presets": [{ "name": "Aide pour configurer" }]
+}
+{% endschema %}
