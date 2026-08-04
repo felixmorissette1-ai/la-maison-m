@@ -1,0 +1,120 @@
+{% comment %} Devenir un partenaire — formulaire de candidature tailleur/ambassadeur {% endcomment %}
+<div class="lmm-partenaire-wrap">
+  <div class="lmm-partenaire__header">
+    <p class="lmm-partenaire__label">{{ section.settings.label }}</p>
+    <h1 class="lmm-partenaire__title">{{ section.settings.titre }}</h1>
+    <p class="lmm-partenaire__sub">{{ section.settings.sous_titre }}</p>
+  </div>
+
+  <form id="partenaire-form" class="lmm-partenaire__form" onsubmit="event.preventDefault(); lmmSoumettrePartenaire();">
+    <div class="lmm-partenaire__field">
+      <label for="p-nom">Nom</label>
+      <input type="text" id="p-nom" name="nom">
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="p-telephone">Téléphone</label>
+      <input type="tel" id="p-telephone" name="telephone">
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="p-email">Courriel *</label>
+      <input type="email" id="p-email" name="email" required>
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="p-type">Intéressé·e par</label>
+      <select id="p-type" name="type">
+        <option value="Tailleur">Devenir tailleur</option>
+        <option value="Ambassadeur">Devenir ambassadeur</option>
+        <option value="Les deux">Les deux</option>
+      </select>
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="p-message">Message *</label>
+      <textarea id="p-message" name="message" required rows="5"></textarea>
+    </div>
+    <button type="submit" class="lmm-btn-primary" id="partenaire-submit-btn">Envoyer ma demande</button>
+    <p class="lmm-partenaire__error" id="partenaire-error"></p>
+    <p class="lmm-partenaire__success" id="partenaire-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
+  </form>
+</div>
+
+<style>
+  .lmm-partenaire-wrap {
+    width: 90%; max-width: 560px; margin: 0 auto; padding: 56px 0 80px;
+  }
+  .lmm-partenaire__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 8px; }
+  .lmm-partenaire__title { font-family: Georgia, serif; font-size: 32px; font-weight: 400; color: var(--lmm-text); margin: 0 0 12px; }
+  .lmm-partenaire__sub { font-size: 14px; color: var(--lmm-muted); line-height: 1.7; margin: 0 0 40px; }
+  .lmm-partenaire__field { margin-bottom: 20px; }
+  .lmm-partenaire__field label {
+    display: block; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--lmm-muted); margin-bottom: 8px;
+  }
+  .lmm-partenaire__field input,
+  .lmm-partenaire__field select,
+  .lmm-partenaire__field textarea {
+    width: 100%; box-sizing: border-box; border: 1px solid var(--lmm-border); background: #fff;
+    padding: 14px 16px; font-family: inherit; font-size: 15px; color: var(--lmm-text);
+  }
+  .lmm-partenaire__field textarea { resize: vertical; }
+  .lmm-partenaire__field input:focus,
+  .lmm-partenaire__field select:focus,
+  .lmm-partenaire__field textarea:focus { outline: none; border-color: var(--lmm-gold); }
+  .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
+  .lmm-partenaire__success { color: #4A7A4A; font-size: 13px; margin-top: 14px; display: none; }
+</style>
+
+<script>
+  function lmmSoumettrePartenaire() {
+    var btn = document.getElementById('partenaire-submit-btn');
+    var errEl = document.getElementById('partenaire-error');
+    var okEl = document.getElementById('partenaire-success');
+    errEl.style.display = 'none';
+    okEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours…';
+
+    fetch('https://lmm-backend.vercel.app/api/partenaire-application', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nom: document.getElementById('p-nom').value,
+        telephone: document.getElementById('p-telephone').value,
+        email: document.getElementById('p-email').value,
+        type: document.getElementById('p-type').value,
+        message: document.getElementById('p-message').value
+      })
+    })
+    .then(function(r) { return r.json().then(function(d) { return { ok: r.ok, d: d }; }); })
+    .then(function(res) {
+      if (!res.ok) {
+        errEl.textContent = res.d.error || 'Une erreur est survenue. Réessayez.';
+        errEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Envoyer ma demande';
+        return;
+      }
+      document.getElementById('partenaire-form').reset();
+      okEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+    })
+    .catch(function() {
+      errEl.textContent = 'Erreur réseau. Réessayez.';
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma demande';
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Devenir un partenaire",
+  "settings": [
+    { "type": "text", "id": "label", "label": "Étiquette", "default": "Partenariat" },
+    { "type": "text", "id": "titre", "label": "Titre", "default": "Devenir un partenaire" },
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Tailleur ou ambassadeur — dites-nous en un peu plus sur vous, et nous vous répondrons sous 48 heures." }
+  ],
+  "presets": [{ "name": "Devenir un partenaire" }]
+}
+{% endschema %}

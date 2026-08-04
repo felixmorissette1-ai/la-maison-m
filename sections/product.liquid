@@ -115,7 +115,6 @@
               <input type="hidden" name="id" id="chemise-selected-variant" value="{{ product.selected_or_first_available_variant.id }}">
               <button type="submit" class="lmm-product__cta-primary" {% unless product.available %}disabled{% endunless %}>
                 <span>{% if product.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
-                {{ 'icon-cart.svg' | inline_asset_content }}
               </button>
             {% endform %}
           {% else %}

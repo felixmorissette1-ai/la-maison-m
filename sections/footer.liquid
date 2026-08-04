@@ -20,7 +20,18 @@
     <div class="lmm-footer__col">
       <h3 class="lmm-footer__heading">{{ section.settings.magasine_heading }}</h3>
       <ul class="lmm-footer__links">
-        <li><a href="{{ section.settings.magasine_url | default: '/blogs/magasine' }}">{{ section.settings.magasine_label }}</a></li>
+        <li><a href="{{ section.settings.personnalise_url | default: '/pages/sur-mesure' }}">{{ section.settings.personnalise_label }}</a></li>
+        <li><a href="{{ section.settings.collection_url | default: '/collections/frontpage' }}">{{ section.settings.collection_label }}</a></li>
+        <li><a href="{{ section.settings.chemise_url | default: '/collections/chemises' }}">{{ section.settings.chemise_label }}</a></li>
+      </ul>
+    </div>
+
+    <div class="lmm-footer__col">
+      <h3 class="lmm-footer__heading">{{ section.settings.partenaires_heading }}</h3>
+      <ul class="lmm-footer__links">
+        <li><a href="{{ section.settings.couturieres_url | default: 'https://lmm-backend.vercel.app/mensurations.html' }}" target="_blank" rel="noopener">{{ section.settings.couturieres_label }}</a></li>
+        <li><a href="{{ section.settings.ambassadeurs_url | default: 'https://lmm-backend.vercel.app/ambassadeur.html' }}" target="_blank" rel="noopener">{{ section.settings.ambassadeurs_label }}</a></li>
+        <li><a href="{{ section.settings.devenir_partenaire_url | default: '/pages/devenir-partenaire' }}">{{ section.settings.devenir_partenaire_label }}</a></li>
       </ul>
     </div>
 
@@ -55,7 +66,6 @@
           {{ type | payment_type_svg_tag }}
         {% endfor %}
       {% endif %}
-      <a href="https://lmm-backend.vercel.app/mensurations.html" target="_blank" rel="noopener" class="lmm-footer__staff-link">Portail couturière</a>
     </div>
   </div>
 </footer>
@@ -71,8 +81,8 @@
     margin: 0 auto;
     padding: 56px 32px 40px;
     display: grid;
-    grid-template-columns: 1.4fr 1fr 1fr 1.2fr;
-    gap: 32px;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1.1fr;
+    gap: 28px;
   }
 
   .lmm-footer__logo {
@@ -175,18 +185,6 @@
     width: auto;
   }
 
-  .lmm-footer__staff-link {
-    font-size: 10px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(245, 240, 235, 0.4);
-    text-decoration: none;
-  }
-
-  .lmm-footer__staff-link:hover {
-    color: var(--lmm-gold);
-  }
-
   @media (max-width: 860px) {
     .lmm-footer__inner {
       grid-template-columns: 1fr 1fr;
@@ -218,10 +216,23 @@
     { "type": "text", "id": "about_heading", "label": "Titre de la colonne", "default": "À propos" },
     { "type": "link_list", "id": "about_menu", "label": "Liens (à gérer dans Navigation)" },
 
-    { "type": "header", "content": "Magasine" },
-    { "type": "text", "id": "magasine_heading", "label": "Titre de la colonne", "default": "Magasine" },
-    { "type": "text", "id": "magasine_label", "label": "Texte du lien", "default": "Voir les articles" },
-    { "type": "url", "id": "magasine_url", "label": "Lien du Magasine" },
+    { "type": "header", "content": "Magasiner" },
+    { "type": "text", "id": "magasine_heading", "label": "Titre de la colonne", "default": "Magasiner" },
+    { "type": "text", "id": "personnalise_label", "label": "Texte du lien — Personnalisé", "default": "Personnalisé" },
+    { "type": "url", "id": "personnalise_url", "label": "Lien — Personnalisé (vide = /pages/sur-mesure)" },
+    { "type": "text", "id": "collection_label", "label": "Texte du lien — Collection", "default": "Collection" },
+    { "type": "url", "id": "collection_url", "label": "Lien — Collection (vide = /collections/frontpage)" },
+    { "type": "text", "id": "chemise_label", "label": "Texte du lien — Chemise", "default": "Chemise" },
+    { "type": "url", "id": "chemise_url", "label": "Lien — Chemise (vide = /collections/chemises)" },
+
+    { "type": "header", "content": "Partenaires" },
+    { "type": "text", "id": "partenaires_heading", "label": "Titre de la colonne", "default": "Partenaires" },
+    { "type": "text", "id": "couturieres_label", "label": "Texte du lien — Tailleurs", "default": "Tailleurs" },
+    { "type": "url", "id": "couturieres_url", "label": "Lien — Tailleurs (vide = portail par défaut)" },
+    { "type": "text", "id": "ambassadeurs_label", "label": "Texte du lien — Ambassadeurs", "default": "Ambassadeurs" },
+    { "type": "url", "id": "ambassadeurs_url", "label": "Lien — Ambassadeurs (vide = portail par défaut)" },
+    { "type": "text", "id": "devenir_partenaire_label", "label": "Texte du lien — Devenir un partenaire", "default": "Devenir un partenaire" },
+    { "type": "url", "id": "devenir_partenaire_url", "label": "Lien — Devenir un partenaire (vide = /pages/devenir-partenaire)" },
 
     { "type": "header", "content": "Contact" },
     { "type": "text", "id": "contact_heading", "label": "Titre de la colonne", "default": "Contact" },

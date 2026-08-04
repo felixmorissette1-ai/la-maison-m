@@ -76,13 +76,27 @@
       </span>
     {% endif %}
     <span class="lmm-fil__sep">›</span>
-    {% if etape_active == 5 %}
+    {% if etape_active > 5 %}
+      <a href="/pages/configurateur-monogramme" class="lmm-fil__step lmm-fil__step--done" id="fil-step-5">
+        <span class="lmm-fil__num">✓</span>Monogramme
+      </a>
+    {% elsif etape_active == 5 %}
       <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-5">
-        <span class="lmm-fil__num">5</span>Récapitulatif
+        <span class="lmm-fil__num">5</span>Monogramme
       </span>
     {% else %}
       <span class="lmm-fil__step" id="fil-step-5">
-        <span class="lmm-fil__num">5</span>Récapitulatif
+        <span class="lmm-fil__num">5</span>Monogramme
+      </span>
+    {% endif %}
+    <span class="lmm-fil__sep">›</span>
+    {% if etape_active == 6 %}
+      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-6">
+        <span class="lmm-fil__num">6</span>Récapitulatif
+      </span>
+    {% else %}
+      <span class="lmm-fil__step" id="fil-step-6">
+        <span class="lmm-fil__num">6</span>Récapitulatif
       </span>
     {% endif %}
   </div>
@@ -90,11 +104,11 @@
 <script>
   (function() {
     var params = new URLSearchParams(window.location.search);
-    var pages = { 2: '/pages/configurateur-pieces', 3: '/pages/configurateur-pantalon', 4: '/pages/configurateur-ourlet' };
-    var completed = { 2: !!params.get('pieces'), 3: !!params.get('hauteur'), 4: !!params.get('bas') };
+    var pages = { 2: '/pages/configurateur-pieces', 3: '/pages/configurateur-pantalon', 4: '/pages/configurateur-ourlet', 5: '/pages/configurateur-monogramme' };
+    var completed = { 2: !!params.get('pieces'), 3: !!params.get('hauteur'), 4: !!params.get('bas'), 5: !!params.get('mono_vu') };
 
     // Mettre à jour les étapes déjà complétées (même si elles sont "futures" sur cette page)
-    [2, 3, 4].forEach(function(step) {
+    [2, 3, 4, 5].forEach(function(step) {
       var el = document.getElementById('fil-step-' + step);
       if (!el) return;
       if (completed[step] && !el.classList.contains('lmm-fil__step--active') && !el.classList.contains('lmm-fil__step--done')) {

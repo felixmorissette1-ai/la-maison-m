@@ -1,5 +1,5 @@
 {% comment %} Récapitulatif — Collection La Maison M. {% endcomment %}
-{% render 'fil-ariane-collection', etape_active: 5 %}
+{% render 'fil-ariane-collection', etape_active: 6 %}
 
 <style>
   .lmm-recap-wrap { width: 90%; max-width: 900px; margin: 0 auto; padding: 40px 0 60px; }
@@ -33,6 +33,7 @@
     <div class="lmm-recap__row"><span class="lmm-recap__key">Pièces</span><span class="lmm-recap__val" id="r-pieces">—</span></div>
     <div class="lmm-recap__row"><span class="lmm-recap__key">Bas de pantalon</span><span class="lmm-recap__val" id="r-bas">—</span></div>
     <div class="lmm-recap__row"><span class="lmm-recap__key">Hauteur du pantalon</span><span class="lmm-recap__val" id="r-hauteur">—</span></div>
+    <div class="lmm-recap__row" id="r-mono-row" style="display:none;"><span class="lmm-recap__key">Monogramme</span><span class="lmm-recap__val" id="r-mono">—</span></div>
   </div>
 
   <div class="lmm-recap__total">
@@ -56,7 +57,15 @@
   document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
   document.getElementById('r-bas').textContent = params.get('bas') || '—';
   document.getElementById('r-hauteur').textContent = params.get('hauteur') || '—';
-  var prixCents = parseInt(params.get('prix') || '0');
+
+  var monogramme = params.get('monogramme') || '';
+  var prixMonogrammeCents = {{ section.settings.prix_monogramme | default: 0 }};
+  if (monogramme) {
+    document.getElementById('r-mono-row').style.display = 'flex';
+    document.getElementById('r-mono').textContent = monogramme + (prixMonogrammeCents ? ' (+$' + (prixMonogrammeCents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2 }) + ')' : '');
+  }
+
+  var prixCents = parseInt(params.get('prix') || '0') + (monogramme ? prixMonogrammeCents : 0);
   var prixFormate = prixCents ? '$' + (prixCents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
   document.getElementById('r-prix').textContent = prixFormate;
 
@@ -73,6 +82,7 @@
       'Bas de pantalon': params.get('bas') || '',
       'Hauteur du pantalon': params.get('hauteur') || ''
     };
+    if (monogramme) props['Monogramme (nom brodé à l\'intérieur du veston)'] = monogramme;
     fetch('/cart/add.js', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -91,7 +101,8 @@
 {
   "name": "Collection — Recap",
   "settings": [
-    { "type": "number", "id": "variant_id", "label": "Variant ID du produit Shopify par défaut" }
+    { "type": "number", "id": "variant_id", "label": "Variant ID du produit Shopify par défaut" },
+    { "type": "number", "id": "prix_monogramme", "label": "Prix du monogramme (en cents, ex: 1500 = 15,00$)", "default": 2000 }
   ],
   "presets": [{ "name": "Collection — Récapitulatif" }]
 }

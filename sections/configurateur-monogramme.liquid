@@ -1,0 +1,86 @@
+{% comment %} Monogramme — Collection La Maison M. {% endcomment %}
+{% render 'fil-ariane-collection', etape_active: 5 %}
+
+<style>
+  .lmm-mono-wrap {
+    width: 90%; max-width: 560px; margin: 0 auto; padding: 56px 0 60px;
+    display: flex; flex-direction: column; box-sizing: border-box;
+  }
+  .lmm-mono__label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-gold); margin-bottom: 6px; }
+  .lmm-mono__title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: var(--lmm-text); margin-bottom: 10px; }
+  .lmm-mono__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.6; margin-bottom: 32px; }
+  .lmm-mono__field { margin-bottom: 8px; }
+  .lmm-mono__input {
+    width: 100%; box-sizing: border-box; border: 1px solid var(--lmm-border); background: #fff;
+    padding: 16px 18px; font-family: Georgia, serif; font-size: 18px; letter-spacing: 0.04em;
+    color: var(--lmm-text); text-align: center; text-transform: uppercase;
+  }
+  .lmm-mono__input:focus { outline: none; border-color: var(--lmm-gold); }
+  .lmm-mono__count { font-size: 10px; color: var(--lmm-muted); text-align: right; margin: 6px 0 0; }
+  .lmm-mono__prix { font-size: 11px; color: var(--lmm-muted); text-align: center; margin: 16px 0 0; letter-spacing: 0.04em; }
+  .lmm-mono__nav { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px; }
+  .lmm-mono__skip { background: none; border: none; color: var(--lmm-muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; padding: 6px; }
+  .lmm-mono__skip:hover { color: var(--lmm-text); }
+</style>
+
+<div class="lmm-mono-wrap">
+  <p class="lmm-mono__label">Collection — Étape 5 sur 6</p>
+  <h1 class="lmm-mono__title">Un nom brodé à l'intérieur du veston</h1>
+  <p class="lmm-mono__sub">{{ section.settings.sous_titre }}</p>
+
+  <div class="lmm-mono__field">
+    <input type="text" id="mono-input" class="lmm-mono__input" maxlength="{{ section.settings.max_caracteres | default: 20 }}" placeholder="Ex. J. Morissette" autocomplete="off">
+    <p class="lmm-mono__count"><span id="mono-count">0</span> / {{ section.settings.max_caracteres | default: 20 }}</p>
+  </div>
+
+  {% if section.settings.prix_monogramme and section.settings.prix_monogramme > 0 %}
+    <p class="lmm-mono__prix">+ {{ section.settings.prix_monogramme | money }} si un nom est brodé</p>
+  {% endif %}
+
+  <div class="lmm-mono__nav">
+    <button class="lmm-btn-primary" id="mono-next" onclick="goNext()">Continuer →</button>
+    <button class="lmm-mono__skip" onclick="goSkip()">Passer cette étape</button>
+  </div>
+</div>
+
+<script>
+  var monoInput = document.getElementById('mono-input');
+  var monoCount = document.getElementById('mono-count');
+
+  var savedMono = new URLSearchParams(window.location.search).get('monogramme');
+  if (savedMono) {
+    monoInput.value = savedMono;
+    monoCount.textContent = savedMono.length;
+  }
+
+  monoInput.addEventListener('input', function() {
+    monoCount.textContent = monoInput.value.length;
+  });
+
+  function goNext() {
+    var p = new URLSearchParams(window.location.search);
+    var val = monoInput.value.trim();
+    if (val) { p.set('monogramme', val); } else { p.delete('monogramme'); }
+    p.set('mono_vu', '1');
+    window.location.href = '/pages/configurateur-recap?' + p.toString();
+  }
+
+  function goSkip() {
+    var p = new URLSearchParams(window.location.search);
+    p.delete('monogramme');
+    p.set('mono_vu', '1');
+    window.location.href = '/pages/configurateur-recap?' + p.toString();
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Collection — Monogramme",
+  "settings": [
+    { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Faites broder discrètement un nom ou des initiales à l'intérieur du veston. Cette étape est entièrement optionnelle." },
+    { "type": "number", "id": "max_caracteres", "label": "Nombre de caractères maximum", "default": 20 },
+    { "type": "number", "id": "prix_monogramme", "label": "Prix du monogramme (en cents, ex: 1500 = 15,00$)", "default": 2000 }
+  ],
+  "presets": [{ "name": "Collection — Monogramme" }]
+}
+{% endschema %}

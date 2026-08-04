@@ -32,16 +32,16 @@
 
 ## Mensurations
 - [x] Metafields de mensurations sur le profil client (`custom.mensurations`, utilisé activement pour débloquer le paiement — voir `sections/cart.liquid`)
-- [ ] Vérifier que les couturières remplissent bien les mesures détaillées (tour de poitrine, tour de taille, longueur d'épaule, etc.) dans le profil client au premier rendez-vous — process humain à confirmer, pas du code
+- [ ] Vérifier que les tailleurs remplissent bien les mesures détaillées (tour de poitrine, tour de taille, longueur d'épaule, etc.) dans le profil client au premier rendez-vous — process humain à confirmer, pas du code
 - [x] Les mesures sont automatiquement disponibles sur les commandes futures (logique de gating déjà en place dans le panier)
 
 ## Commandes en boutique
-- [ ] Former la couturière à créer des draft orders depuis l'admin Shopify
+- [ ] Former le tailleur à créer des draft orders depuis l'admin Shopify
 - [ ] Prévoir une tablette/ordi en boutique pour que le client se connecte à son compte La Maison M.
-- [ ] Documenter le flux : client se connecte → couturière crée le draft → client voit et paie
+- [ ] Documenter le flux : client se connecte → tailleur crée le draft → client voit et paie
 
 ## Prise de rendez-vous
-- [x] Système de réservation en place — **intégré via Cal.com** (pas Calendly comme prévu à l'origine), directement dans le header et la modale de localisation/couturière (`sections/header.liquid`), avec sync automatique des metafields rdv via `llm-backend/api/cal-sync.js` et `cal-webhook.js`
+- [x] Système de réservation en place — **intégré via Cal.com** (pas Calendly comme prévu à l'origine), directement dans le header et la modale de localisation/tailleur (`sections/header.liquid`), avec sync automatique des metafields rdv via `llm-backend/api/cal-sync.js` et `cal-webhook.js`
 - [x] Champ de réglage "Lien Calendly" retiré du schema de `sections/page.liquid` (obsolète depuis le passage à Cal.com)
 
 ## Futur
@@ -59,6 +59,7 @@
 ## Déjà construit (retiré de la liste "à construire")
 - [x] Navigation principale (`sections/header.liquid` — À propos / Collection / Personnalisé / Chemise, logo = retour accueil)
 - [x] Footer (`sections/footer.liquid` + `footer-group.json`)
-- [x] Distinction couturière vendeuse (livres de tissus) vs mensurations seulement — pastille dorée dédiée sur la carte, légende, toggle de filtre, texte clair sur chaque carte (`sections/header.liquid`, champ `vendeuse` sur le metaobjet `couturiere`). Felix doit cocher "vendeuse" sur ses vraies couturières concernées dans l'Admin Shopify.
+- [x] Distinction tailleur vendeur (livres de tissus) vs mensurations seulement — pastille dorée dédiée sur la carte, légende, toggle de filtre, texte clair sur chaque carte (`sections/header.liquid`, champ `vendeuse` sur le metaobjet `couturiere` — nom technique inchangé). Felix doit cocher "vendeuse" sur ses vrais tailleurs concernés dans l'Admin Shopify.
+- [x] "Couturière" renommé en "Tailleur" partout dans le texte visible du site (identifiants techniques/URLs inchangés pour ne rien casser).
 - [x] Classe `.lmm-btn-primary` unifiée dans `snippets/css-variables.liquid` — corrige un vrai bug où les boutons "Continuer" de tout le parcours Collection (pieces/pantalon/ourlet/monogramme/page.liquid) étaient non stylés (la seule définition existante était locale à `home-hero.liquid`, renommée `.lmm-btn-hero-light` pour éviter la collision).
 - [x] Étape monogramme (Personnalisé) et récapitulatif final réutilisent maintenant le même bouton partagé du panneau preview (`#lmm-prev-btn-next` dans `snippets/sm-preview.liquid`) au lieu de boutons locaux non stylés/incohérents. Le texte "un membre de notre équipe vous contactera" a été retiré du récapitulatif.
