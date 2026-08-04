@@ -18,61 +18,60 @@
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
     <div class="lmm-plan__row">
-      <div class="lmm-plan__step">
-        <span class="lmm-plan__num">01</span>
-        <div class="lmm-plan__step-head">
-          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-        </div>
+      <span class="lmm-plan__num">01</span>
+      <span class="lmm-plan__num">02</span>
+      <span class="lmm-plan__num">03</span>
+
+      <div class="lmm-plan__step-head">
+        <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+      </div>
+      <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
+        <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
+      </a>
+      <div class="lmm-plan__step-head">
+        <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
       </div>
 
-      <div class="lmm-plan__line"></div>
-
-      <div class="lmm-plan__step">
-        <span class="lmm-plan__num">02</span>
-        <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
-          <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
-        </a>
-      </div>
-
-      <div class="lmm-plan__line"></div>
-
-      <div class="lmm-plan__step">
-        <span class="lmm-plan__num">03</span>
-        <div class="lmm-plan__step-head">
-          <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="lmm-plan__details">
-      <div class="lmm-plan__detail">
+      <div class="lmm-plan__desc">
         <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
           {% for line in step1_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% if line != blank %}
+              {% assign emoji = line | split: ' ' | first %}
+              {% assign rest = line | remove_first: emoji | strip %}
+              <li><span class="lmm-plan__emoji">{{ emoji }}</span> {{ rest }}</li>
+            {% endif %}
           {% endfor %}
-          <li>💬 Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
+          <li><span class="lmm-plan__emoji">💬</span> Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
         </ul>
       </div>
 
-      <div class="lmm-plan__detail">
+      <div class="lmm-plan__desc">
         <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
           {% for line in step2_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% if line != blank %}
+              {% assign emoji = line | split: ' ' | first %}
+              {% assign rest = line | remove_first: emoji | strip %}
+              <li><span class="lmm-plan__emoji">{{ emoji }}</span> {{ rest }}</li>
+            {% endif %}
           {% endfor %}
-          <li id="lmm-plan-ville-item" style="display:none;">📍 <span id="lmm-plan-ville"></span></li>
+          <li id="lmm-plan-ville-item" style="display:none;"><span class="lmm-plan__emoji">📍</span> <span id="lmm-plan-ville"></span></li>
         </ul>
       </div>
 
-      <div class="lmm-plan__detail">
+      <div class="lmm-plan__desc">
         <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
           {% for line in step3_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% if line != blank %}
+              {% assign emoji = line | split: ' ' | first %}
+              {% assign rest = line | remove_first: emoji | strip %}
+              <li><span class="lmm-plan__emoji">{{ emoji }}</span> {{ rest }}</li>
+            {% endif %}
           {% endfor %}
         </ul>
       </div>
@@ -210,53 +209,27 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
+  /* Grille 3 colonnes x 3 rangées (numéro / titre / description) — chaque
+     rangée de la grille partage la même hauteur pour les 3 colonnes, donc
+     les descriptions démarrent toutes sur la même ligne horizontale peu
+     importe si un titre est plus long qu'un autre. Chaque description
+     reste directement sous son propre titre (même colonne). */
   .lmm-plan__row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 0;
-  }
-
-  .lmm-plan__step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 24px;
+    row-gap: 18px;
     text-align: center;
-    gap: 10px;
-    flex: 1;
-    max-width: 320px;
-    padding: 0 20px;
+    justify-items: center;
   }
 
-  /* Descriptions — volontairement plus bas dans la page (simple mise en
-     page, sans animation) : au chargement, seuls les numéros et titres
-     ci-dessus sont visibles ; il faut défiler pour voir ce bloc. */
-  .lmm-plan__details {
-    display: flex;
-    flex-direction: column;
-    gap: 48px;
-    max-width: 640px;
-    margin: 130px auto 0;
-  }
-
-  /* Largeur fixe partagée par la phrase d'intro ET la liste, sinon
-     chacune se centre indépendamment à sa propre largeur de contenu et
-     elles finissent décalées l'une par rapport à l'autre. */
-  .lmm-plan__detail {
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto;
-  }
-
-  .lmm-plan__line {
+  /* Largeur fixe partagée par la phrase d'intro ET la liste à l'intérieur,
+     sinon chacune se centre indépendamment à sa propre largeur de contenu
+     et elles finissent décalées l'une par rapport à l'autre. */
+  .lmm-plan__desc {
     width: 100%;
-    max-width: 60px;
-    border-top: 1px solid var(--lmm-ivoire-line);
-    align-self: flex-start;
-    /* Aligne la ligne sur le centre vertical du numéro (32px, en haut de
-       chaque étape). */
-    margin-top: 26px;
-    flex-shrink: 1;
+    max-width: 300px;
+    text-align: center;
   }
 
   /* Même format de numéro et de titre pour les 3 étapes — seule la
@@ -269,7 +242,6 @@
     font-size: 32px;
     font-weight: 400;
     color: var(--lmm-ivoire-line);
-    margin-bottom: -8px;
   }
 
   .lmm-plan__step-head {
@@ -328,6 +300,12 @@
     color: var(--lmm-bordeaux-soft);
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  /* Émoticônes en niveaux de gris — gardent leur forme, perdent leur
+     couleur, pour rester discrètes à côté du texte muted. */
+  .lmm-plan__emoji {
+    filter: grayscale(1);
   }
 {% endstylesheet %}
 
