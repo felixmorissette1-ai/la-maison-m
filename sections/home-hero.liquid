@@ -8,7 +8,6 @@
     <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
     <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
       {{ section.settings.step1_label }}
-      <span class="lmm-plan__badge">1</span>
     </a>
   </div>
 </section>
@@ -110,11 +109,11 @@
   .lmm-hero {
     position: relative;
     background: var(--lmm-ivoire);
-    /* Volontairement moins que 100% de l'écran : le bas de la section
-       suivante (.lmm-plan) doit dépasser visible sous le pli au chargement,
-       comme indice pour inciter à défiler. */
-    height: calc(100dvh - 104px - 320px);
-    min-height: 320px;
+    /* Volontairement moins que 100% de l'écran : seuls le titre "Comment
+       ça fonctionne" et la rangée numéro/titre du plan doivent dépasser
+       visibles sous le pli au chargement — pas les descriptions. */
+    height: calc(100dvh - 104px - 180px);
+    min-height: 380px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -138,9 +137,11 @@
   .lmm-hero__inner {
     position: relative;
     width: 100%;
+    height: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 0 32px;
+    padding: 48px 32px 40px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -159,7 +160,6 @@
   }
 
   .lmm-hero__cta {
-    position: relative;
     display: inline-flex;
     background: var(--lmm-bordeaux);
     color: var(--lmm-ivoire);
@@ -169,18 +169,9 @@
     padding: 22px 44px;
     border-radius: 8px;
     white-space: nowrap;
-  }
-
-  /* Pastille "étape 1" sur le bouton du hero — même format que le "01" du
-     plan d'action (Georgia, texte simple, sans cercle ni contour). */
-  .lmm-plan__badge {
-    position: absolute;
-    top: -12px;
-    right: -10px;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 15px;
-    font-weight: 400;
-    color: var(--lmm-bordeaux-pale);
+    /* Pousse le bouton vers le bas du hero (juste au-dessus du plan
+       d'action) peu importe où le titre se retrouve au-dessus. */
+    margin-top: auto;
   }
 
   @media (min-width: 768px) {
