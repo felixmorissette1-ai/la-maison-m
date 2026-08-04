@@ -6,6 +6,10 @@
 
   <div class="lmm-hero__inner">
     <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
+    <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
+      {{ section.settings.step1_label }}
+      <span class="lmm-plan__badge">1</span>
+    </a>
   </div>
 </section>
 
@@ -13,22 +17,25 @@
   <div class="lmm-plan__inner">
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
-    <div class="lmm-plan__featured">
-      <span class="lmm-plan__num">01</span>
-      <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn lmm-plan__step-head--featured">
-        <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-      </a>
-      <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
-      <ul class="lmm-plan__list">
-        {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
-        {% for line in step1_lines %}
-          {% if line != blank %}<li>{{ line }}</li>{% endif %}
-        {% endfor %}
-        <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
-      </ul>
-    </div>
+    <div class="lmm-plan__row">
+      <div class="lmm-plan__step">
+        <span class="lmm-plan__num">01</span>
+        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
+          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+          <span class="lmm-plan__badge">1</span>
+        </a>
+        <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
+        <ul class="lmm-plan__list">
+          {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
+          {% for line in step1_lines %}
+            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+          {% endfor %}
+          <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
+        </ul>
+      </div>
 
-    <div class="lmm-plan__row lmm-plan__row--minor">
+      <div class="lmm-plan__line"></div>
+
       <div class="lmm-plan__step">
         <span class="lmm-plan__num">02</span>
         <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
@@ -126,8 +133,10 @@
     margin: 0 auto;
     padding: 0 32px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 28px;
   }
 
   .lmm-hero__title {
@@ -138,6 +147,38 @@
     line-height: 1.3;
     text-align: center;
     margin: 0;
+  }
+
+  .lmm-hero__cta {
+    position: relative;
+    display: inline-flex;
+    background: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire);
+    text-decoration: none;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 20px;
+    padding: 22px 44px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  /* Pastille "étape 1" — identique sur le bouton du hero et sur l'étape 1
+     du plan d'action, pour relier visuellement les deux. */
+  .lmm-plan__badge {
+    position: absolute;
+    top: -9px;
+    right: -9px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--lmm-ivoire);
+    color: var(--lmm-bordeaux);
+    border: 1.5px solid var(--lmm-bordeaux);
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   @media (min-width: 768px) {
@@ -166,28 +207,11 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Étape 1 mise en vedette, en haut ; les étapes 2 et 3 suivent juste un
-     peu plus bas (pas une section détachée, pas de grand vide entre les
-     deux). */
-  .lmm-plan__featured {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 24px;
-    max-width: 440px;
-    margin: 0 auto 36px;
-  }
-
   .lmm-plan__row {
     display: flex;
     align-items: flex-start;
     justify-content: center;
     gap: 0;
-  }
-
-  .lmm-plan__row--minor {
-    opacity: 0.85;
   }
 
   .lmm-plan__step {
@@ -238,6 +262,7 @@
   }
 
   .lmm-plan__step-head--btn {
+    position: relative;
     background: var(--lmm-bordeaux);
     border-radius: 8px;
     padding: 13px 26px;
@@ -245,13 +270,6 @@
 
   .lmm-plan__step-head--btn .lmm-plan__step-title {
     color: var(--lmm-ivoire);
-  }
-
-  /* Étape 1 vedette : même police/taille de titre que les autres étapes
-     (Georgia 20px, voir .lmm-plan__step-title) mais un bouton nettement
-     plus grand, puisque c'est la pièce centrale de l'écran. */
-  .lmm-plan__step-head--featured {
-    padding: 22px 44px;
   }
 
   .lmm-plan__step-head--link {
