@@ -239,8 +239,13 @@
     margin: 130px auto 0;
   }
 
+  /* Largeur fixe partagée par la phrase d'intro ET la liste, sinon
+     chacune se centre indépendamment à sa propre largeur de contenu et
+     elles finissent décalées l'une par rapport à l'autre. */
   .lmm-plan__detail {
     text-align: center;
+    max-width: 400px;
+    margin: 0 auto;
   }
 
   .lmm-plan__line {
@@ -298,24 +303,24 @@
     font-size: 15.5px;
     color: var(--lmm-text);
     line-height: 1.6;
-    margin: 0;
-    max-width: 26ch;
+    margin: 0 0 20px;
   }
 
   .lmm-plan__list {
     list-style: none;
     margin: 0;
     padding: 0;
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 10px;
-    text-align: left;
   }
 
   .lmm-plan__list li {
     font-size: 13.5px;
     color: var(--lmm-muted);
     line-height: 1.5;
+    text-align: center;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
