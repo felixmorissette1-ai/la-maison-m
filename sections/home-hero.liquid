@@ -6,44 +6,34 @@
 
   <div class="lmm-hero__inner">
     <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
+  </div>
+</section>
 
-    <div class="lmm-hero__plan">
-      <p class="lmm-hero__plan-title">{{ section.settings.plan_title }}</p>
+<section class="lmm-plan full-width">
+  <div class="lmm-plan__inner">
+    <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
-      <div class="lmm-hero__steps">
-        <div class="lmm-step lmm-step--primary">
-          <div class="lmm-step__num">1</div>
-          <a href="{{ section.settings.step1_url }}" class="lmm-step__cta">{{ section.settings.step1_label }}</a>
-          <button type="button" class="lmm-disclosure">
-            <span class="lmm-disclosure__preview">{{ section.settings.step1_help_teaser }}</span>
-            <span class="lmm-disclosure__full">{{ section.settings.step1_help_detail }}</span>
-            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
+    <div class="lmm-plan__grid">
+      <div class="lmm-plan__card lmm-plan__card--primary">
+        <div class="lmm-plan__num">1</div>
+        <a href="{{ section.settings.step1_url }}" class="lmm-plan__cta">{{ section.settings.step1_label }}</a>
+        <button type="button" class="lmm-disclosure">
+          <span class="lmm-disclosure__preview">{{ section.settings.step1_help_teaser }}</span>
+          <span class="lmm-disclosure__full">{{ section.settings.step1_help_detail }}</span>
+          <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
 
-        <div class="lmm-step__connector"></div>
+      <div class="lmm-plan__card">
+        <div class="lmm-plan__num">2</div>
+        <p class="lmm-plan__label">{{ section.settings.step2_label }}</p>
+        <p class="lmm-plan__desc">{{ section.settings.step2_detail }}</p>
+      </div>
 
-        <div class="lmm-step">
-          <div class="lmm-step__num">2</div>
-          <p class="lmm-step__label">{{ section.settings.step2_label }}</p>
-          <button type="button" class="lmm-disclosure">
-            <span class="lmm-disclosure__preview">{{ section.settings.step2_preview }}</span>
-            <span class="lmm-disclosure__full">{{ section.settings.step2_detail }}</span>
-            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
-
-        <div class="lmm-step__connector"></div>
-
-        <div class="lmm-step">
-          <div class="lmm-step__num">3</div>
-          <p class="lmm-step__label">{{ section.settings.step3_label }}</p>
-          <button type="button" class="lmm-disclosure">
-            <span class="lmm-disclosure__preview">{{ section.settings.step3_preview }}</span>
-            <span class="lmm-disclosure__full">{{ section.settings.step3_detail }}</span>
-            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </button>
-        </div>
+      <div class="lmm-plan__card">
+        <div class="lmm-plan__num">3</div>
+        <p class="lmm-plan__label">{{ section.settings.step3_label }}</p>
+        <p class="lmm-plan__desc">{{ section.settings.step3_detail }}</p>
       </div>
     </div>
   </div>
@@ -80,7 +70,11 @@
   .lmm-hero {
     position: relative;
     background: var(--lmm-ivoire);
-    min-height: calc(100dvh - 84px);
+    /* Volontairement moins que 100% de l'écran : le bas de la section
+       suivante (.lmm-plan) doit dépasser visible sous le pli au chargement,
+       comme indice pour inciter à défiler. */
+    height: calc(100dvh - 84px - 170px);
+    min-height: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -108,86 +102,82 @@
     margin: 0 auto;
     padding: 0 32px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    min-height: calc(100dvh - 84px);
+    justify-content: center;
   }
 
   .lmm-hero__title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(32px, 4.2vw, 46px);
+    font-size: clamp(24px, 3.2vw, 44px);
     font-weight: 400;
     color: var(--lmm-text);
     line-height: 1.3;
     text-align: center;
-    max-width: 16ch;
-    margin-top: auto;
-    margin-bottom: auto;
-    transform: translateY(-14%);
+    margin: 0;
   }
 
-  .lmm-hero__plan {
-    width: 100%;
-    max-width: 640px;
-    text-align: center;
-    margin-bottom: 48px;
+  @media (min-width: 768px) {
+    .lmm-hero__title {
+      white-space: nowrap;
+    }
   }
 
-  .lmm-hero__plan-title {
-    font-size: 11.5px;
+  .lmm-plan {
+    background: var(--lmm-ivoire-deep);
+    padding: 64px 32px 90px;
+  }
+
+  .lmm-plan__inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .lmm-plan__title {
+    font-size: 12px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--lmm-bordeaux-soft);
-    margin: 0 0 22px;
+    text-align: center;
+    margin: 0 0 40px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-hero__steps {
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
+  .lmm-plan__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    align-items: start;
   }
 
-  .lmm-step {
+  .lmm-plan__card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 0 14px;
+    text-align: center;
+    gap: 10px;
   }
 
-  .lmm-step__connector {
-    width: 34px;
-    border-top: 1px solid var(--lmm-ivoire-line);
-    align-self: center;
-    margin: 0 2px;
-    position: relative;
-    top: -24px;
-  }
-
-  .lmm-step__num {
-    width: 22px;
-    height: 22px;
+  .lmm-plan__num {
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 10.5px;
-    margin-bottom: 10px;
+    font-size: 11px;
+    margin-bottom: 4px;
     border: 1px solid var(--lmm-muted);
     color: var(--lmm-muted);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-step--primary .lmm-step__num {
-    width: 26px;
-    height: 26px;
+  .lmm-plan__card--primary .lmm-plan__num {
     background: var(--lmm-bordeaux);
     border-color: var(--lmm-bordeaux);
     color: var(--lmm-ivoire);
-    font-size: 11.5px;
   }
 
-  .lmm-step__cta {
+  .lmm-plan__cta {
     display: inline-block;
     background: var(--lmm-bordeaux);
     color: var(--lmm-ivoire);
@@ -200,12 +190,19 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-step__label {
-    font-size: 11px;
-    color: var(--lmm-muted);
-    line-height: 1.4;
+  .lmm-plan__label {
+    font-size: 14px;
+    color: var(--lmm-text);
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-plan__desc {
+    font-size: 12.5px;
+    color: var(--lmm-muted);
+    line-height: 1.6;
+    max-width: 26ch;
+    margin: 0;
   }
 
   .lmm-disclosure {
@@ -215,23 +212,25 @@
     background: none;
     border: none;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 4px;
     padding: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .lmm-disclosure__preview {
-    font-size: 10px;
-    color: var(--lmm-ivoire-faint);
-    max-width: 20ch;
+    font-size: 11px;
+    color: var(--lmm-muted);
+    max-width: 22ch;
     line-height: 1.4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .lmm-disclosure__full {
     display: block;
-    font-size: 10.5px;
+    font-size: 12px;
     color: var(--lmm-muted);
-    max-width: 22ch;
+    max-width: 24ch;
     line-height: 1.5;
     max-height: 0;
     overflow: hidden;
@@ -240,7 +239,7 @@
 
   .lmm-disclosure.open .lmm-disclosure__full {
     max-height: 60px;
-    margin-top: 2px;
+    margin-top: 4px;
   }
 
   .lmm-disclosure.open .lmm-disclosure__preview {
@@ -248,7 +247,7 @@
   }
 
   .lmm-disclosure__chev {
-    margin-top: 5px;
+    margin-top: 4px;
     color: var(--lmm-ivoire-faint);
     transition: transform 0.2s;
   }
@@ -313,12 +312,10 @@
     { "type": "text", "id": "step1_help_detail", "label": "Étape 1 — détail de l'aide", "default": "Aide stylistique par courriel, ou rendez-vous avec un tailleur." },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_preview", "label": "Étape 2 — aperçu pâle", "default": "Réservez un moment…" },
-    { "type": "text", "id": "step2_detail", "label": "Étape 2 — détail déplié", "default": "Réservez un moment avec un tailleur — deux succursales à Sherbrooke." },
+    { "type": "text", "id": "step2_detail", "label": "Étape 2 — description", "default": "Réservez un moment avec un tailleur — deux succursales à Sherbrooke." },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_preview", "label": "Étape 3 — aperçu pâle", "default": "Cousu à la main…" },
-    { "type": "text", "id": "step3_detail", "label": "Étape 3 — détail déplié", "default": "Cousu à la main, prêt en quelques semaines." },
+    { "type": "text", "id": "step3_detail", "label": "Étape 3 — description", "default": "Cousu à la main, prêt en quelques semaines." },
 
     { "type": "header", "content": "Bandeau de confiance" },
     { "type": "text", "id": "stat1_num", "label": "Stat 1 — chiffre", "default": "12+" },

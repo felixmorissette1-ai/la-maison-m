@@ -3,7 +3,6 @@
     <nav class="lmm-header__nav lmm-header__nav--left">
       <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
       <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collection</a>
-      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
     </nav>
 
     <a href="{{ routes.root_url }}" class="lmm-header__logo">
