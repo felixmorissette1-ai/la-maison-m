@@ -3,18 +3,19 @@
     "hero": {
       "type": "home-hero",
       "settings": {
-        "title": "Parce que la première impression compte.",
+        "hero_photo": "shopify://shop_images/hero-accueil-test.jpg",
+        "title": "Parce que la première impression compte",
         "plan_title": "Comment ça fonctionne",
         "step1_label": "Configurez votre complet",
         "step1_url": "/pages/sur-mesure",
-        "step1_intro": "Configurez votre complet à votre rythme.",
-        "step1_bullets": "✂️ De A à Z, ou directement dans la collection",
+        "step1_intro": "Configurez votre complet de A à Z, ou commandez directement dans notre collection. Choisissez la coupe de vos pantalons, puis laissez-nous vos coordonnées pour des conseils stylistiques personnalisés.",
+        "step1_bullets": "5 minutes",
         "step2_label": "Rendez-vous mensurations",
-        "step2_intro": "Vos mensurations sont prises par des professionnels.",
-        "step2_bullets": "📍 Près de chez vous",
+        "step2_intro": "Pour un premier rendez-vous, vos mensurations sont prises par un de nos professionnels, pour assurer un ajustement parfait.",
+        "step2_bullets": "30 minutes",
         "step3_label": "Recevez votre complet",
-        "step3_intro": "Votre complet est cousu à la main.",
-        "step3_bullets": "⏱️ Prêt en quelques semaines\n📦 Livré chez vous"
+        "step3_intro": "Profitez d'un complet parfaitement ajusté à votre silhouette, pour une allure à la hauteur de vos ambitions.",
+        "step3_bullets": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin"
       }
     }
   },
