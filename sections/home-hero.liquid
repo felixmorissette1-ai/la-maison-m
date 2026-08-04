@@ -13,24 +13,22 @@
   <div class="lmm-plan__inner">
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
-    <div class="lmm-plan__row">
-      <div class="lmm-plan__step">
-        <span class="lmm-plan__num">01</span>
-        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
-          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-        </a>
-        <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
-        <ul class="lmm-plan__list">
-          {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
-          {% for line in step1_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
-          {% endfor %}
-          <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
-        </ul>
-      </div>
+    <div class="lmm-plan__featured">
+      <span class="lmm-plan__num">01</span>
+      <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn lmm-plan__step-head--featured">
+        <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+      </a>
+      <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
+      <ul class="lmm-plan__list">
+        {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
+        {% for line in step1_lines %}
+          {% if line != blank %}<li>{{ line }}</li>{% endif %}
+        {% endfor %}
+        <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
+      </ul>
+    </div>
 
-      <div class="lmm-plan__line"></div>
-
+    <div class="lmm-plan__row lmm-plan__row--minor">
       <div class="lmm-plan__step">
         <span class="lmm-plan__num">02</span>
         <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
@@ -168,11 +166,29 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
+  /* Étape 1 mise en vedette, seule au centre de l'écran ; les étapes 2 et
+     3 suivent plus bas, dans une rangée secondaire plus discrète. */
+  .lmm-plan__featured {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 24px;
+    min-height: 44vh;
+    justify-content: center;
+    max-width: 440px;
+    margin: 0 auto 72px;
+  }
+
   .lmm-plan__row {
     display: flex;
     align-items: flex-start;
     justify-content: center;
     gap: 0;
+  }
+
+  .lmm-plan__row--minor {
+    opacity: 0.85;
   }
 
   .lmm-plan__step {
@@ -228,15 +244,15 @@
     padding: 13px 26px;
   }
 
-  /* Un vrai bouton a la typo des autres boutons du site (petit, sans-serif,
-     majuscules espacées) — pas la police "titre" serif des étapes 2 et 3. */
   .lmm-plan__step-head--btn .lmm-plan__step-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
     color: var(--lmm-ivoire);
+  }
+
+  /* Étape 1 vedette : même police/taille de titre que les autres étapes
+     (Georgia 20px, voir .lmm-plan__step-title) mais un bouton nettement
+     plus grand, puisque c'est la pièce centrale de l'écran. */
+  .lmm-plan__step-head--featured {
+    padding: 22px 44px;
   }
 
   .lmm-plan__step-head--link {
