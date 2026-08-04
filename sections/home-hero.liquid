@@ -22,52 +22,56 @@
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
     <div class="lmm-plan__row">
-      <span class="lmm-plan__num">01</span>
-      <span class="lmm-plan__num">02</span>
-      <span class="lmm-plan__num">03</span>
-
-      <div class="lmm-plan__step-head">
-        <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-      </div>
-      <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
-        <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
-      </a>
-      <div class="lmm-plan__step-head">
-        <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
-      </div>
-
-      <div class="lmm-plan__desc">
-        <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
-        <ul class="lmm-plan__list">
-          {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
-          {% for line in step1_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
-          {% endfor %}
-          <li>Conseil stylistique — <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
-          <li>Envie de voir les tissus avant de commander ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a></li>
-        </ul>
+      <div class="lmm-plan__step">
+        <span class="lmm-plan__num">01</span>
+        <div class="lmm-plan__step-head">
+          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+        </div>
+        <div class="lmm-plan__desc">
+          <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
+          <ul class="lmm-plan__list">
+            {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
+            {% for line in step1_lines %}
+              {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% endfor %}
+            <li>Conseil stylistique — <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
+            <li>Envie de voir les tissus avant de commander ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a></li>
+          </ul>
+        </div>
       </div>
 
-      <div class="lmm-plan__desc">
-        <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
-        <ul class="lmm-plan__list">
-          {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
-          {% for line in step2_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
-          {% endfor %}
-          <li id="lmm-plan-ville-item"><span id="lmm-plan-ville">Partenaire disponible près de chez vous</span></li>
-          <li><a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a> pour vos mensurations</li>
-        </ul>
+      <div class="lmm-plan__step">
+        <span class="lmm-plan__num">02</span>
+        <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
+          <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
+        </a>
+        <div class="lmm-plan__desc">
+          <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
+          <ul class="lmm-plan__list">
+            {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
+            {% for line in step2_lines %}
+              {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% endfor %}
+            <li id="lmm-plan-ville-item"><span id="lmm-plan-ville">Partenaire disponible près de chez vous</span></li>
+            <li><a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a> pour vos mensurations</li>
+          </ul>
+        </div>
       </div>
 
-      <div class="lmm-plan__desc">
-        <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
-        <ul class="lmm-plan__list">
-          {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
-          {% for line in step3_lines %}
-            {% if line != blank %}<li>{{ line }}</li>{% endif %}
-          {% endfor %}
-        </ul>
+      <div class="lmm-plan__step">
+        <span class="lmm-plan__num">03</span>
+        <div class="lmm-plan__step-head">
+          <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
+        </div>
+        <div class="lmm-plan__desc">
+          <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
+          <ul class="lmm-plan__list">
+            {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
+            {% for line in step3_lines %}
+              {% if line != blank %}<li>{{ line }}</li>{% endif %}
+            {% endfor %}
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -193,7 +197,7 @@
   }
 
   .lmm-plan__inner {
-    max-width: 1000px;
+    max-width: 1180px;
     margin: 0 auto;
   }
 
@@ -207,33 +211,37 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Grille 3 colonnes x 3 rangées (numéro / titre / description) — chaque
-     rangée de la grille partage la même hauteur pour les 3 colonnes, donc
-     les descriptions démarrent toutes sur la même ligne horizontale peu
-     importe si un titre est plus long qu'un autre. Chaque description
-     reste directement sous son propre titre (même colonne). */
+  /* Une carte encadrée par étape — largeur égale, contenu aligné à
+     gauche. Les 3 cartes forment une seule rangée de grille, donc elles
+     s'étirent à la même hauteur peu importe la longueur du titre. */
   .lmm-plan__row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    column-gap: 24px;
-    row-gap: 18px;
-    text-align: center;
-    justify-items: center;
+    column-gap: 28px;
+    row-gap: 24px;
+    align-items: stretch;
   }
 
-  /* Largeur fixe partagée par la phrase d'intro ET la liste à l'intérieur,
-     sinon chacune se centre indépendamment à sa propre largeur de contenu
-     et elles finissent décalées l'une par rapport à l'autre. */
+  .lmm-plan__step {
+    box-sizing: border-box;
+    border: 1px solid var(--lmm-ivoire-line);
+    border-radius: 10px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    text-align: left;
+  }
+
   .lmm-plan__desc {
     width: 100%;
-    max-width: 300px;
-    text-align: center;
+    text-align: left;
   }
 
   /* Même format de numéro et de titre pour les 3 étapes — seule la
-     décoration (fond bordeaux pour l'étape 1, curseur pour l'étape 2)
-     change selon que l'étape est cliquable ou non. Le numéro reste hors
-     du bouton de l'étape 1 (juste au-dessus), pas dedans. */
+     décoration (curseur pour l'étape 2, l'étape cliquable) change selon
+     que l'étape est cliquable ou non. */
   .lmm-plan__num {
     display: block;
     font-family: Georgia, 'Times New Roman', serif;
@@ -273,6 +281,7 @@
     font-size: 15.5px;
     color: var(--lmm-text);
     line-height: 1.6;
+    text-align: left;
     margin: 0 0 20px;
   }
 
@@ -282,7 +291,7 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
   }
 
@@ -290,7 +299,7 @@
     font-size: 13.5px;
     color: var(--lmm-muted);
     line-height: 1.5;
-    text-align: center;
+    text-align: left;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
@@ -324,15 +333,15 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou commandez directement dans notre collection. Choisissez la coupe de vos pantalons, puis laissez-nous vos coordonnées pour des conseils stylistiques personnalisés." },
+    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou commandez directement dans notre collection." },
     { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "5 minutes" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Pour un premier rendez-vous, vos mensurations sont prises par un de nos professionnels, pour assurer un ajustement parfait." },
+    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Vos mensurations sont prises par un de nos professionnels pour assurer un ajustement parfait." },
     { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "30 minutes" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Profitez d'un complet parfaitement ajusté à votre silhouette, pour une allure à la hauteur de vos ambitions." },
+    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Profitez d'un complet parfaitement ajusté à votre silhouette pour une allure à la hauteur de vos ambitions." },
     { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" }
   ],
   "presets": [
