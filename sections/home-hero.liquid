@@ -17,10 +17,13 @@
       <div class="lmm-plan__step lmm-plan__step--primary">
         <div class="lmm-plan__num">1</div>
         <a href="{{ section.settings.step1_url }}" class="lmm-plan__cta">{{ section.settings.step1_label }}</a>
-        <p class="lmm-plan__desc" data-reveal>
-          {{ section.settings.step1_detail }}
-          Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> avec un tailleur qui a des laines, ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a>.
-        </p>
+        <ul class="lmm-plan__list">
+          {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
+          {% for line in step1_lines %}
+            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+          {% endfor %}
+          <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
+        </ul>
       </div>
 
       <div class="lmm-plan__line"></div>
@@ -28,7 +31,13 @@
       <div class="lmm-plan__step">
         <div class="lmm-plan__num">2</div>
         <p class="lmm-plan__label">{{ section.settings.step2_label }}</p>
-        <p class="lmm-plan__desc" data-reveal>{{ section.settings.step2_detail }}<span id="lmm-plan-ville"></span></p>
+        <ul class="lmm-plan__list">
+          {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
+          {% for line in step2_lines %}
+            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+          {% endfor %}
+          <li id="lmm-plan-ville-item" style="display:none;"><span id="lmm-plan-ville"></span></li>
+        </ul>
       </div>
 
       <div class="lmm-plan__line"></div>
@@ -36,51 +45,18 @@
       <div class="lmm-plan__step">
         <div class="lmm-plan__num">3</div>
         <p class="lmm-plan__label">{{ section.settings.step3_label }}</p>
-        <p class="lmm-plan__desc" data-reveal>{{ section.settings.step3_detail }}</p>
+        <ul class="lmm-plan__list">
+          {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
+          {% for line in step3_lines %}
+            {% if line != blank %}<li>{{ line }}</li>{% endif %}
+          {% endfor %}
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
 <script>
-  (function () {
-    var reveals = document.querySelectorAll('.lmm-plan [data-reveal]');
-    if (!reveals.length) return;
-
-    function revealNow(el) { el.classList.add('lmm-reveal--in'); }
-
-    // Filet de sécurité : un élément qui n'a jamais reçu la classe (observer
-    // qui ne se déclenche pas pour une raison quelconque, navigateur
-    // capricieux, etc.) doit quand même finir par s'afficher — le texte ne
-    // doit jamais rester invisible en permanence.
-    var safety = setTimeout(function () {
-      reveals.forEach(revealNow);
-    }, 2500);
-
-    if ('IntersectionObserver' in window) {
-      var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            revealNow(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-      reveals.forEach(function (el) {
-        var r = el.getBoundingClientRect();
-        // Déjà visible au chargement (ex. si la page arrive déjà scrollée,
-        // ou sur un grand écran) : pas besoin d'attendre l'observer.
-        if (r.top < window.innerHeight && r.bottom > 0) {
-          revealNow(el);
-        } else {
-          observer.observe(el);
-        }
-      });
-    } else {
-      reveals.forEach(revealNow);
-    }
-  })();
-
   // Ville la plus proche pour l'étape 2 — demande la localisation dès
   // l'arrivée sur la page d'accueil ; échoue silencieusement (refus,
   // navigateur sans support, aucun tailleur dans un rayon raisonnable).
@@ -98,7 +74,8 @@
         .then(function (data) {
           var nearest = data && data.success && data.couturieres && data.couturieres[0];
           if (nearest && nearest.ville && nearest.distanceValue < 100000) {
-            villeEl.textContent = ' Couturière la plus proche : ' + nearest.ville + '.';
+            villeEl.textContent = 'Disponible à ' + nearest.ville;
+            document.getElementById('lmm-plan-ville-item').style.display = '';
           }
         })
         .catch(function () {});
@@ -252,28 +229,35 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-plan__desc {
+  .lmm-plan__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+  }
+
+  .lmm-plan__list li {
+    position: relative;
+    padding-left: 14px;
     font-size: 12.5px;
     color: var(--lmm-muted);
-    line-height: 1.6;
-    margin: 0;
+    line-height: 1.5;
+  }
+
+  .lmm-plan__list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--lmm-bordeaux-soft);
   }
 
   .lmm-plan__link {
     color: var(--lmm-bordeaux-soft);
     text-decoration: underline;
     text-underline-offset: 3px;
-  }
-
-  .lmm-plan__desc[data-reveal] {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .lmm-plan__desc.lmm-reveal--in {
-    opacity: 1;
-    transform: translateY(0);
   }
 {% endstylesheet %}
 
@@ -289,13 +273,13 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_detail", "label": "Étape 1 — description", "default": "Vous pouvez configurer votre complet de A à Z, ou choisir directement dans notre collection." },
+    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "Configurez de A à Z, ou choisissez dans la collection" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_detail", "label": "Étape 2 — description", "default": "Vos mensurations sont prises par des professionnels près de chez vous, pour maximiser la qualité de l'ajustement." },
+    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "Mensurations prises par des professionnels\nPrès de chez vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_detail", "label": "Étape 3 — description", "default": "Votre complet est cousu à la main par un tailleur, prêt en quelques semaines, et livré directement chez vous." }
+    { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Cousu à la main\nPrêt en quelques semaines\nLivré chez vous" }
   ],
   "presets": [
     { "name": "Hero — Accueil" }
