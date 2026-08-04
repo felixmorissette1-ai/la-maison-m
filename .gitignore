@@ -12,6 +12,9 @@ node_modules/
 # Shopify CLI files
 .shopify/
 
+# Local dev tooling config (may contain store password)
+.claude/
+
 ## Release files
 release
 *.zip

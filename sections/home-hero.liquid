@@ -1,11 +1,50 @@
 <section class="lmm-hero full-width">
+  {% if section.settings.hero_photo %}
+    <div class="lmm-hero__photo" style="background-image: url({{ section.settings.hero_photo | image_url: width: 1800 }});"></div>
+    <div class="lmm-hero__wash"></div>
+  {% endif %}
+
   <div class="lmm-hero__inner">
-    <p class="lmm-label">{{ section.settings.label }}</p>
     <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
-    <p class="lmm-hero__sub">{{ section.settings.subtitle }}</p>
-    <div class="lmm-hero__ctas">
-      <a href="{{ section.settings.cta1_url }}" class="lmm-btn-primary">{{ section.settings.cta1_label }}</a>
-      <a href="{{ section.settings.cta2_url }}" class="lmm-btn-outline">{{ section.settings.cta2_label }}</a>
+
+    <div class="lmm-hero__plan">
+      <p class="lmm-hero__plan-title">{{ section.settings.plan_title }}</p>
+
+      <div class="lmm-hero__steps">
+        <div class="lmm-step lmm-step--primary">
+          <div class="lmm-step__num">1</div>
+          <a href="{{ section.settings.step1_url }}" class="lmm-step__cta">{{ section.settings.step1_label }}</a>
+          <button type="button" class="lmm-disclosure">
+            <span class="lmm-disclosure__preview">{{ section.settings.step1_help_teaser }}</span>
+            <span class="lmm-disclosure__full">{{ section.settings.step1_help_detail }}</span>
+            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="lmm-step__connector"></div>
+
+        <div class="lmm-step">
+          <div class="lmm-step__num">2</div>
+          <p class="lmm-step__label">{{ section.settings.step2_label }}</p>
+          <button type="button" class="lmm-disclosure">
+            <span class="lmm-disclosure__preview">{{ section.settings.step2_preview }}</span>
+            <span class="lmm-disclosure__full">{{ section.settings.step2_detail }}</span>
+            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="lmm-step__connector"></div>
+
+        <div class="lmm-step">
+          <div class="lmm-step__num">3</div>
+          <p class="lmm-step__label">{{ section.settings.step3_label }}</p>
+          <button type="button" class="lmm-disclosure">
+            <span class="lmm-disclosure__preview">{{ section.settings.step3_preview }}</span>
+            <span class="lmm-disclosure__full">{{ section.settings.step3_detail }}</span>
+            <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -29,90 +68,193 @@
   </div>
 </section>
 
+<script>
+  document.querySelectorAll('.lmm-hero .lmm-disclosure').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.classList.toggle('open');
+    });
+  });
+</script>
+
 {% stylesheet %}
   .lmm-hero {
-    background: var(--lmm-text);
-    min-height: calc(100vh - 72px);
+    position: relative;
+    background: var(--lmm-ivoire);
+    min-height: calc(100dvh - 84px);
     display: flex;
     align-items: center;
-    padding: 80px 32px;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .lmm-hero__photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 30%;
+    filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
+  }
+
+  .lmm-hero__wash {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--lmm-ivoire-rgb), 0.38);
   }
 
   .lmm-hero__inner {
+    position: relative;
+    width: 100%;
     max-width: 1280px;
     margin: 0 auto;
-    width: 100%;
-  }
-
-  .lmm-label {
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--lmm-gold);
-    margin-bottom: 24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100dvh - 84px);
   }
 
   .lmm-hero__title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(48px, 7vw, 96px);
+    font-size: clamp(32px, 4.2vw, 46px);
     font-weight: 400;
-    color: #ffffff;
-    line-height: 1.05;
-    margin-bottom: 28px;
-    max-width: 800px;
+    color: var(--lmm-text);
+    line-height: 1.3;
+    text-align: center;
+    max-width: 16ch;
+    margin-top: auto;
+    margin-bottom: auto;
+    transform: translateY(-14%);
   }
 
-  .lmm-hero__sub {
-    font-size: 16px;
-    color: rgba(245, 240, 235, 0.55);
-    font-weight: 300;
-    line-height: 1.7;
-    max-width: 480px;
+  .lmm-hero__plan {
+    width: 100%;
+    max-width: 640px;
+    text-align: center;
     margin-bottom: 48px;
   }
 
-  .lmm-hero__ctas {
+  .lmm-hero__plan-title {
+    font-size: 11.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 22px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-hero__steps {
     display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
   }
 
-  .lmm-btn-primary {
-    display: inline-block;
-    background: var(--lmm-surface);
-    color: var(--lmm-text);
-    text-decoration: none;
-    padding: 16px 36px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .lmm-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 14px;
+  }
+
+  .lmm-step__connector {
+    width: 34px;
+    border-top: 1px solid var(--lmm-ivoire-line);
+    align-self: center;
+    margin: 0 2px;
+    position: relative;
+    top: -24px;
+  }
+
+  .lmm-step__num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10.5px;
+    margin-bottom: 10px;
+    border: 1px solid var(--lmm-muted);
+    color: var(--lmm-muted);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: background 0.2s, color 0.2s;
   }
 
-  .lmm-btn-primary:hover {
-    background: var(--lmm-gold);
-    color: var(--lmm-text);
+  .lmm-step--primary .lmm-step__num {
+    width: 26px;
+    height: 26px;
+    background: var(--lmm-bordeaux);
+    border-color: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire);
+    font-size: 11.5px;
   }
 
-  .lmm-btn-outline {
+  .lmm-step__cta {
     display: inline-block;
-    background: transparent;
-    color: #ffffff;
+    background: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire);
     text-decoration: none;
-    padding: 15px 36px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: 1px solid rgba(245, 240, 235, 0.3);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    padding: 15px 30px;
+    border-radius: 8px;
+    white-space: nowrap;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: border-color 0.2s, color 0.2s;
   }
 
-  .lmm-btn-outline:hover {
-    border-color: #ffffff;
-    color: #ffffff;
+  .lmm-step__label {
+    font-size: 11px;
+    color: var(--lmm-muted);
+    line-height: 1.4;
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-disclosure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-disclosure__preview {
+    font-size: 10px;
+    color: var(--lmm-ivoire-faint);
+    max-width: 20ch;
+    line-height: 1.4;
+  }
+
+  .lmm-disclosure__full {
+    display: block;
+    font-size: 10.5px;
+    color: var(--lmm-muted);
+    max-width: 22ch;
+    line-height: 1.5;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease;
+  }
+
+  .lmm-disclosure.open .lmm-disclosure__full {
+    max-height: 60px;
+    margin-top: 2px;
+  }
+
+  .lmm-disclosure.open .lmm-disclosure__preview {
+    display: none;
+  }
+
+  .lmm-disclosure__chev {
+    margin-top: 5px;
+    color: var(--lmm-ivoire-faint);
+    transition: transform 0.2s;
+  }
+
+  .lmm-disclosure.open .lmm-disclosure__chev {
+    transform: rotate(180deg);
   }
 
   .lmm-trust {
@@ -151,7 +293,7 @@
   .lmm-divider-v {
     width: 1px;
     height: 48px;
-    background: rgba(28,28,28,0.12);
+    background: rgba(28, 28, 28, 0.12);
   }
 {% endstylesheet %}
 
@@ -159,13 +301,26 @@
 {
   "name": "Hero — Accueil",
   "settings": [
-    { "type": "text", "id": "label", "label": "Étiquette", "default": "Artisanat québécois" },
-    { "type": "text", "id": "title", "label": "Titre", "default": "L'élégance\ntaillée pour vous" },
-    { "type": "textarea", "id": "subtitle", "label": "Sous-titre", "default": "Complets sur mesure et collection permanente. Chaque pièce est confectionnée à la main par notre artisane." },
-    { "type": "text", "id": "cta1_label", "label": "Bouton 1 — texte", "default": "Voir la collection" },
-    { "type": "url", "id": "cta1_url", "label": "Bouton 1 — lien" },
-    { "type": "text", "id": "cta2_label", "label": "Bouton 2 — texte", "default": "Configurateur sur mesure" },
-    { "type": "url", "id": "cta2_url", "label": "Bouton 2 — lien" },
+    { "type": "image_picker", "id": "hero_photo", "label": "Photo de fond (laisser vide pour fond ivoire uni)" },
+    { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte." },
+
+    { "type": "header", "content": "Plan d'action" },
+    { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment ça fonctionne" },
+
+    { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
+    { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
+    { "type": "text", "id": "step1_help_teaser", "label": "Étape 1 — lien d'aide", "default": "Besoin d'aide pour configurer ?" },
+    { "type": "text", "id": "step1_help_detail", "label": "Étape 1 — détail de l'aide", "default": "Aide stylistique par courriel, ou rendez-vous avec un tailleur." },
+
+    { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
+    { "type": "text", "id": "step2_preview", "label": "Étape 2 — aperçu pâle", "default": "Réservez un moment…" },
+    { "type": "text", "id": "step2_detail", "label": "Étape 2 — détail déplié", "default": "Réservez un moment avec un tailleur — deux succursales à Sherbrooke." },
+
+    { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
+    { "type": "text", "id": "step3_preview", "label": "Étape 3 — aperçu pâle", "default": "Cousu à la main…" },
+    { "type": "text", "id": "step3_detail", "label": "Étape 3 — détail déplié", "default": "Cousu à la main, prêt en quelques semaines." },
+
+    { "type": "header", "content": "Bandeau de confiance" },
     { "type": "text", "id": "stat1_num", "label": "Stat 1 — chiffre", "default": "12+" },
     { "type": "text", "id": "stat1_label", "label": "Stat 1 — texte", "default": "Années d'expérience" },
     { "type": "text", "id": "stat2_num", "label": "Stat 2 — chiffre", "default": "100%" },

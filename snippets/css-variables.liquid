@@ -24,5 +24,49 @@
     --lmm-gold:    #C9A96E;
     --lmm-error:   #c0392b;
     --lmm-success: #7DAF7D;
+
+    /* Palette bordeaux/ivoire — en-tête + page d'accueil pour l'instant
+       (voir TODO.md : reste du site toujours sur la palette gold/text ci-dessus) */
+    --lmm-bordeaux:      #3A0E16;
+    --lmm-bordeaux-soft: #7A2A33;
+    --lmm-bordeaux-pale: #D9BFC3;
+    --lmm-ivoire:        #F6F1E7;
+    --lmm-ivoire-rgb:    246, 241, 231;
+    --lmm-ivoire-deep:   #EDE3D3;
+    --lmm-ivoire-deep-rgb: 237, 227, 211;
+    --lmm-ivoire-line:   #E3D9C6;
+    --lmm-ivoire-faint:  #A79F91;
+  }
+
+  /* Bouton d'action principal partagé — tous les boutons "continuer / ajouter au
+     panier / confirmer" du site doivent utiliser cette seule classe pour rester
+     visuellement identiques, peu importe la page. La variante claire du hero
+     (fond photo) a son propre nom : .lmm-btn-hero-light, dans home-hero.liquid. */
+  .lmm-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: var(--lmm-text);
+    color: #ffffff;
+    border: none;
+    padding: 16px 40px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .lmm-btn-primary:hover {
+    opacity: 0.85;
+  }
+  .lmm-btn-primary:disabled,
+  .lmm-btn-primary[disabled],
+  .lmm-btn-primary.lmm-btn--inactive {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
   }
 {% endstyle %}

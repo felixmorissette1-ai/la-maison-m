@@ -1,42 +1,44 @@
 <header class="lmm-header full-width">
   <div class="lmm-header__inner">
+    <nav class="lmm-header__nav lmm-header__nav--left">
+      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
+      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
+    </nav>
+
     <a href="{{ routes.root_url }}" class="lmm-header__logo">
       {% if section.settings.logo_image %}
         <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
       {% else %}
         <span class="lmm-logo-main">La Maison M.</span>
       {% endif %}
+      <span class="lmm-logo-sub">Tailleur sur mesure</span>
     </a>
 
-    <nav class="lmm-header__nav">
-      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
-      <a href="/" class="lmm-nav-link{% if request.path == '/' %} lmm-nav-link--active{% endif %}">Accueil</a>
-      <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
-      <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemises</a>
-      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Personnalisé</a>
-    </nav>
+    <div class="lmm-header__nav lmm-header__nav--right">
+      <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collection</a>
 
-    {% assign now_ts = 'now' | date: '%s' %}
-    {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
-    {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
-      <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion des rendez-vous</a>
-    {% else %}
-      <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prise de rendez-vous</a>
-    {% endif %}
-
-    <div class="lmm-header__icons">
-      {% if shop.customer_accounts_enabled %}
-        <shopify-account menu="{{ section.settings.customer_account_menu }}" class="lmm-icon-btn">
-          {{ 'icon-account.svg' | inline_asset_content }}
-        </shopify-account>
+      {% assign now_ts = 'now' | date: '%s' %}
+      {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
+      {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+        <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion du rendez-vous</a>
+      {% else %}
+        <a href="#" class="lmm-header__rdv-btn" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
       {% endif %}
 
-      <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
-        {{ 'icon-cart.svg' | inline_asset_content }}
-        {% if cart.item_count > 0 %}
-          <span class="lmm-cart-count">{{ cart.item_count }}</span>
+      <div class="lmm-header__icons">
+        {% if shop.customer_accounts_enabled %}
+          <shopify-account menu="{{ section.settings.customer_account_menu }}" class="lmm-icon-btn">
+            {{ 'icon-account.svg' | inline_asset_content }}
+          </shopify-account>
         {% endif %}
-      </a>
+
+        <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
+          {{ 'icon-cart.svg' | inline_asset_content }}
+          {% if cart.item_count > 0 %}
+            <span class="lmm-cart-count">{{ cart.item_count }}</span>
+          {% endif %}
+        </a>
+      </div>
     </div>
   </div>
 </header>
@@ -44,8 +46,8 @@
 <div class="lmm-cal-modal" id="lmm-localisation-modal" onclick="if(event.target===this) fermerLocalisationModal()">
   <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:600px; width:90vw; max-height:90vh; display:flex; flex-direction:column;">
     <button class="lmm-cal-modal__close" onclick="fermerLocalisationModal()">×</button>
-    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:var(--lmm-text); margin:0 0 8px;">Votre couturière</h2>
-    <p style="font-size:12px; color:var(--lmm-muted); letter-spacing:0.04em; margin:0 0 20px; line-height:1.7;">Nous trouvons la couturière la plus près de vous.</p>
+    <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:var(--lmm-text); margin:0 0 8px;">Votre tailleur</h2>
+    <p style="font-size:12px; color:var(--lmm-muted); letter-spacing:0.04em; margin:0 0 20px; line-height:1.7;">Nous trouvons le tailleur le plus près de vous.</p>
 
     <div id="lmm-loc-auto" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
       <button onclick="localiserAuto()" style="background:var(--lmm-text); color:#ffffff; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:10px;">
@@ -65,10 +67,27 @@
       <p style="font-size:12px; color:var(--lmm-muted); letter-spacing:0.08em;">Recherche en cours...</p>
     </div>
 
-    <div id="lmm-loc-resultat" style="display:none; flex-direction:column; gap:12px; flex:1; min-height:0;">
+    <div id="lmm-loc-resultat" style="display:none; flex-direction:column; gap:0; flex:1; min-height:0;">
       <div id="lmm-map" style="width:100%; height:200px; background:var(--lmm-white); flex-shrink:0;"></div>
 
-      <div id="lmm-couturieres-liste" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; min-height:0;"></div>
+      <div id="lmm-vendeuse-legende" style="display:none; flex-shrink:0; border:1px solid var(--lmm-border); border-top:none; padding:16px 18px; flex-direction:column; gap:12px; background:var(--lmm-surface);">
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <span style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--lmm-text);">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;"><circle cx="7" cy="7" r="7" fill="var(--lmm-gold)"/></svg>
+            Mensurations, altérations et visualisation des tissus
+          </span>
+          <span style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--lmm-text);">
+            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;"><circle cx="7" cy="7" r="7" fill="var(--lmm-text)"/></svg>
+            Mensurations et altérations
+          </span>
+        </div>
+        <button type="button" id="lmm-vendeuse-toggle" onclick="toggleVendeuseSeulement()" style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:none; border:none; border-top:1px solid var(--lmm-border); padding:12px 0 0; cursor:pointer; font-family:inherit; width:100%;">
+          <span style="font-size:11px; letter-spacing:0.04em; color:var(--lmm-text);">Voir seulement les tailleurs avec livres de tissus</span>
+          <span class="lmm-toggle-track"><span class="lmm-toggle-thumb"></span></span>
+        </button>
+      </div>
+
+      <div id="lmm-couturieres-liste" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; min-height:0; margin-top:12px;"></div>
 
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding-top:4px;">
         <button onclick="confirmerCouturiereEtOuvrirCal()" style="background:var(--lmm-text); color:#ffffff; border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
@@ -138,7 +157,7 @@
     <button class="lmm-cal-modal__close" onclick="fermerCalModal()">×</button>
     <button onclick="retourSelectionCouturiere()" style="position:absolute; top:16px; left:16px; z-index:2; background:none; border:none; color:var(--lmm-muted); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px;">
       <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M15 9H3M3 9L8 4M3 9L8 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Changer de couturière
+      Changer de tailleur
     </button>
     <iframe id="lmm-cal-iframe" src="" frameborder="0" allow="camera; microphone; fullscreen" style="width:100%; min-height:600px; display:block;"></iframe>
   </div>
@@ -168,7 +187,7 @@
           <svg width="14" height="14" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <button onclick="ouvrirChangementCouturiere()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
-          Changer de couturière
+          Changer de tailleur
         </button>
         <button onclick="ouvrirAnnulationModal()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Annuler le rendez-vous
@@ -179,7 +198,7 @@
 </div>
 
 <script>
-  // === Localisation / Couturière ===
+  // === Localisation / Tailleur ===
   var tunnelUrl = 'https://lmm-backend.vercel.app';
 
   function ouvrirLocalisationModal() {
@@ -213,6 +232,9 @@
   var lmmLienCalChoisi = '';
   var lmmMap = null;
   var lmmMapCharge = false;
+  var lmmVendeuseSeulement = false;
+  var lmmListeActive = [];
+  var lmmOrigine = null;
 
   function chargerGoogleMaps(callback) {
     if (window.google && window.google.maps) { callback(); return; }
@@ -224,58 +246,135 @@
   }
 
   function afficherResultat(couturieres) {
-    lmmLienCalChoisi = couturieres[0].lien_cal || '';
+    lmmDernierResultat = couturieres;
+    lmmVendeuseSeulement = false;
     document.getElementById('lmm-loc-loading').style.display = 'none';
     document.getElementById('lmm-loc-resultat').style.display = 'flex';
+    rendererResultat();
+  }
 
-    // Liste triée
+  function toggleVendeuseSeulement() {
+    lmmVendeuseSeulement = !lmmVendeuseSeulement;
+    rendererResultat();
+  }
+
+  function rendererResultat() {
+    var hasVendeuse = lmmDernierResultat.some(function(c) { return c.vendeuse; });
+    var legende = document.getElementById('lmm-vendeuse-legende');
+    legende.style.display = hasVendeuse ? 'flex' : 'none';
+    if (!hasVendeuse) lmmVendeuseSeulement = false;
+    document.getElementById('lmm-vendeuse-toggle').classList.toggle('active', lmmVendeuseSeulement);
+
+    var couturieres = lmmVendeuseSeulement
+      ? lmmDernierResultat.filter(function(c) { return c.vendeuse; })
+      : lmmDernierResultat;
+    lmmListeActive = couturieres;
+
     var liste = document.getElementById('lmm-couturieres-liste');
     liste.innerHTML = '';
+
+    if (!couturieres.length) {
+      liste.innerHTML = '<p style="font-size:12px; color:var(--lmm-muted); text-align:center; padding:24px 0;">Aucun tailleur avec livres de tissus dans votre secteur pour l\'instant.</p>';
+      if (lmmMap) { document.getElementById('lmm-map').innerHTML = ''; lmmMap = null; }
+      return;
+    }
+
+    lmmLienCalChoisi = couturieres[0].lien_cal || '';
+
     couturieres.forEach(function(c, i) {
       var card = document.createElement('div');
       card.id = 'lmm-card-' + i;
       card.setAttribute('onclick', 'selectionnerCouturiere(' + i + ')');
       card.style.cssText = 'background:#fff; border:1px solid var(--lmm-border); padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;';
+      var typeService = c.vendeuse
+        ? '<span style="display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:0.03em; color:var(--lmm-gold); margin-top:4px;"><svg width="9" height="9" viewBox="0 0 9 9" style="flex-shrink:0;"><circle cx="4.5" cy="4.5" r="4.5" fill="var(--lmm-gold)"/></svg>Mensurations, altérations et visualisation des tissus</span>'
+        : '<span style="display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:0.03em; color:var(--lmm-muted); margin-top:4px;"><svg width="7" height="7" viewBox="0 0 7 7" style="flex-shrink:0;"><circle cx="3.5" cy="3.5" r="3.5" fill="var(--lmm-text)"/></svg>Mensurations et altérations</span>';
       card.innerHTML = '<div style="flex:1;">' +
         (i === 0 ? '<p style="font-size:10px;color:var(--lmm-gold);letter-spacing:0.1em;text-transform:uppercase;margin:0 0 4px;">La plus proche</p>' : '') +
         '<p style="font-family:Georgia,serif;font-size:15px;color:var(--lmm-text);margin:0 0 2px;">' + c.nom + '</p>' +
         '<p style="font-size:11px;color:var(--lmm-muted);margin:0;">' + c.adresse + '</p>' +
+        typeService +
         '</div>' +
         '<p id="lmm-btn-' + i + '" style="font-size:12px;color:var(--lmm-gold);margin:0;flex-shrink:0;margin-left:12px;">' + c.distance + '</p>';
       liste.appendChild(card);
     });
     selectionnerCouturiere(0);
 
-    // Map
+    // Map — centrée sur la position du client (pas sur les tailleurs), avec un
+    // zoom serré sur sa région pour éviter de dézoomer jusqu'à voir tout le Québec
+    // dès qu'un tailleur plus lointain fait partie des résultats.
     chargerGoogleMaps(function() {
       var mapEl = document.getElementById('lmm-map');
-      var center = { lat: couturieres[0].lat, lng: couturieres[0].lng };
+      mapEl.innerHTML = '';
+      var center = lmmOrigine || { lat: couturieres[0].lat, lng: couturieres[0].lng };
       lmmMap = new google.maps.Map(mapEl, {
         center: center,
-        zoom: couturieres.length > 1 ? 3 : 12,
+        zoom: 11,
         disableDefaultUI: true,
         zoomControl: true,
-        styles: [{ featureType: 'all', elementType: 'geometry', stylers: [{ color: '#ffffff' }] }, { featureType: 'water', elementType: 'geometry', stylers: [{ color: 'var(--lmm-border)' }] }, { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#fff' }] }]
+        styles: [
+          { elementType: 'geometry', stylers: [{ color: '#F5F2EE' }] },
+          { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+          { elementType: 'labels.text.fill', stylers: [{ color: '#888888' }] },
+          { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#E3DFDA' }] },
+          { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#ffffff' }] },
+          { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E8E8E8' }] },
+          { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+          { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+          { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#E8E8E8' }] }
+        ]
       });
-      var bounds = new google.maps.LatLngBounds();
-      couturieres.forEach(function(c, i) {
-        var pos = { lat: c.lat, lng: c.lng };
+      if (lmmOrigine) {
         new google.maps.Marker({
-          position: pos,
+          position: lmmOrigine,
           map: lmmMap,
-          title: c.nom,
+          title: 'Vous',
           icon: {
             path: google.maps.SymbolPath.CIRCLE,
-            scale: i === 0 ? 10 : 7,
-            fillColor: i === 0 ? 'var(--lmm-gold)' : 'var(--lmm-text)',
+            scale: 6,
+            fillColor: '#4285F4',
             fillOpacity: 1,
             strokeColor: '#fff',
             strokeWeight: 2
           }
         });
-        bounds.extend(pos);
+      }
+      couturieres.forEach(function(c, i) {
+        var pos = { lat: c.lat, lng: c.lng };
+        var isNearest = i === 0;
+        // Couleurs littérales : l'API Google Maps ne résout pas les variables CSS
+        // (var(--lmm-gold) etc.) — ce ne sont pas de vrais éléments DOM stylés.
+        // Le format des tailleurs "tissus" est fixe (pas de variation selon la
+        // proximité ou le filtre actif) pour rester cohérent d'une vue à l'autre.
+        var icon = c.vendeuse
+          ? {
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: 11,
+              fillColor: '#C9A96E',
+              fillOpacity: 1,
+              strokeColor: '#ffffff',
+              strokeWeight: 2
+            }
+          : {
+              // Doré réservé exclusivement aux tailleurs "tissus" (voir légende) —
+              // le doré ne sert plus à indiquer "la plus proche" sur la carte, pour
+              // éviter la confusion avec deux pastilles dorées identiques. La
+              // proximité reste indiquée par la taille et par le libellé dans la liste.
+              path: google.maps.SymbolPath.CIRCLE,
+              scale: isNearest ? 10 : 7,
+              fillColor: '#1C1C1C',
+              fillOpacity: 1,
+              strokeColor: '#ffffff',
+              strokeWeight: 2
+            };
+        new google.maps.Marker({
+          position: pos,
+          map: lmmMap,
+          title: c.nom + (c.vendeuse ? ' — présente les tissus' : ''),
+          icon: icon
+        });
       });
-      if (couturieres.length > 1) lmmMap.fitBounds(bounds);
     });
   }
 
@@ -284,8 +383,8 @@
 
   function selectionnerCouturiere(index) {
     lmmIndexChoisi = index;
-    lmmLienCalChoisi = lmmDernierResultat[index].lien_cal || '';
-    var n = lmmDernierResultat.length;
+    lmmLienCalChoisi = lmmListeActive[index].lien_cal || '';
+    var n = lmmListeActive.length;
     for (var j = 0; j < n; j++) {
       var card = document.getElementById('lmm-card-' + j);
       var btn = document.getElementById('lmm-btn-' + j);
@@ -320,6 +419,7 @@
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data.success) {
+            lmmOrigine = { lat: pos.coords.latitude, lng: pos.coords.longitude };
             lmmDernierResultat = data.couturieres;
             afficherResultat(data.couturieres);
           } else {
@@ -351,6 +451,7 @@
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.success) {
+        lmmOrigine = data.origine || null;
         lmmDernierResultat = data.couturieres;
         afficherResultat(data.couturieres);
       } else {
@@ -431,7 +532,7 @@
   function ouvrirChangementCouturiere() {
     lmmAnnulationPourChangement = true;
     fermerGestionModal();
-    document.getElementById('lmm-annulation-raison').value = 'Changement de couturière';
+    document.getElementById('lmm-annulation-raison').value = 'Changement de tailleur';
     document.getElementById('lmm-annulation-modal').classList.add('open');
   }
 
@@ -549,9 +650,9 @@
     left: 0;
     right: 0;
     z-index: 100;
-    background: var(--lmm-text);
+    background: var(--lmm-bordeaux);
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    height: 72px;
+    height: 84px;
   }
 
   .lmm-header__inner {
@@ -559,15 +660,17 @@
     margin: 0 auto;
     padding: 0 32px;
     height: 100%;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
   }
 
   .lmm-header__logo {
     text-decoration: none;
     display: flex;
+    flex-direction: column;
     align-items: center;
+    justify-self: center;
   }
 
   .lmm-header__logo-img {
@@ -579,14 +682,30 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 20px;
     font-weight: 400;
-    color: #ffffff;
+    color: var(--lmm-ivoire);
     letter-spacing: 0.04em;
+  }
+
+  .lmm-logo-sub {
+    font-size: 9px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-pale);
+    margin-top: 3px;
   }
 
   .lmm-header__nav {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 28px;
+  }
+
+  .lmm-header__nav--left {
+    justify-self: start;
+  }
+
+  .lmm-header__nav--right {
+    justify-self: end;
   }
 
   .lmm-nav-link {
@@ -594,47 +713,47 @@
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: rgba(245, 240, 235, 0.65);
+    color: rgba(var(--lmm-ivoire-deep-rgb), 0.75);
     transition: color 0.2s;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   .lmm-nav-link:hover,
   .lmm-nav-link--active {
-    color: #ffffff;
+    color: var(--lmm-ivoire);
   }
 
   .lmm-header__icons {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
   }
 
   .lmm-icon-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(245, 240, 235, 0.65);
+    color: rgba(var(--lmm-ivoire-deep-rgb), 0.75);
     text-decoration: none;
     transition: color 0.2s;
     position: relative;
   }
 
   .lmm-icon-btn:hover {
-    color: #ffffff;
+    color: var(--lmm-ivoire);
   }
 
   .lmm-icon-btn svg {
-    width: 20px;
-    height: 20px;
+    width: 19px;
+    height: 19px;
   }
 
   .lmm-cart-count {
     position: absolute;
     top: -6px;
     right: -8px;
-    background: var(--lmm-gold);
-    color: var(--lmm-text);
+    background: var(--lmm-ivoire);
+    color: var(--lmm-bordeaux);
     font-size: 9px;
     font-weight: 600;
     width: 16px;
@@ -646,7 +765,7 @@
   }
 
   body {
-    padding-top: 72px;
+    padding-top: 84px;
     background: var(--lmm-surface);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     color: var(--lmm-text);
@@ -662,20 +781,21 @@
   }
 
   .lmm-header__rdv-btn {
-    font-size: 12px;
-    letter-spacing: 0.14em;
+    font-size: 11px;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--lmm-text);
-    background: var(--lmm-gold);
-    padding: 11px 22px;
+    color: var(--lmm-bordeaux);
+    background: var(--lmm-ivoire);
+    padding: 10px 18px;
+    border-radius: 6px;
     text-decoration: none;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: background 0.2s, color 0.2s;
+    transition: opacity 0.2s;
     white-space: nowrap;
   }
 
   .lmm-header__rdv-btn:hover {
-    background: var(--lmm-surface);
+    opacity: 0.85;
   }
 
   .lmm-cal-modal {
@@ -720,6 +840,37 @@
 
   #lmm-cal-embed {
     min-height: 600px;
+  }
+
+  .lmm-toggle-track {
+    position: relative;
+    display: inline-block;
+    width: 30px;
+    height: 17px;
+    background: var(--lmm-border);
+    border-radius: 10px;
+    flex-shrink: 0;
+    transition: background 0.2s ease;
+  }
+
+  .lmm-toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 13px;
+    height: 13px;
+    background: #ffffff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease;
+  }
+
+  #lmm-vendeuse-toggle.active .lmm-toggle-track {
+    background: var(--lmm-gold);
+  }
+
+  #lmm-vendeuse-toggle.active .lmm-toggle-thumb {
+    transform: translateX(13px);
   }
 
   @keyframes lmm-progress {
