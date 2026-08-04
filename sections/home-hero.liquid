@@ -16,6 +16,9 @@
     <div class="lmm-plan__row">
       <div class="lmm-plan__step">
         <span class="lmm-plan__num">01</span>
+        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
+          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+        </a>
         <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
@@ -24,9 +27,6 @@
           {% endfor %}
           <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
         </ul>
-        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
-          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-        </a>
       </div>
 
       <div class="lmm-plan__line"></div>
