@@ -101,17 +101,65 @@
         .catch(function () {});
     }, function () {}, { timeout: 8000 });
   })();
+
+  // Hauteur du hero calculée à partir des vraies mesures du DOM (pas de
+  // pixels devinés) : on mesure combien d'espace prend le titre "Comment
+  // ça fonctionne" + la rangée numéro/titre de chaque carte — cette
+  // distance ne dépend pas de la hauteur du hero lui-même, seulement du
+  // contenu du plan. Le hero prend tout le reste de l'écran, ce qui
+  // garantit que les titres restent visibles au chargement et que les
+  // descriptions restent sous le pli, peu importe la taille de l'écran
+  // ou si un titre passe sur deux lignes.
+  (function () {
+    var hero = document.querySelector('.lmm-hero');
+    var header = document.querySelector('.lmm-header');
+    var plan = document.querySelector('.lmm-plan');
+    var planTitle = document.querySelector('.lmm-plan__title');
+    var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
+    if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
+
+    var MIN_HERO_HEIGHT = 300;
+    var BUFFER_BELOW_TITLES = 20;
+
+    function updateHeroPeek() {
+      var planTop = plan.getBoundingClientRect().top;
+      var maxBottom = planTitle.getBoundingClientRect().bottom;
+      stepHeads.forEach(function (el) {
+        var bottom = el.getBoundingClientRect().bottom;
+        if (bottom > maxBottom) maxBottom = bottom;
+      });
+
+      var revealHeight = maxBottom - planTop;
+      var headerHeight = header.getBoundingClientRect().height;
+      var target = window.innerHeight - headerHeight - revealHeight - BUFFER_BELOW_TITLES;
+
+      hero.style.height = Math.max(target, MIN_HERO_HEIGHT) + 'px';
+    }
+
+    updateHeroPeek();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(updateHeroPeek);
+    }
+    window.addEventListener('load', updateHeroPeek);
+
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateHeroPeek, 120);
+    });
+  })();
 </script>
 
 {% stylesheet %}
   .lmm-hero {
     position: relative;
     background: var(--lmm-ivoire);
-    /* Volontairement moins que 100% de l'écran : seuls le titre "Comment
-       ça fonctionne" et la rangée numéro/titre du plan doivent dépasser
-       visibles sous le pli au chargement — pas les descriptions. */
-    height: calc(100dvh - 104px - 180px);
-    min-height: 380px;
+    /* Valeur de repli avant que le script en bas de page ne mesure le
+       vrai contenu et fixe la hauteur exacte en pixels (voir <script> :
+       garantit que les titres du plan restent visibles au chargement et
+       que les descriptions restent sous le pli, de façon fiable). */
+    height: calc(100dvh - 284px);
+    min-height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -236,6 +284,11 @@
 
   .lmm-plan__desc {
     width: 100%;
+    /* Marge supplémentaire (en plus du gap de la carte) entre le titre et
+       la description : donne une vraie zone tampon au script de hauteur
+       du hero, pour que la coupure au chargement reste fiable même avec
+       de petites variations de rendu entre navigateurs. */
+    margin-top: 26px;
     text-align: left;
   }
 
@@ -252,6 +305,14 @@
 
   .lmm-plan__step-head {
     display: flex;
+    align-items: flex-start;
+    /* Fixe à la hauteur d'un titre sur 2 lignes : même si un titre est
+       plus court qu'un autre (une ligne au lieu de deux), la description
+       qui suit démarre toujours à la même hauteur dans les 3 cartes —
+       sinon la carte au titre le plus court laisserait sa description
+       dépasser avant celle des autres, et la coupure au chargement du
+       hero ne serait plus fiable. */
+    min-height: 54px;
     text-decoration: none;
   }
 
@@ -259,6 +320,7 @@
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 20px;
     font-weight: 400;
+    line-height: 1.3;
     color: var(--lmm-text);
   }
 
