@@ -13,27 +13,12 @@
   <div class="lmm-plan__inner">
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
-    <div class="lmm-plan__overview">
-      <div class="lmm-plan__overview-item lmm-plan__overview-item--primary">
-        <span class="lmm-plan__overview-num">1</span>
-        <span class="lmm-plan__overview-label">{{ section.settings.step1_label }}</span>
-      </div>
-      <div class="lmm-plan__line"></div>
-      <div class="lmm-plan__overview-item">
-        <span class="lmm-plan__overview-num">2</span>
-        <span class="lmm-plan__overview-label">{{ section.settings.step2_label }}</span>
-      </div>
-      <div class="lmm-plan__line"></div>
-      <div class="lmm-plan__overview-item">
-        <span class="lmm-plan__overview-num">3</span>
-        <span class="lmm-plan__overview-label">{{ section.settings.step3_label }}</span>
-      </div>
-    </div>
-
-    <div class="lmm-plan__details">
-      <div class="lmm-plan__detail">
-        <span class="lmm-plan__detail-num">01</span>
-        <h3 class="lmm-plan__detail-title">{{ section.settings.step1_label }}</h3>
+    <div class="lmm-plan__row">
+      <div class="lmm-plan__step">
+        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
+          <span class="lmm-plan__num">01</span>
+          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+        </a>
         <ul class="lmm-plan__list">
           {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
           {% for line in step1_lines %}
@@ -41,12 +26,15 @@
           {% endfor %}
           <li>Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> ou <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
         </ul>
-        <a href="{{ section.settings.step1_url }}" class="lmm-plan__cta">{{ section.settings.step1_label }}</a>
       </div>
 
-      <div class="lmm-plan__detail">
-        <span class="lmm-plan__detail-num">02</span>
-        <h3 class="lmm-plan__detail-title">{{ section.settings.step2_label }}</h3>
+      <div class="lmm-plan__line"></div>
+
+      <div class="lmm-plan__step">
+        <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
+          <span class="lmm-plan__num">02</span>
+          <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
+        </a>
         <ul class="lmm-plan__list">
           {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
           {% for line in step2_lines %}
@@ -56,9 +44,13 @@
         </ul>
       </div>
 
-      <div class="lmm-plan__detail">
-        <span class="lmm-plan__detail-num">03</span>
-        <h3 class="lmm-plan__detail-title">{{ section.settings.step3_label }}</h3>
+      <div class="lmm-plan__line"></div>
+
+      <div class="lmm-plan__step">
+        <div class="lmm-plan__step-head">
+          <span class="lmm-plan__num">03</span>
+          <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
+        </div>
         <ul class="lmm-plan__list">
           {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
           {% for line in step3_lines %}
@@ -173,104 +165,85 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Aperçu compact — juste les numéros et titres, sert de table des
-     matières. Les vraies descriptions sont plus bas dans .lmm-plan__details. */
-  .lmm-plan__overview {
+  .lmm-plan__row {
     display: flex;
     align-items: flex-start;
     justify-content: center;
     gap: 0;
-    margin-bottom: 80px;
   }
 
-  .lmm-plan__overview-item {
+  .lmm-plan__step {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 10px;
+    gap: 24px;
     flex: 1;
-    max-width: 260px;
-    padding: 0 16px;
+    max-width: 320px;
+    padding: 0 20px;
   }
 
   .lmm-plan__line {
     width: 100%;
-    max-width: 90px;
+    max-width: 60px;
     border-top: 1px solid var(--lmm-ivoire-line);
     align-self: flex-start;
-    margin-top: 15px;
+    /* Aligne la ligne sur le centre vertical du grand numéro (40px, en
+       haut de chaque étape). */
+    margin-top: 34px;
     flex-shrink: 1;
   }
 
-  .lmm-plan__overview-num {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    border: 1px solid var(--lmm-muted);
-    color: var(--lmm-muted);
-    background: var(--lmm-ivoire);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  .lmm-plan__overview-item--primary .lmm-plan__overview-num {
-    background: var(--lmm-bordeaux);
-    border-color: var(--lmm-bordeaux);
-    color: var(--lmm-ivoire);
-  }
-
-  .lmm-plan__overview-label {
-    font-size: 13px;
-    color: var(--lmm-text);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  /* Détails — grand, aéré, éditorial. */
-  .lmm-plan__details {
+  /* Même format de numéro et de titre pour les 3 étapes — seule la
+     décoration (fond bordeaux pour l'étape 1, curseur pour l'étape 2)
+     change selon que l'étape est cliquable ou non. */
+  .lmm-plan__step-head {
     display: flex;
     flex-direction: column;
-    gap: 64px;
-    max-width: 640px;
-    margin: 0 auto;
+    align-items: center;
+    gap: 4px;
+    text-decoration: none;
   }
 
-  .lmm-plan__detail {
-    text-align: center;
-  }
-
-  .lmm-plan__detail-num {
+  .lmm-plan__num {
     display: block;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 40px;
     font-weight: 400;
     color: var(--lmm-ivoire-line);
-    margin-bottom: 4px;
   }
 
-  .lmm-plan__detail-title {
+  .lmm-plan__step-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 26px;
     font-weight: 400;
     color: var(--lmm-text);
-    margin: 0 0 20px;
   }
 
-  .lmm-plan__cta {
-    display: inline-block;
+  .lmm-plan__step-head--btn {
     background: var(--lmm-bordeaux);
+    border-radius: 12px;
+    padding: 24px 20px;
+  }
+
+  .lmm-plan__step-head--btn .lmm-plan__num {
+    color: var(--lmm-bordeaux-pale);
+  }
+
+  .lmm-plan__step-head--btn .lmm-plan__step-title {
     color: var(--lmm-ivoire);
-    text-decoration: none;
-    font-size: 13px;
-    letter-spacing: 0.03em;
-    padding: 15px 30px;
-    border-radius: 8px;
-    white-space: nowrap;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    margin-top: 20px;
+  }
+
+  .lmm-plan__step-head--link {
+    cursor: pointer;
+  }
+
+  .lmm-plan__step-head--link .lmm-plan__step-title {
+    transition: color 0.2s;
+  }
+
+  .lmm-plan__step-head--link:hover .lmm-plan__step-title {
+    color: var(--lmm-bordeaux-soft);
   }
 
   .lmm-plan__list {
