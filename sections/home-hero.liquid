@@ -15,8 +15,8 @@
 
     <div class="lmm-plan__row">
       <div class="lmm-plan__step">
+        <span class="lmm-plan__num">01</span>
         <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
-          <span class="lmm-plan__num">01</span>
           <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
         </a>
         <ul class="lmm-plan__list">
@@ -31,8 +31,8 @@
       <div class="lmm-plan__line"></div>
 
       <div class="lmm-plan__step">
+        <span class="lmm-plan__num">02</span>
         <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
-          <span class="lmm-plan__num">02</span>
           <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
         </a>
         <ul class="lmm-plan__list">
@@ -47,8 +47,8 @@
       <div class="lmm-plan__line"></div>
 
       <div class="lmm-plan__step">
+        <span class="lmm-plan__num">03</span>
         <div class="lmm-plan__step-head">
-          <span class="lmm-plan__num">03</span>
           <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
         </div>
         <ul class="lmm-plan__list">
@@ -177,7 +177,7 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 24px;
+    gap: 20px;
     flex: 1;
     max-width: 320px;
     padding: 0 20px;
@@ -188,34 +188,33 @@
     max-width: 60px;
     border-top: 1px solid var(--lmm-ivoire-line);
     align-self: flex-start;
-    /* Aligne la ligne sur le centre vertical du grand numéro (40px, en
-       haut de chaque étape). */
-    margin-top: 34px;
+    /* Aligne la ligne sur le centre vertical du numéro (32px, en haut de
+       chaque étape). */
+    margin-top: 26px;
     flex-shrink: 1;
   }
 
   /* Même format de numéro et de titre pour les 3 étapes — seule la
      décoration (fond bordeaux pour l'étape 1, curseur pour l'étape 2)
-     change selon que l'étape est cliquable ou non. */
-  .lmm-plan__step-head {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    text-decoration: none;
-  }
-
+     change selon que l'étape est cliquable ou non. Le numéro reste hors
+     du bouton de l'étape 1 (juste au-dessus), pas dedans. */
   .lmm-plan__num {
     display: block;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 40px;
+    font-size: 32px;
     font-weight: 400;
     color: var(--lmm-ivoire-line);
+    margin-bottom: -8px;
+  }
+
+  .lmm-plan__step-head {
+    display: flex;
+    text-decoration: none;
   }
 
   .lmm-plan__step-title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 400;
     color: var(--lmm-text);
   }
@@ -223,11 +222,7 @@
   .lmm-plan__step-head--btn {
     background: var(--lmm-bordeaux);
     border-radius: 12px;
-    padding: 24px 20px;
-  }
-
-  .lmm-plan__step-head--btn .lmm-plan__num {
-    color: var(--lmm-bordeaux-pale);
+    padding: 16px 24px;
   }
 
   .lmm-plan__step-head--btn .lmm-plan__step-title {
