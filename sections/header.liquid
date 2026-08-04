@@ -1,23 +1,31 @@
 <header class="lmm-header full-width">
   <div class="lmm-header__inner">
-    <nav class="lmm-header__nav">
+    <div class="lmm-header__cell">
       <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
+    </div>
+    <div class="lmm-header__cell">
       <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
+    </div>
+    <div class="lmm-header__cell">
       <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemise</a>
-    </nav>
+    </div>
 
-    <a href="{{ routes.root_url }}" class="lmm-header__logo">
-      {% if section.settings.logo_image %}
-        <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
-      {% else %}
-        <span class="lmm-logo-main">La Maison M.</span>
-      {% endif %}
-      <span class="lmm-logo-sub">Tailleur sur mesure</span>
-    </a>
+    <div class="lmm-header__cell">
+      <a href="{{ routes.root_url }}" class="lmm-header__logo">
+        {% if section.settings.logo_image %}
+          <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
+        {% else %}
+          <span class="lmm-logo-main">La Maison M.</span>
+        {% endif %}
+        <span class="lmm-logo-sub">Tailleur sur mesure</span>
+      </a>
+    </div>
 
-    <nav class="lmm-header__nav lmm-header__nav--right">
+    <div class="lmm-header__cell">
       <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
+    </div>
 
+    <div class="lmm-header__cell">
       {% assign now_ts = 'now' | date: '%s' %}
       {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
       {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
@@ -25,7 +33,9 @@
       {% else %}
         <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
       {% endif %}
+    </div>
 
+    <div class="lmm-header__cell">
       <div class="lmm-header__icons">
         <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
           {{ 'icon-cart.svg' | inline_asset_content }}
@@ -40,7 +50,7 @@
           </shopify-account>
         {% endif %}
       </div>
-    </nav>
+    </div>
   </div>
 </header>
 
@@ -656,33 +666,36 @@
     height: 104px;
   }
 
-  /* 3 blocs (nav gauche / logo / nav droite) plutôt qu'une grille à 7
-     colonnes égales : avant, un mot court comme "Chemise" et un mot long
-     comme "Prendre rendez-vous" centrés chacun dans leur propre colonne
-     créaient des espaces visuels inégaux entre les items. Ici, l'espace-
-     ment (gap) entre les items est une vraie valeur fixe des deux côtés.
-     minmax(0, 1fr) — plutôt que 1fr seul — force les deux blocs de nav à
-     rester exactement la même largeur même si leur contenu ("Prendre
-     rendez-vous" + icônes à droite) est plus large que l'autre côté,
-     sinon le logo se retrouvait décentré. */
   .lmm-header__inner {
     max-width: 1520px;
     margin: 0 auto;
     padding: 0 32px;
     height: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-columns: repeat(7, 1fr);
     align-items: center;
   }
 
-  .lmm-header__nav {
+  .lmm-header__cell {
     display: flex;
     align-items: center;
-    gap: 48px;
+    justify-content: center;
+    position: relative;
   }
 
-  .lmm-header__nav--right {
-    justify-content: flex-end;
+  /* Séparateur discret entre chaque zone : une petite ligne verticale
+     centrée (pas toute la hauteur du header), assez subtile pour
+     apaiser l'œil sans attirer l'attention — et qui montre au passage
+     que les 7 zones sont bien réparties également. */
+  .lmm-header__cell + .lmm-header__cell::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 22px;
+    background: rgba(var(--lmm-ivoire-deep-rgb), 0.18);
   }
 
   .lmm-header__logo {
@@ -690,7 +703,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-shrink: 0;
   }
 
   .lmm-header__logo-img {
