@@ -7,18 +7,11 @@
         "plan_title": "Comment ça fonctionne",
         "step1_label": "Configurez votre complet",
         "step1_url": "/pages/sur-mesure",
-        "step1_help_teaser": "Besoin d'aide pour configurer ?",
-        "step1_help_detail": "Aide stylistique par courriel, ou rendez-vous avec un tailleur.",
+        "step1_detail": "Vous pouvez configurer votre complet de A à Z, ou choisir directement dans notre collection.",
         "step2_label": "Rendez-vous mensurations",
-        "step2_detail": "Réservez un moment avec un tailleur — deux succursales à Sherbrooke.",
+        "step2_detail": "Vos mensurations sont prises par des professionnels près de chez vous, pour maximiser la qualité de l'ajustement.",
         "step3_label": "Recevez votre complet",
-        "step3_detail": "Cousu à la main, prêt en quelques semaines.",
-        "stat1_num": "12+",
-        "stat1_label": "Années d'expérience",
-        "stat2_num": "100%",
-        "stat2_label": "Cousu main",
-        "stat3_num": "4–8",
-        "stat3_label": "Semaines de livraison"
+        "step3_detail": "Votre complet est cousu à la main par un tailleur, prêt en quelques semaines, et livré directement chez vous."
       }
     }
   },

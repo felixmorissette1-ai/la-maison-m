@@ -13,57 +13,76 @@
   <div class="lmm-plan__inner">
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
-    <div class="lmm-plan__grid">
-      <div class="lmm-plan__card lmm-plan__card--primary">
+    <div class="lmm-plan__row">
+      <div class="lmm-plan__step lmm-plan__step--primary">
         <div class="lmm-plan__num">1</div>
         <a href="{{ section.settings.step1_url }}" class="lmm-plan__cta">{{ section.settings.step1_label }}</a>
-        <button type="button" class="lmm-disclosure">
-          <span class="lmm-disclosure__preview">{{ section.settings.step1_help_teaser }}</span>
-          <span class="lmm-disclosure__full">{{ section.settings.step1_help_detail }}</span>
-          <svg class="lmm-disclosure__chev" width="13" height="13" viewBox="0 0 20 20"><path d="M5 8l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
+        <p class="lmm-plan__desc" data-reveal>
+          {{ section.settings.step1_detail }}
+          Besoin d'aide ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">prenez rendez-vous</a> avec un tailleur qui a des laines, ou <a href="mailto:{{ shop.email }}" class="lmm-plan__link">écrivez-nous</a>.
+        </p>
       </div>
 
-      <div class="lmm-plan__card">
+      <div class="lmm-plan__line"></div>
+
+      <div class="lmm-plan__step">
         <div class="lmm-plan__num">2</div>
         <p class="lmm-plan__label">{{ section.settings.step2_label }}</p>
-        <p class="lmm-plan__desc">{{ section.settings.step2_detail }}</p>
+        <p class="lmm-plan__desc" data-reveal>{{ section.settings.step2_detail }}<span id="lmm-plan-ville"></span></p>
       </div>
 
-      <div class="lmm-plan__card">
+      <div class="lmm-plan__line"></div>
+
+      <div class="lmm-plan__step">
         <div class="lmm-plan__num">3</div>
         <p class="lmm-plan__label">{{ section.settings.step3_label }}</p>
-        <p class="lmm-plan__desc">{{ section.settings.step3_detail }}</p>
+        <p class="lmm-plan__desc" data-reveal>{{ section.settings.step3_detail }}</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<section class="lmm-trust full-width">
-  <div class="lmm-trust__inner">
-    <div class="lmm-trust__item">
-      <p class="lmm-trust__num">{{ section.settings.stat1_num }}</p>
-      <p class="lmm-trust__desc">{{ section.settings.stat1_label }}</p>
-    </div>
-    <div class="lmm-divider-v"></div>
-    <div class="lmm-trust__item">
-      <p class="lmm-trust__num">{{ section.settings.stat2_num }}</p>
-      <p class="lmm-trust__desc">{{ section.settings.stat2_label }}</p>
-    </div>
-    <div class="lmm-divider-v"></div>
-    <div class="lmm-trust__item">
-      <p class="lmm-trust__num">{{ section.settings.stat3_num }}</p>
-      <p class="lmm-trust__desc">{{ section.settings.stat3_label }}</p>
     </div>
   </div>
 </section>
 
 <script>
-  document.querySelectorAll('.lmm-hero .lmm-disclosure').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      btn.classList.toggle('open');
-    });
-  });
+  (function () {
+    var reveals = document.querySelectorAll('.lmm-plan [data-reveal]');
+    if ('IntersectionObserver' in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('lmm-reveal--in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.35 });
+      reveals.forEach(function (el) { observer.observe(el); });
+    } else {
+      reveals.forEach(function (el) { el.classList.add('lmm-reveal--in'); });
+    }
+  })();
+
+  // Ville la plus proche pour l'étape 2 — demande la localisation dès
+  // l'arrivée sur la page d'accueil ; échoue silencieusement (refus,
+  // navigateur sans support, aucun tailleur dans un rayon raisonnable).
+  (function () {
+    var villeEl = document.getElementById('lmm-plan-ville');
+    if (!villeEl || !navigator.geolocation) return;
+
+    navigator.geolocation.getCurrentPosition(function (pos) {
+      fetch('https://lmm-backend.vercel.app/api/couturiere', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var nearest = data && data.success && data.couturieres && data.couturieres[0];
+          if (nearest && nearest.ville && nearest.distanceValue < 100000) {
+            villeEl.textContent = ' Couturière la plus proche : ' + nearest.ville + '.';
+          }
+        })
+        .catch(function () {});
+    }, function () {}, { timeout: 8000 });
+  })();
 </script>
 
 {% stylesheet %}
@@ -73,7 +92,7 @@
     /* Volontairement moins que 100% de l'écran : le bas de la section
        suivante (.lmm-plan) doit dépasser visible sous le pli au chargement,
        comme indice pour inciter à défiler. */
-    height: calc(100dvh - 84px - 320px);
+    height: calc(100dvh - 104px - 320px);
     min-height: 320px;
     display: flex;
     align-items: center;
@@ -142,23 +161,33 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-plan__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    align-items: stretch;
+  .lmm-plan__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
   }
 
-  .lmm-plan__card {
+  .lmm-plan__step {
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    gap: 12px;
-    background: var(--lmm-ivoire-deep);
-    border: 1px solid var(--lmm-ivoire-line);
-    border-radius: 12px;
-    padding: 36px 26px;
+    gap: 10px;
+    flex: 1;
+    max-width: 300px;
+    padding: 0 20px;
+  }
+
+  .lmm-plan__line {
+    width: 100%;
+    max-width: 90px;
+    border-top: 1px solid var(--lmm-ivoire-line);
+    align-self: flex-start;
+    /* Aligne la ligne sur le centre vertical du cercle numéroté (30px de
+       haut, premier élément de chaque étape, sans padding au-dessus). */
+    margin-top: 15px;
+    flex-shrink: 1;
   }
 
   .lmm-plan__num {
@@ -176,7 +205,7 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  .lmm-plan__card--primary .lmm-plan__num {
+  .lmm-plan__step--primary .lmm-plan__num {
     background: var(--lmm-bordeaux);
     border-color: var(--lmm-bordeaux);
     color: var(--lmm-ivoire);
@@ -206,98 +235,24 @@
     font-size: 12.5px;
     color: var(--lmm-muted);
     line-height: 1.6;
-    max-width: 26ch;
     margin: 0;
   }
 
-  .lmm-disclosure {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-top: 4px;
-    padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  }
-
-  .lmm-disclosure__preview {
-    font-size: 11px;
-    color: var(--lmm-muted);
-    max-width: 22ch;
-    line-height: 1.4;
+  .lmm-plan__link {
+    color: var(--lmm-bordeaux-soft);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  .lmm-disclosure__full {
-    display: block;
-    font-size: 12px;
-    color: var(--lmm-muted);
-    max-width: 24ch;
-    line-height: 1.5;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.2s ease;
+  .lmm-plan__desc[data-reveal] {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
-  .lmm-disclosure.open .lmm-disclosure__full {
-    max-height: 60px;
-    margin-top: 4px;
-  }
-
-  .lmm-disclosure.open .lmm-disclosure__preview {
-    display: none;
-  }
-
-  .lmm-disclosure__chev {
-    margin-top: 4px;
-    color: var(--lmm-ivoire-faint);
-    transition: transform 0.2s;
-  }
-
-  .lmm-disclosure.open .lmm-disclosure__chev {
-    transform: rotate(180deg);
-  }
-
-  .lmm-trust {
-    background: var(--lmm-surface);
-    border-bottom: 1px solid rgba(28, 28, 28, 0.08);
-    padding: 40px 32px;
-  }
-
-  .lmm-trust__inner {
-    max-width: 1280px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 64px;
-  }
-
-  .lmm-trust__item {
-    text-align: center;
-  }
-
-  .lmm-trust__num {
-    font-family: Georgia, serif;
-    font-size: 28px;
-    color: var(--lmm-text);
-    margin-bottom: 4px;
-  }
-
-  .lmm-trust__desc {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--lmm-muted);
-  }
-
-  .lmm-divider-v {
-    width: 1px;
-    height: 48px;
-    background: rgba(28, 28, 28, 0.12);
+  .lmm-plan__desc.lmm-reveal--in {
+    opacity: 1;
+    transform: translateY(0);
   }
 {% endstylesheet %}
 
@@ -313,22 +268,13 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_help_teaser", "label": "Étape 1 — lien d'aide", "default": "Besoin d'aide pour configurer ?" },
-    { "type": "text", "id": "step1_help_detail", "label": "Étape 1 — détail de l'aide", "default": "Aide stylistique par courriel, ou rendez-vous avec un tailleur." },
+    { "type": "text", "id": "step1_detail", "label": "Étape 1 — description", "default": "Vous pouvez configurer votre complet de A à Z, ou choisir directement dans notre collection." },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_detail", "label": "Étape 2 — description", "default": "Réservez un moment avec un tailleur — deux succursales à Sherbrooke." },
+    { "type": "text", "id": "step2_detail", "label": "Étape 2 — description", "default": "Vos mensurations sont prises par des professionnels près de chez vous, pour maximiser la qualité de l'ajustement." },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_detail", "label": "Étape 3 — description", "default": "Cousu à la main, prêt en quelques semaines." },
-
-    { "type": "header", "content": "Bandeau de confiance" },
-    { "type": "text", "id": "stat1_num", "label": "Stat 1 — chiffre", "default": "12+" },
-    { "type": "text", "id": "stat1_label", "label": "Stat 1 — texte", "default": "Années d'expérience" },
-    { "type": "text", "id": "stat2_num", "label": "Stat 2 — chiffre", "default": "100%" },
-    { "type": "text", "id": "stat2_label", "label": "Stat 2 — texte", "default": "Cousu main" },
-    { "type": "text", "id": "stat3_num", "label": "Stat 3 — chiffre", "default": "4–8" },
-    { "type": "text", "id": "stat3_label", "label": "Stat 3 — texte", "default": "Semaines de livraison" }
+    { "type": "text", "id": "step3_detail", "label": "Étape 3 — description", "default": "Votre complet est cousu à la main par un tailleur, prêt en quelques semaines, et livré directement chez vous." }
   ],
   "presets": [
     { "name": "Hero — Accueil" }
