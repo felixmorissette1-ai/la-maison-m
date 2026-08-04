@@ -20,10 +20,9 @@
     <div class="lmm-plan__row">
       <div class="lmm-plan__step">
         <span class="lmm-plan__num">01</span>
-        <a href="{{ section.settings.step1_url }}" class="lmm-plan__step-head lmm-plan__step-head--btn">
+        <div class="lmm-plan__step-head">
           <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-          <span class="lmm-plan__badge">1</span>
-        </a>
+        </div>
         <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
         <ul class="lmm-plan__list">
           {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
@@ -162,23 +161,16 @@
     white-space: nowrap;
   }
 
-  /* Pastille "étape 1" — identique sur le bouton du hero et sur l'étape 1
-     du plan d'action, pour relier visuellement les deux. */
+  /* Pastille "étape 1" sur le bouton du hero — même format que le "01" du
+     plan d'action (Georgia, texte simple, sans cercle ni contour). */
   .lmm-plan__badge {
     position: absolute;
-    top: -9px;
-    right: -9px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--lmm-ivoire);
-    color: var(--lmm-bordeaux);
-    border: 1.5px solid var(--lmm-bordeaux);
+    top: -12px;
+    right: -10px;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--lmm-bordeaux-pale);
   }
 
   @media (min-width: 768px) {
@@ -259,17 +251,6 @@
     font-size: 20px;
     font-weight: 400;
     color: var(--lmm-text);
-  }
-
-  .lmm-plan__step-head--btn {
-    position: relative;
-    background: var(--lmm-bordeaux);
-    border-radius: 8px;
-    padding: 13px 26px;
-  }
-
-  .lmm-plan__step-head--btn .lmm-plan__step-title {
-    color: var(--lmm-ivoire);
   }
 
   .lmm-plan__step-head--link {
