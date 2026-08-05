@@ -20,16 +20,15 @@
 </section>
 
 {% stylesheet %}
-  /* Retour à un beige pâle avec texte charcoal, comme les autres
-     sections claires — les essais bordeaux (plein, désaturé, puis
-     semi-transparent) n'ont pas fonctionné visuellement. Ton légèrement
-     différent de --lmm-ivoire (plan) et --lmm-ivoire-pale (pourquoi)
-     pour garder une petite variation entre les sections claires.
-     Section volontairement vide de vrai contenu pour l'instant (voir
-     schéma : les valeurs par défaut sont des espaces réservés). */
+  /* Ivoire pâle (la plus claire de la palette) — la section "Pourquoi
+     nous choisir" prend maintenant le ton plus foncé (--lmm-ivoire-deep)
+     à sa place, pour inverser leur relation. Texte charcoal, comme les
+     autres sections claires. Section volontairement vide de vrai
+     contenu pour l'instant (voir schéma : les valeurs par défaut sont
+     des espaces réservés). */
   .lmm-stats {
     position: relative;
-    background: var(--lmm-ivoire-deep);
+    background: var(--lmm-ivoire-pale);
   }
 
   /* Fondu vers la couleur de la section suivante (Pourquoi nous
@@ -40,8 +39,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 90px;
-    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-pale));
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-deep));
     pointer-events: none;
   }
 

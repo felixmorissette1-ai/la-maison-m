@@ -163,12 +163,22 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible;
   }
 
+  /* La photo, le voile et le fondu débordent de 30px sous la boîte du
+     hero (bottom: -30px au lieu de 0) pour que la photo se rende un peu
+     plus bas sur la page — sans toucher à la hauteur du hero lui-même,
+     donc sans déplacer le bouton, le titre du plan ou les cartes. Comme
+     ce sont des éléments positionnés, ils s'affichent par-dessus le haut
+     de .lmm-plan (qui a 40px de padding avant le titre) : le débordement
+     reste dans cette marge, jamais sur du texte. */
   .lmm-hero__photo {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -30px;
     background-size: cover;
     background-position: center 30%;
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
@@ -176,18 +186,22 @@
 
   .lmm-hero__wash {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -30px;
     background: rgba(var(--lmm-ivoire-rgb), 0.38);
   }
 
   /* Fondu de la photo vers l'ivoire du plan d'action, plutôt qu'une
-     coupure nette entre les deux sections. */
+     coupure nette entre les deux sections — se termine exactement au
+     bord bas étendu de la photo (voir bottom: -30px ci-dessus). */
   .lmm-hero__fade {
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
-    height: 140px;
+    bottom: -30px;
+    height: 45px;
     background: linear-gradient(to bottom, transparent, var(--lmm-ivoire));
   }
 
@@ -265,8 +279,8 @@
     left: 0;
     right: 0;
     bottom: 0;
-    height: 90px;
-    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-deep));
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-pale));
     pointer-events: none;
   }
 
