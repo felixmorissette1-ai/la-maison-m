@@ -20,14 +20,14 @@
 </section>
 
 {% stylesheet %}
-  /* Essai : fond bordeaux tamisé (--lmm-bordeaux-muted), même famille que
-     le header mais désaturé — pour distinguer cette section des sections
-     claires qui l'entourent. Section volontairement vide de vrai contenu
-     pour l'instant (voir schéma : les valeurs par défaut sont des
-     espaces réservés) — la structure sert juste à visualiser la mise en
-     page en attendant les vraies statistiques. */
+  /* Même bordeaux que le header, mais en semi-transparent (55%) sur le
+     fond clair de la page — donne une teinte bordeaux adoucie plutôt
+     qu'un désaturé fabriqué à part. Section volontairement vide de vrai
+     contenu pour l'instant (voir schéma : les valeurs par défaut sont
+     des espaces réservés) — la structure sert juste à visualiser la
+     mise en page en attendant les vraies statistiques. */
   .lmm-stats {
-    background: var(--lmm-bordeaux-muted);
+    background: rgba(var(--lmm-bordeaux-rgb), 0.55);
     border-top: 1px solid rgba(var(--lmm-ivoire-rgb), 0.12);
   }
 
