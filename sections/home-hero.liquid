@@ -2,6 +2,7 @@
   {% if section.settings.hero_photo %}
     <div class="lmm-hero__photo" style="background-image: url({{ section.settings.hero_photo | image_url: width: 1800 }});"></div>
     <div class="lmm-hero__wash"></div>
+    <div class="lmm-hero__fade"></div>
   {% endif %}
 
   <div class="lmm-hero__inner">
@@ -179,6 +180,17 @@
     background: rgba(var(--lmm-ivoire-rgb), 0.38);
   }
 
+  /* Fondu de la photo vers l'ivoire du plan d'action, plutôt qu'une
+     coupure nette entre les deux sections. */
+  .lmm-hero__fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 140px;
+    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire));
+  }
+
   .lmm-hero__inner {
     position: relative;
     width: 100%;
@@ -241,8 +253,21 @@
   }
 
   .lmm-plan {
+    position: relative;
     background: var(--lmm-ivoire);
     padding: 40px 32px 90px;
+  }
+
+  /* Fondu vers la couleur de la section suivante (Statistiques). */
+  .lmm-plan::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 90px;
+    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-deep));
+    pointer-events: none;
   }
 
   .lmm-plan__inner {
