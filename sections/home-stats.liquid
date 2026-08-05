@@ -2,6 +2,23 @@
   <div class="lmm-stats__inner">
     <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
 
+    {% if section.settings.quote_text != blank %}
+      <blockquote class="lmm-stats__quote">
+        <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
+        {% if section.settings.quote_source != blank %}
+          <cite class="lmm-stats__quote-source">{{ section.settings.quote_source }}</cite>
+        {% endif %}
+      </blockquote>
+      {% if section.settings.quote_description != blank %}
+        <div class="lmm-stats__quote-description">
+          <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
+          {% if section.settings.quote_description_source != blank %}
+            <p class="lmm-stats__quote-description-source">{{ section.settings.quote_description_source }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endif %}
+
     <div class="lmm-stats__row">
       <div class="lmm-stats__card">
         {% if section.settings.stat1_number != blank %}
@@ -69,6 +86,77 @@
     max-width: 640px;
   }
 
+  /* Citation vedette — grande, bordeaux, gros guillemets décoratifs.
+     Sépare clairement 2 sources : la citation elle-même (adaptée/
+     traduite, attribution courte) et la description de l'étude
+     (référence académique complète), pour qu'il n'y ait aucune
+     ambiguïté sur ce qui vient d'où. */
+  .lmm-stats__quote {
+    margin: 0 0 20px;
+    padding: 0;
+    border: none;
+    max-width: 780px;
+  }
+
+  .lmm-stats__quote-text {
+    position: relative;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--lmm-bordeaux);
+    margin: 0 0 16px;
+    padding-left: 46px;
+  }
+
+  .lmm-stats__quote-text::before {
+    content: '\201C';
+    position: absolute;
+    left: -6px;
+    top: -0.28em;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 2.6em;
+    line-height: 1;
+    color: var(--lmm-bordeaux);
+  }
+
+  .lmm-stats__quote-text::after {
+    content: '\201D';
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.3em;
+    color: var(--lmm-bordeaux);
+  }
+
+  .lmm-stats__quote-source {
+    display: block;
+    font-style: normal;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--lmm-bordeaux-soft);
+    padding-left: 46px;
+  }
+
+  .lmm-stats__quote-description {
+    max-width: 680px;
+    margin: 0 0 56px;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--lmm-ivoire-line);
+  }
+
+  .lmm-stats__quote-description-text {
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--lmm-text);
+    margin: 0 0 8px;
+  }
+
+  .lmm-stats__quote-description-source {
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--lmm-muted);
+    margin: 0;
+  }
+
   .lmm-stats__row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -120,6 +208,14 @@
       font-size: 22px;
     }
 
+    .lmm-stats__quote-text,
+    .lmm-stats__quote-source {
+      padding-left: 30px;
+    }
+    .lmm-stats__quote-text::before {
+      font-size: 2.1em;
+    }
+
     .lmm-stats__row {
       grid-template-columns: 1fr;
     }
@@ -131,6 +227,12 @@
   "name": "Statistiques",
   "settings": [
     { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la science dit sur la première impression" },
+
+    { "type": "header", "content": "Citation vedette (nécessite la permission de l'auteur avant publication — voir tâche légale)" },
+    { "type": "textarea", "id": "quote_text", "label": "Citation (grande, bordeaux)" },
+    { "type": "text", "id": "quote_source", "label": "Source de la citation (courte)" },
+    { "type": "textarea", "id": "quote_description", "label": "Description de l'étude" },
+    { "type": "text", "id": "quote_description_source", "label": "Source de la description (référence complète)" },
 
     { "type": "header", "content": "Statistique 1" },
     { "type": "text", "id": "stat1_number", "label": "Chiffre en gros (vide = aucun)" },
