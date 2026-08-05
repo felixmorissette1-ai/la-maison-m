@@ -273,22 +273,36 @@
 
   .lmm-plan {
     position: relative;
-    /* Dégradé d'opacité, étalé sur toute la hauteur avec des paliers
-       intermédiaires (pas juste 2 points) pour un fondu progressif sans
-       ligne de séparation visible avec le hero au-dessus. */
+    background: transparent;
+    padding: 40px 32px 90px;
+  }
+
+  /* Le flou + la teinte vivent sur un calque séparé (::before) plutôt que
+     sur .lmm-plan directement, pour pouvoir le masquer en dégradé : sans
+     ça, backdrop-filter s'active net à la bordure du bloc et dessine une
+     ligne visible (net au-dessus, flou en dessous) peu importe l'opacité
+     de la teinte. Le mask-image fait monter le flou progressivement sur
+     les premiers ~18% de la section, au lieu d'un interrupteur. */
+  .lmm-plan::before {
+    content: '';
+    position: absolute;
+    inset: 0;
     background: linear-gradient(to bottom,
       rgba(var(--lmm-ivoire-rgb), 0) 0%,
       rgba(var(--lmm-ivoire-rgb), 0.0125) 30%,
       rgba(var(--lmm-ivoire-rgb), 0.03) 60%,
       rgba(var(--lmm-ivoire-rgb), 0.05) 100%);
-    padding: 40px 32px 90px;
-    /* Floutage sur toute la section (pas juste dans les cases) — la photo
-       derrière tout .lmm-plan est adoucie de façon uniforme. */
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 100%);
+    pointer-events: none;
+    z-index: 0;
   }
 
   .lmm-plan__inner {
+    position: relative;
+    z-index: 1;
     max-width: 1180px;
     margin: 0 auto;
   }
