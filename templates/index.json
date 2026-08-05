@@ -22,7 +22,12 @@
       "type": "home-pourquoi"
     },
     "stats": {
-      "type": "home-stats"
+      "type": "home-stats",
+      "settings": {
+        "stat1_number": "129 ms",
+        "stat1_finding": "C'est le temps qu'il faut pour qu'un observateur se forme un jugement de compétence à partir de l'apparence d'une personne — et cet effet résiste même quand on sait qu'on est biaisé, qu'on prend plus de temps pour juger, ou qu'on est payé pour l'ignorer.",
+        "stat1_source": "Oh, Shafir & Todorov (2020), Nature Human Behaviour — Princeton University & New York University"
+      }
     }
   },
   "order": ["hero", "stats", "pourquoi"]
