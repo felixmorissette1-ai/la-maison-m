@@ -292,8 +292,8 @@
       rgba(var(--lmm-ivoire-rgb), 0.0125) 30%,
       rgba(var(--lmm-ivoire-rgb), 0.03) 60%,
       rgba(var(--lmm-ivoire-rgb), 0.05) 100%);
-    backdrop-filter: blur(16.94px);
-    -webkit-backdrop-filter: blur(16.94px);
+    backdrop-filter: blur(16.09px);
+    -webkit-backdrop-filter: blur(16.09px);
     mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
     pointer-events: none;
@@ -340,16 +340,13 @@
     align-items: stretch;
   }
 
-  /* Pas de fond plein (le fond ivoire "intense" par-dessus la photo) —
-     juste un contour bordeaux, plus discret et plus dans le ton que la
-     case pleine. */
+  /* Plus de boîte autour de toute la case — seule la description (voir
+     .lmm-plan__desc) est encadrée. Le numéro et le titre restent nus sur
+     le fond flouté. */
   .lmm-plan__step {
     position: relative;
     box-sizing: border-box;
     background: transparent;
-    border: 1px solid var(--lmm-bordeaux);
-    border-radius: 10px;
-    padding: 32px 28px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -357,23 +354,8 @@
     text-align: left;
   }
 
-  /* Petite flèche bordeaux dans l'espace entre les cases, pour montrer la
-     continuité entre les étapes (pas sur la dernière case, rien après). */
-  .lmm-plan__step:not(:last-child)::after {
-    content: '→';
-    position: absolute;
-    top: 50%;
-    right: -28px;
-    width: 28px;
-    transform: translateY(-50%);
-    text-align: center;
-    font-size: 22px;
-    line-height: 1;
-    color: var(--lmm-bordeaux);
-    pointer-events: none;
-  }
-
   .lmm-plan__desc {
+    box-sizing: border-box;
     width: 100%;
     /* Marge supplémentaire (en plus du gap de la carte) entre le titre et
        la description : donne une vraie zone tampon au script de hauteur
@@ -381,6 +363,10 @@
        de petites variations de rendu entre navigateurs. */
     margin-top: 26px;
     text-align: left;
+    /* Seule zone encadrée de la case. */
+    border: 1px solid var(--lmm-bordeaux);
+    border-radius: 10px;
+    padding: 24px 24px 28px;
   }
 
   /* Même format de numéro et de titre pour les 3 étapes — seule la
@@ -397,6 +383,7 @@
   }
 
   .lmm-plan__step-head {
+    position: relative;
     display: flex;
     align-items: flex-start;
     justify-content: center;
@@ -410,6 +397,20 @@
        hero ne serait plus fiable. */
     min-height: 54px;
     text-decoration: none;
+  }
+
+  /* Ligne bordeaux reliant les titres d'étape entre eux (pas sur la
+     dernière étape, rien après), pour montrer la continuité. */
+  .lmm-plan__step:not(:last-child) .lmm-plan__step-head::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -28px;
+    width: 28px;
+    height: 1px;
+    background: var(--lmm-bordeaux);
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 
   .lmm-plan__step-title {
@@ -455,7 +456,7 @@
 
   .lmm-plan__list li {
     font-size: 13.5px;
-    color: var(--lmm-muted);
+    color: var(--lmm-text);
     line-height: 1.5;
     text-align: left;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
