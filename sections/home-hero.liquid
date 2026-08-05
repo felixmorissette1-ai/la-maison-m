@@ -195,14 +195,24 @@
 
   /* Fondu de la photo vers l'ivoire du plan d'action, plutôt qu'une
      coupure nette entre les deux sections — se termine exactement au
-     bord bas étendu de la photo (voir bottom: -30px ci-dessus). */
+     bord bas étendu de la photo (voir bottom: -30px ci-dessus). Zone de
+     fondu volontairement haute (remonte bien dans la photo, pas juste
+     dans les 30px de débordement) pour une transition plus progressive,
+     moins délimitée. Plusieurs arrêts de couleur (pas juste 2) pour que
+     le fondu paraisse doux à l'œil, pas juste une rampe linéaire. */
   .lmm-hero__fade {
     position: absolute;
     left: 0;
     right: 0;
     bottom: -30px;
-    height: 45px;
-    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire));
+    height: 220px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(var(--lmm-ivoire-rgb), 0.35) 55%,
+      rgba(var(--lmm-ivoire-rgb), 0.75) 80%,
+      var(--lmm-ivoire) 100%
+    );
   }
 
   .lmm-hero__inner {
