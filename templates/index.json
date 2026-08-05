@@ -5,7 +5,7 @@
       "settings": {
         "hero_photo": "shopify://shop_images/hero-accueil-test.jpg",
         "title": "Parce que la première impression compte",
-        "plan_title": "Comment ça fonctionne",
+        "plan_title": "En seulement trois étapes",
         "step1_label": "Configurez votre complet",
         "step1_url": "/pages/sur-mesure",
         "step1_intro": "Configurez votre complet de A à Z, ou commandez directement dans notre collection.",
@@ -20,7 +20,10 @@
     },
     "pourquoi": {
       "type": "home-pourquoi"
+    },
+    "stats": {
+      "type": "home-stats"
     }
   },
-  "order": ["hero", "pourquoi"]
+  "order": ["hero", "pourquoi", "stats"]
 }

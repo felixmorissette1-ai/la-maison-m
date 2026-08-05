@@ -250,14 +250,23 @@
     margin: 0 auto;
   }
 
+  /* Même gabarit que .lmm-why__heading — grand, aligné à gauche, Georgia —
+     pour que tous les titres de section du site soient cohérents. */
   .lmm-plan__title {
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--lmm-bordeaux-soft);
-    text-align: center;
-    margin: 0 0 24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--lmm-text);
+    text-align: left;
+    margin: 0 0 40px;
+    max-width: 640px;
+  }
+
+  @media (max-width: 767px) {
+    .lmm-plan__title {
+      font-size: 28px;
+    }
   }
 
   /* Une carte encadrée par étape — largeur égale, contenu aligné à
@@ -392,7 +401,7 @@
     { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte" },
 
     { "type": "header", "content": "Plan d'action" },
-    { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment ça fonctionne" },
+    { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "En seulement trois étapes" },
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
