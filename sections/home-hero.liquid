@@ -273,11 +273,13 @@
 
   .lmm-plan {
     position: relative;
-    /* Dégradé d'opacité : transparent en haut (jonction avec le hero)
-       jusqu'à 25% ivoire en bas, plutôt qu'une teinte plate. */
+    /* Dégradé d'opacité, étalé sur toute la hauteur avec des paliers
+       intermédiaires (pas juste 2 points) pour un fondu progressif sans
+       ligne de séparation visible avec le hero au-dessus. */
     background: linear-gradient(to bottom,
       rgba(var(--lmm-ivoire-rgb), 0) 0%,
-      rgba(var(--lmm-ivoire-rgb), 0.25) 40%,
+      rgba(var(--lmm-ivoire-rgb), 0.06) 30%,
+      rgba(var(--lmm-ivoire-rgb), 0.14) 60%,
       rgba(var(--lmm-ivoire-rgb), 0.25) 100%);
     padding: 40px 32px 90px;
     /* Floutage sur toute la section (pas juste dans les cases) — la photo
