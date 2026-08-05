@@ -26,7 +26,10 @@
       "settings": {
         "quote_description": "Des chercheurs de l'Université de Princeton ont présenté à des centaines de participants un même visage associé à différents vêtements. La perception de compétence changeait selon la tenue portée — et ce, même lorsque les participants tentaient consciemment d'ignorer les vêtements, ou étaient récompensés financièrement pour le faire.",
         "quote_text": "Nous avons constaté un effet significatif du type de vêtement sur le jugement de compétence.",
-        "quote_source": "Adapté et traduit de : Oh, D., Shafir, E., & Todorov, A. (2020). Economic status cues from clothes affect perceived competence from faces. Nature Human Behaviour, 4, 287–293. Princeton University & New York University."
+        "quote_source": "Adapté et traduit de : Oh, D., Shafir, E., & Todorov, A. (2020). Economic status cues from clothes affect perceived competence from faces. Nature Human Behaviour, 4, 287–293. Princeton University & New York University.",
+        "quote2_description": "Des chercheurs de Princeton ont montré qu'un jugement de compétence, de confiance ou de sympathie se forme dès une exposition d'un dixième de seconde à un visage. Donner plus de temps aux observateurs n'a pas changé leur jugement — seulement leur confiance en ce jugement.",
+        "quote2_text": "Les rencontres qui suivent la première pourraient ne servir qu'à justifier un jugement rapide et immédiat déjà formé dès le départ.",
+        "quote2_source": "Adapté et traduit de : Willis, J., & Todorov, A. (2006). First impressions: Making up your mind after a 100-ms exposure to a face. Psychological Science, 17(7), 592–598. Princeton University."
       }
     }
   },

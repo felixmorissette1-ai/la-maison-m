@@ -17,6 +17,22 @@
         <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
       {% endif %}
     {% endif %}
+
+    {% if section.settings.quote2_text != blank %}
+      <div class="lmm-stats__quote-wrap lmm-stats__quote-wrap--second">
+        {% if section.settings.quote2_description != blank %}
+          <div class="lmm-stats__quote-description">
+            <p class="lmm-stats__quote-description-text">{{ section.settings.quote2_description }}</p>
+          </div>
+        {% endif %}
+        <blockquote class="lmm-stats__quote">
+          <p class="lmm-stats__quote-text">{{ section.settings.quote2_text }}</p>
+        </blockquote>
+      </div>
+      {% if section.settings.quote2_source != blank %}
+        <p class="lmm-stats__quote-source">{{ section.settings.quote2_source }}</p>
+      {% endif %}
+    {% endif %}
   </div>
 </section>
 
@@ -121,6 +137,12 @@
     color: var(--lmm-muted);
   }
 
+  .lmm-stats__quote-wrap--second {
+    margin-top: 56px;
+    padding-top: 56px;
+    border-top: 1px solid var(--lmm-ivoire-line);
+  }
+
   @media (max-width: 767px) {
     .lmm-stats__heading {
       font-size: 22px;
@@ -147,11 +169,17 @@
   "settings": [
     { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la psychologie dit sur la première impression" },
 
-    { "type": "header", "content": "Citation vedette (permission requise)" },
+    { "type": "header", "content": "Citation vedette 1 (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Oh, Shafir & Todorov) n'a pas été obtenue." },
     { "type": "textarea", "id": "quote_description", "label": "Description (colonne gauche)" },
     { "type": "textarea", "id": "quote_text", "label": "Citation (colonne droite, grande, bordeaux)" },
-    { "type": "text", "id": "quote_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" }
+    { "type": "text", "id": "quote_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" },
+
+    { "type": "header", "content": "Citation vedette 2 (permission requise)" },
+    { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Willis & Todorov) n'a pas été obtenue." },
+    { "type": "textarea", "id": "quote2_description", "label": "Description (colonne gauche)" },
+    { "type": "textarea", "id": "quote2_text", "label": "Citation (colonne droite, grande, bordeaux)" },
+    { "type": "text", "id": "quote2_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" }
   ],
   "presets": [
     { "name": "Statistiques" }
