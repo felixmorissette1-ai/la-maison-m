@@ -93,11 +93,10 @@
      boîtes, la couleur sert à distinguer cette section des suivantes. */
   .lmm-why {
     background: var(--lmm-ivoire-deep);
-    /* Ligne fine en haut = séparateur avec la section précédente, cohérent
-       avec les bordures déjà utilisées ailleurs sur le site (cartes du
-       plan d'action, séparateurs du header) plutôt qu'un nouvel élément
-       visuel. Un peu plus d'espace en haut/bas pour laisser respirer. */
-    border-top: 1px solid var(--lmm-ivoire-line);
+    /* La bordure fine qui était ici dessinait une ligne dure exactement
+       là où le gradient de .lmm-stats se termine — ça annulait l'effet
+       de fondu (on voyait la ligne au milieu du dégradé). Le gradient
+       s'occupe seul de marquer la transition maintenant. */
   }
 
   .lmm-why__inner {
