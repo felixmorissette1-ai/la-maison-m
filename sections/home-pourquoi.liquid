@@ -1,106 +1,118 @@
 <section class="lmm-why full-width">
+  <div class="lmm-why__inner">
+    <p class="lmm-why__heading">{{ section.settings.section_title }}</p>
 
-  <div class="lmm-why__row lmm-why__row--pale">
-    <div class="lmm-why__media">
-      {% if section.settings.item1_image %}
-        <img src="{{ section.settings.item1_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
-      {% else %}
-        <div class="lmm-why__placeholder"></div>
-      {% endif %}
+    <div class="lmm-why__row">
+      <div class="lmm-why__media">
+        {% if section.settings.item1_image %}
+          <img src="{{ section.settings.item1_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
+        {% else %}
+          <div class="lmm-why__placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="lmm-why__box">
+        <p class="lmm-why__subtitle">{{ section.settings.item1_subtitle }}</p>
+        <h3 class="lmm-why__title">{{ section.settings.item1_title }}</h3>
+        <p class="lmm-why__text">{{ section.settings.item1_text }}</p>
+      </div>
     </div>
-    <div class="lmm-why__box">
-      <p class="lmm-why__subtitle">{{ section.settings.item1_subtitle }}</p>
-      <h3 class="lmm-why__title">{{ section.settings.item1_title }}</h3>
-      <p class="lmm-why__text">{{ section.settings.item1_text }}</p>
+
+    <div class="lmm-why__row">
+      <div class="lmm-why__box">
+        <p class="lmm-why__subtitle">{{ section.settings.item2_subtitle }}</p>
+        <h3 class="lmm-why__title">{{ section.settings.item2_title }}</h3>
+        <p class="lmm-why__text">{{ section.settings.item2_text }}</p>
+      </div>
+      <div class="lmm-why__media">
+        {% if section.settings.item2_image %}
+          <img src="{{ section.settings.item2_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
+        {% else %}
+          <div class="lmm-why__placeholder"></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="lmm-why__row">
+      <div class="lmm-why__media">
+        {% if section.settings.item3_image %}
+          <img src="{{ section.settings.item3_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
+        {% else %}
+          <div class="lmm-why__placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="lmm-why__box">
+        <p class="lmm-why__subtitle">{{ section.settings.item3_subtitle }}</p>
+        <h3 class="lmm-why__title">{{ section.settings.item3_title }}</h3>
+        <p class="lmm-why__text">{{ section.settings.item3_text }}</p>
+      </div>
+    </div>
+
+    <div class="lmm-why__row">
+      <div class="lmm-why__box">
+        <p class="lmm-why__subtitle">{{ section.settings.item4_subtitle }}</p>
+        <h3 class="lmm-why__title">{{ section.settings.item4_title }}</h3>
+        <p class="lmm-why__text">{{ section.settings.item4_text }}</p>
+      </div>
+      <div class="lmm-why__media">
+        {% if section.settings.item4_image %}
+          <img src="{{ section.settings.item4_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
+        {% else %}
+          <div class="lmm-why__placeholder"></div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="lmm-why__row">
+      <div class="lmm-why__media">
+        {% if section.settings.item5_image %}
+          <img src="{{ section.settings.item5_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
+        {% else %}
+          <div class="lmm-why__placeholder"></div>
+        {% endif %}
+      </div>
+      <div class="lmm-why__box">
+        <p class="lmm-why__subtitle">{{ section.settings.item5_subtitle }}</p>
+        <h3 class="lmm-why__title">{{ section.settings.item5_title }}</h3>
+        <p class="lmm-why__text">{{ section.settings.item5_text }}</p>
+      </div>
     </div>
   </div>
-
-  <div class="lmm-why__row lmm-why__row--dark">
-    <div class="lmm-why__box">
-      <p class="lmm-why__subtitle">{{ section.settings.item2_subtitle }}</p>
-      <h3 class="lmm-why__title">{{ section.settings.item2_title }}</h3>
-      <p class="lmm-why__text">{{ section.settings.item2_text }}</p>
-    </div>
-    <div class="lmm-why__media">
-      {% if section.settings.item2_image %}
-        <img src="{{ section.settings.item2_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
-      {% else %}
-        <div class="lmm-why__placeholder"></div>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="lmm-why__row lmm-why__row--pale">
-    <div class="lmm-why__media">
-      {% if section.settings.item3_image %}
-        <img src="{{ section.settings.item3_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
-      {% else %}
-        <div class="lmm-why__placeholder"></div>
-      {% endif %}
-    </div>
-    <div class="lmm-why__box">
-      <p class="lmm-why__subtitle">{{ section.settings.item3_subtitle }}</p>
-      <h3 class="lmm-why__title">{{ section.settings.item3_title }}</h3>
-      <p class="lmm-why__text">{{ section.settings.item3_text }}</p>
-    </div>
-  </div>
-
-  <div class="lmm-why__row lmm-why__row--dark">
-    <div class="lmm-why__box">
-      <p class="lmm-why__subtitle">{{ section.settings.item4_subtitle }}</p>
-      <h3 class="lmm-why__title">{{ section.settings.item4_title }}</h3>
-      <p class="lmm-why__text">{{ section.settings.item4_text }}</p>
-    </div>
-    <div class="lmm-why__media">
-      {% if section.settings.item4_image %}
-        <img src="{{ section.settings.item4_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
-      {% else %}
-        <div class="lmm-why__placeholder"></div>
-      {% endif %}
-    </div>
-  </div>
-
-  <div class="lmm-why__row lmm-why__row--pale">
-    <div class="lmm-why__media">
-      {% if section.settings.item5_image %}
-        <img src="{{ section.settings.item5_image | image_url: width: 900 }}" alt="" class="lmm-why__img" loading="lazy">
-      {% else %}
-        <div class="lmm-why__placeholder"></div>
-      {% endif %}
-    </div>
-    <div class="lmm-why__box">
-      <p class="lmm-why__subtitle">{{ section.settings.item5_subtitle }}</p>
-      <h3 class="lmm-why__title">{{ section.settings.item5_title }}</h3>
-      <p class="lmm-why__text">{{ section.settings.item5_text }}</p>
-    </div>
-  </div>
-
 </section>
 
 {% stylesheet %}
+  /* Le fond est posé sur la <section> elle-même (comme .lmm-plan) pour
+     couvrir toute la largeur de l'écran — .lmm-why__inner ne fait que
+     centrer le contenu à 1180px, il ne doit jamais porter de background.
+     Une seule couleur pour toute la section plutôt qu'une alternance
+     interne : le rythme visuel vient de l'alternance gauche/droite des
+     boîtes, la couleur sert à distinguer cette section des suivantes. */
+  .lmm-why {
+    background: var(--lmm-ivoire-pale);
+  }
+
+  .lmm-why__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 70px 32px 30px;
+  }
+
+  .lmm-why__heading {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 50px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
   .lmm-why__row {
     display: flex;
     align-items: center;
     gap: 64px;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 76px 32px;
+    padding: 40px 0;
   }
 
-  .lmm-why__row--pale {
-    background: var(--lmm-ivoire);
-  }
-
-  .lmm-why__row--dark {
-    background: var(--lmm-ivoire-deep);
-  }
-
-  /* Le fond doit s'étendre sur toute la largeur de l'écran mais le
-     contenu reste centré à 1180px — chaque rangée est donc elle-même
-     "full-width" via un fond appliqué à 100vw par un pseudo-élément
-     n'est pas nécessaire ici : le fond est simplement posé sur la
-     rangée elle-même qui a déjà width:100% (comportement par défaut
-     d'un enfant direct de .full-width). */
   .lmm-why__media,
   .lmm-why__box {
     flex: 1;
@@ -160,6 +172,8 @@
 {
   "name": "Pourquoi nous choisir",
   "settings": [
+    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Pourquoi nous choisir" },
+
     { "type": "header", "content": "Caractéristique 1" },
     { "type": "text", "id": "item1_subtitle", "label": "Sous-titre", "default": "Un veston sur mesure" },
     { "type": "text", "id": "item1_title", "label": "Titre", "default": "Un fit qui vous donne toute votre liberté" },
