@@ -344,6 +344,7 @@
      juste un contour bordeaux, plus discret et plus dans le ton que la
      case pleine. */
   .lmm-plan__step {
+    position: relative;
     box-sizing: border-box;
     background: transparent;
     border: 1px solid var(--lmm-bordeaux);
@@ -354,6 +355,22 @@
     align-items: flex-start;
     gap: 14px;
     text-align: left;
+  }
+
+  /* Petite flèche bordeaux dans l'espace entre les cases, pour montrer la
+     continuité entre les étapes (pas sur la dernière case, rien après). */
+  .lmm-plan__step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    top: 50%;
+    right: -28px;
+    width: 28px;
+    transform: translateY(-50%);
+    text-align: center;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--lmm-bordeaux);
+    pointer-events: none;
   }
 
   .lmm-plan__desc {
