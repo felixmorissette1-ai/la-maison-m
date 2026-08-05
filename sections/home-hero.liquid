@@ -319,6 +319,7 @@
      slogan (clamp 24-44px) : jamais un titre de section ne devrait
      rivaliser en taille avec le slogan principal. */
   .lmm-plan__title {
+    position: relative;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 28px;
     font-weight: 400;
@@ -326,7 +327,22 @@
     color: var(--lmm-text);
     text-align: left;
     margin: 0 0 40px;
+    padding-bottom: 18px;
     max-width: 640px;
+  }
+
+  /* Petit trait bordeaux sous le titre de section — rend le titre plus
+     évident sans passer par le gras ou la couleur bordeaux (refusés
+     avant). Même traitement sur les 3 titres de section du site
+     (.lmm-plan__title, .lmm-stats__heading, .lmm-why__heading). */
+  .lmm-plan__title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    height: 2px;
+    background: var(--lmm-bordeaux);
   }
 
   @media (max-width: 767px) {

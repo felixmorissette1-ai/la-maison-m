@@ -118,6 +118,7 @@
      plus petit que le slogan du hero (clamp 24-44px) : un titre de
      section ne doit jamais rivaliser en taille avec le slogan. */
   .lmm-why__heading {
+    position: relative;
     text-align: left;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 28px;
@@ -125,7 +126,20 @@
     line-height: 1.3;
     color: var(--lmm-text);
     margin: 0 0 56px;
+    padding-bottom: 18px;
     max-width: 640px;
+  }
+
+  /* Petit trait bordeaux sous le titre — voir home-hero.liquid pour
+     le contexte (même traitement sur les 3 titres de section). */
+  .lmm-why__heading::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 48px;
+    height: 2px;
+    background: var(--lmm-bordeaux);
   }
 
   @media (max-width: 767px) {
