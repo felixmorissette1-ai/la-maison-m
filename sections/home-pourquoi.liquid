@@ -1,6 +1,6 @@
 <section class="lmm-why full-width">
   <div class="lmm-why__inner">
-    <p class="lmm-why__heading">{{ section.settings.section_title }}</p>
+    <h2 class="lmm-why__heading">{{ section.settings.section_title }}</h2>
 
     <div class="lmm-why__row">
       <div class="lmm-why__media">
@@ -11,6 +11,7 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
+        <span class="lmm-why__num">01</span>
         <p class="lmm-why__subtitle">{{ section.settings.item1_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item1_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item1_text }}</p>
@@ -19,6 +20,7 @@
 
     <div class="lmm-why__row">
       <div class="lmm-why__box">
+        <span class="lmm-why__num">02</span>
         <p class="lmm-why__subtitle">{{ section.settings.item2_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item2_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item2_text }}</p>
@@ -41,6 +43,7 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
+        <span class="lmm-why__num">03</span>
         <p class="lmm-why__subtitle">{{ section.settings.item3_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item3_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item3_text }}</p>
@@ -49,6 +52,7 @@
 
     <div class="lmm-why__row">
       <div class="lmm-why__box">
+        <span class="lmm-why__num">04</span>
         <p class="lmm-why__subtitle">{{ section.settings.item4_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item4_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item4_text }}</p>
@@ -71,6 +75,7 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
+        <span class="lmm-why__num">05</span>
         <p class="lmm-why__subtitle">{{ section.settings.item5_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item5_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item5_text }}</p>
@@ -88,22 +93,33 @@
      boîtes, la couleur sert à distinguer cette section des suivantes. */
   .lmm-why {
     background: var(--lmm-ivoire-pale);
+    /* Ligne fine en haut = séparateur avec la section précédente, cohérent
+       avec les bordures déjà utilisées ailleurs sur le site (cartes du
+       plan d'action, séparateurs du header) plutôt qu'un nouvel élément
+       visuel. Un peu plus d'espace en haut/bas pour laisser respirer. */
+    border-top: 1px solid var(--lmm-ivoire-line);
   }
 
   .lmm-why__inner {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 70px 32px 30px;
+    padding: 90px 32px 50px;
   }
 
+  /* Titre principal promu en vrai titre de section (plus grand, aligné à
+     gauche) plutôt qu'un petit label centré — sert de gabarit pour les
+     titres des prochaines sections de la page. Poids normal (pas de
+     gras forcé) : le Georgia à cette taille porte déjà assez de présence,
+     et le gras aurait cassé le ton posé du reste du site. */
   .lmm-why__heading {
-    text-align: center;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--lmm-bordeaux-soft);
-    margin: 0 0 50px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--lmm-text);
+    margin: 0 0 56px;
+    max-width: 640px;
   }
 
   .lmm-why__row {
@@ -134,8 +150,21 @@
     border-radius: 10px;
   }
 
+  .lmm-why__num {
+    display: block;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 6px;
+  }
+
+  /* Le sous-titre porte le nom exact de la caractéristique (par
+     opposition au titre, plus évocateur) — en gras et dans le rouge de
+     la marque pour qu'il se distingue clairement du reste du texte. */
   .lmm-why__subtitle {
-    font-size: 11px;
+    font-size: 12px;
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--lmm-bordeaux-soft);
@@ -165,6 +194,10 @@
       gap: 28px;
       padding: 48px 24px;
     }
+
+    .lmm-why__heading {
+      font-size: 28px;
+    }
   }
 {% endstylesheet %}
 
@@ -172,36 +205,36 @@
 {
   "name": "Pourquoi nous choisir",
   "settings": [
-    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Pourquoi nous choisir" },
+    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "5 raisons de passer au sur-mesure" },
 
     { "type": "header", "content": "Caractéristique 1" },
-    { "type": "text", "id": "item1_subtitle", "label": "Sous-titre", "default": "Un veston sur mesure" },
-    { "type": "text", "id": "item1_title", "label": "Titre", "default": "Un fit qui vous donne toute votre liberté" },
-    { "type": "textarea", "id": "item1_text", "label": "Texte", "default": "Chaque complet est taillé sur vos mensurations exactes, pour un veston qui tombe bien et une liberté de mouvement que le prêt-à-porter ne permet pas." },
+    { "type": "text", "id": "item1_subtitle", "label": "Sous-titre", "default": "Tout en ligne, couturière compétente près de chez vous" },
+    { "type": "text", "id": "item1_title", "label": "Titre", "default": "Sans friction, du début à la fin" },
+    { "type": "textarea", "id": "item1_text", "label": "Texte", "default": "Configurez, commandez et payez en ligne en quelques clics, puis une couturière compétente, à proximité, s'occupe de vos mensurations et de vos retouches. Aucun casse-tête, aucun détour." },
     { "type": "image_picker", "id": "item1_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 2" },
-    { "type": "text", "id": "item2_subtitle", "label": "Sous-titre", "default": "Coutures critiques cousues à la main" },
-    { "type": "text", "id": "item2_title", "label": "Titre", "default": "Des coutures pensées pour bouger" },
-    { "type": "textarea", "id": "item2_text", "label": "Texte", "default": "Plus souples qu'une couture machine, pour un confort qui dure toute la journée." },
+    { "type": "text", "id": "item2_subtitle", "label": "Sous-titre", "default": "Un veston sur mesure" },
+    { "type": "text", "id": "item2_title", "label": "Titre", "default": "Un fit qui vous donne toute votre liberté" },
+    { "type": "textarea", "id": "item2_text", "label": "Texte", "default": "Chaque complet est taillé sur vos mensurations exactes, pour un veston qui tombe bien et une liberté de mouvement que le prêt-à-porter ne permet pas." },
     { "type": "image_picker", "id": "item2_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 3" },
-    { "type": "text", "id": "item3_subtitle", "label": "Sous-titre", "default": "Tissus 100% naturels" },
-    { "type": "text", "id": "item3_title", "label": "Titre", "default": "Rien que des tissus nobles" },
-    { "type": "textarea", "id": "item3_text", "label": "Texte", "default": "Nous travaillons uniquement avec des matières naturelles, gage de crédibilité : plus belles, plus durables, et qui respirent mieux." },
+    { "type": "text", "id": "item3_subtitle", "label": "Sous-titre", "default": "Coutures critiques cousues à la main" },
+    { "type": "text", "id": "item3_title", "label": "Titre", "default": "Des coutures pensées pour bouger" },
+    { "type": "textarea", "id": "item3_text", "label": "Texte", "default": "Plus souples qu'une couture machine, pour un confort qui dure toute la journée." },
     { "type": "image_picker", "id": "item3_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 4" },
-    { "type": "text", "id": "item4_subtitle", "label": "Sous-titre", "default": "Mesures à domicile et retouches gratuites" },
-    { "type": "text", "id": "item4_title", "label": "Titre", "default": "Un accompagnement qui inspire confiance" },
-    { "type": "textarea", "id": "item4_text", "label": "Texte", "default": "Vos mensurations sont prises par un professionnel près de chez vous, du début à la fin, la confiance d'un vrai savoir-faire, pas un service impersonnel." },
+    { "type": "text", "id": "item4_subtitle", "label": "Sous-titre", "default": "Tissus 100% naturels" },
+    { "type": "text", "id": "item4_title", "label": "Titre", "default": "Rien que des tissus nobles" },
+    { "type": "textarea", "id": "item4_text", "label": "Texte", "default": "Nous travaillons uniquement avec des matières naturelles, gage de crédibilité : plus belles, plus durables, et qui respirent mieux." },
     { "type": "image_picker", "id": "item4_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 5" },
-    { "type": "text", "id": "item5_subtitle", "label": "Sous-titre", "default": "Tout en ligne, couturière compétente près de chez vous" },
-    { "type": "text", "id": "item5_title", "label": "Titre", "default": "Sans friction, du début à la fin" },
-    { "type": "textarea", "id": "item5_text", "label": "Texte", "default": "Configurez, commandez et payez en ligne en quelques clics, puis une couturière compétente, à proximité, s'occupe de vos mensurations et de vos retouches. Aucun casse-tête, aucun détour." },
+    { "type": "text", "id": "item5_subtitle", "label": "Sous-titre", "default": "Mesures à domicile et retouches gratuites" },
+    { "type": "text", "id": "item5_title", "label": "Titre", "default": "Un accompagnement qui inspire confiance" },
+    { "type": "textarea", "id": "item5_text", "label": "Texte", "default": "Vos mensurations sont prises par un professionnel près de chez vous, du début à la fin, la confiance d'un vrai savoir-faire, pas un service impersonnel." },
     { "type": "image_picker", "id": "item5_image", "label": "Image (laisser vide pour un espace réservé)" }
   ],
   "presets": [
