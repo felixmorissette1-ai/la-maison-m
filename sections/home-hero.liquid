@@ -1,18 +1,22 @@
 <section class="lmm-hero full-width">
   {% if section.settings.hero_photo %}
-    <div class="lmm-hero__photo" style="background-image: url({{ section.settings.hero_photo | image_url: width: 1800 }});"></div>
-    <div class="lmm-hero__wash"></div>
+    <div class="lmm-hero__photo-block">
+      <div class="lmm-hero__photo" style="background-image: url({{ section.settings.hero_photo | image_url: width: 1800 }});"></div>
+      <div class="lmm-hero__wash"></div>
+    </div>
   {% endif %}
 
-  <div class="lmm-hero__inner">
-    <div class="lmm-hero__title-wrap">
-      <div class="lmm-hero__title-block">
-        <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
+  <div class="lmm-hero__text">
+    <div class="lmm-hero__inner">
+      <div class="lmm-hero__title-wrap">
+        <div class="lmm-hero__title-block">
+          <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
+        </div>
       </div>
+      <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
+        {{ section.settings.step1_label }}
+      </a>
     </div>
-    <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
-      {{ section.settings.step1_label }}
-    </a>
   </div>
 </section>
 
@@ -101,85 +105,103 @@
     }, function () {}, { timeout: 8000 });
   })();
 
-  // Hauteur du hero calculée à partir des vraies mesures du DOM (pas de
-  // pixels devinés) : on mesure combien d'espace prend le titre "Comment
-  // ça fonctionne" + la rangée numéro/titre de chaque carte — cette
-  // distance ne dépend pas de la hauteur du hero lui-même, seulement du
-  // contenu du plan. Le hero prend tout le reste de l'écran, ce qui
-  // garantit que les titres restent visibles au chargement et que les
-  // descriptions restent sous le pli, peu importe la taille de l'écran
-  // ou si un titre passe sur deux lignes.
+  // Deux comportements selon la taille d'écran :
+  //
+  // Mobile (<768px) : comportement d'origine — le hero est dimensionné
+  // pour que le titre du plan reste visible au chargement sans défiler
+  // (mesuré en temps réel, pas de pixels devinés).
+  //
+  // Desktop (>=768px) : la photo occupe tout l'écran au chargement. Le
+  // texte du hero (slogan + bouton) reste fixé à l'écran (position:
+  // sticky) pendant qu'on défile — seul l'arrière-plan bouge — jusqu'à
+  // ce que la photo ait complètement défilé, puis le défilement redevient
+  // normal. Pas d'animation : juste du CSS sticky natif, aucune boucle
+  // JS à synchroniser avec le scroll.
   (function () {
     var hero = document.querySelector('.lmm-hero');
     var header = document.querySelector('.lmm-header');
     var plan = document.querySelector('.lmm-plan');
     var planTitle = document.querySelector('.lmm-plan__title');
     var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
+    var photoBlock = document.querySelector('.lmm-hero__photo-block');
+    var heroText = document.querySelector('.lmm-hero__text');
     if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
 
     var MIN_HERO_HEIGHT = 300;
     var BUFFER_BELOW_TITLES = 20;
+    var desktopQuery = window.matchMedia('(min-width: 768px)');
 
-    function updateHeroPeek() {
+    function measureRevealHeight() {
       var planTop = plan.getBoundingClientRect().top;
       var maxBottom = planTitle.getBoundingClientRect().bottom;
       stepHeads.forEach(function (el) {
         var bottom = el.getBoundingClientRect().bottom;
         if (bottom > maxBottom) maxBottom = bottom;
       });
+      return maxBottom - planTop;
+    }
 
-      var revealHeight = maxBottom - planTop;
+    function updateMobilePeek() {
+      var revealHeight = measureRevealHeight();
       var headerHeight = header.getBoundingClientRect().height;
       var target = window.innerHeight - headerHeight - revealHeight - BUFFER_BELOW_TITLES;
-
       hero.style.height = Math.max(target, MIN_HERO_HEIGHT) + 'px';
+      if (photoBlock) photoBlock.style.height = '';
+      if (heroText) heroText.style.height = '';
     }
 
-    updateHeroPeek();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(updateHeroPeek);
+    function updateDesktopZone() {
+      if (!photoBlock || !heroText) { updateMobilePeek(); return; }
+      var headerHeight = header.getBoundingClientRect().height;
+      var photoHeight = window.innerHeight - headerHeight;
+      var pinDistance = photoHeight;
+      hero.style.height = (photoHeight + pinDistance) + 'px';
+      photoBlock.style.height = photoHeight + 'px';
+      heroText.style.height = photoHeight + 'px';
     }
-    window.addEventListener('load', updateHeroPeek);
+
+    function update() {
+      if (desktopQuery.matches) {
+        updateDesktopZone();
+      } else {
+        updateMobilePeek();
+      }
+    }
+
+    update();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(update);
+    }
+    window.addEventListener('load', update);
 
     var resizeTimer;
     window.addEventListener('resize', function () {
       clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateHeroPeek, 120);
+      resizeTimer = setTimeout(update, 120);
     });
   })();
 </script>
 
 {% stylesheet %}
+  /* ===== Base (mobile) — comportement d'origine, inchangé ===== */
   .lmm-hero {
     position: relative;
     background: var(--lmm-ivoire);
     /* Valeur de repli avant que le script en bas de page ne mesure le
-       vrai contenu et fixe la hauteur exacte en pixels (voir <script> :
-       garantit que les titres du plan restent visibles au chargement et
-       que les descriptions restent sous le pli, de façon fiable). */
+       vrai contenu et fixe la hauteur exacte en pixels. */
     height: calc(100dvh - 284px);
     min-height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
+    overflow: hidden;
   }
 
-  /* Pas de fondu ici — coupure nette voulue. La photo, le voile
-     débordent de 50px sous la boîte du hero (bottom: -50px) pour que la
-     photo se rende plus bas sur la page, sans toucher à la hauteur du
-     hero lui-même (donc sans déplacer le bouton). .lmm-plan a 60px de
-     padding avant le titre maintenant (voir plus bas) : le débordement
-     reste dans cette marge, jamais sur du texte, et le titre a été
-     rapproché des cartes d'autant pour laisser cette place sans que les
-     cartes elles-mêmes ne bougent (60px de padding + 20px de marge sous
-     le titre = les mêmes 80px qu'avant, juste redistribués). */
+  .lmm-hero__photo-block {
+    position: absolute;
+    inset: 0;
+  }
+
   .lmm-hero__photo {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -50px;
+    inset: 0;
     background-size: cover;
     background-position: center 30%;
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
@@ -187,11 +209,14 @@
 
   .lmm-hero__wash {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -50px;
+    inset: 0;
     background: rgba(var(--lmm-ivoire-rgb), 0.38);
+  }
+
+  .lmm-hero__text {
+    position: relative;
+    height: 100%;
+    z-index: 2;
   }
 
   .lmm-hero__inner {
@@ -252,6 +277,30 @@
   @media (min-width: 768px) {
     .lmm-hero__title {
       white-space: nowrap;
+    }
+
+    /* ===== Desktop : photo pleine page, texte figé pendant le défilement =====
+       La hauteur totale, celle de la photo et celle du texte sont fixées
+       en JS (voir <script>). Le texte est "sticky" : il reste à l'écran
+       tant qu'on défile à travers la zone, puis reprend le flux normal
+       une fois la zone terminée — pas d'animation, juste du CSS natif. */
+    .lmm-hero {
+      overflow: visible;
+    }
+
+    .lmm-hero__photo-block {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: auto;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .lmm-hero__text {
+      position: sticky;
+      top: 104px;
     }
   }
 
