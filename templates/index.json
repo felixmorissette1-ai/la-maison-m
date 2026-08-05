@@ -25,5 +25,5 @@
       "type": "home-stats"
     }
   },
-  "order": ["hero", "pourquoi", "stats"]
+  "order": ["hero", "stats", "pourquoi"]
 }
