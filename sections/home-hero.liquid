@@ -118,7 +118,7 @@
     if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
 
     var MIN_HERO_HEIGHT = 300;
-    var BUFFER_BELOW_TITLES = 20;
+    var BUFFER_BELOW_TITLES = 10;
 
     function updateHeroPeek() {
       var planTop = plan.getBoundingClientRect().top;
@@ -165,20 +165,14 @@
     overflow: visible;
   }
 
-  /* Pas de fondu ici — coupure nette voulue. La photo, le voile
-     débordent de 20px sous la boîte du hero (bottom: -20px) pour se
-     rendre un peu plus bas, sans toucher à la hauteur du hero lui-même
-     (donc sans déplacer le bouton). .lmm-plan a 30px de padding avant le
-     titre (réduit de 60px, voir plus bas) : moins de marge = un titre du
-     plan qui prend moins de hauteur "reveal", donc un hero (et la photo)
-     plus grand. Le débordement de 20px reste dans cette marge de 30px,
-     10px de sécurité avant le texte. */
+  /* Pas de débordement ici : .lmm-plan n'a presque plus de padding-top
+     (4px, voir plus bas) donc il n'y a plus de marge où faire déborder
+     la photo sans toucher le titre. La photo/le voile remplissent
+     exactement la boîte du hero, qui est elle-même beaucoup plus grande
+     maintenant (moins d'espace "révélé" pour le titre du plan). */
   .lmm-hero__photo {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -20px;
+    inset: 0;
     background-size: cover;
     background-position: center 30%;
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
@@ -186,10 +180,7 @@
 
   .lmm-hero__wash {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -20px;
+    inset: 0;
     background: rgba(var(--lmm-ivoire-rgb), 0.38);
   }
 
@@ -257,12 +248,10 @@
   .lmm-plan {
     position: relative;
     background: var(--lmm-ivoire);
-    /* padding-top réduit à 30px (contre 60px) pour agrandir la photo —
-       moins d'espace à "révéler" avant le titre du plan veut dire un
-       hero plus grand. Les cartes descendent un peu (elles ne sont plus
-       protégées à une position fixe), mais restent bien positionnées
-       sous le titre. */
-    padding: 30px 32px 90px;
+    /* padding-top réduit au minimum (4px) — la dernière réduction (30px)
+       était trop timide pour se voir. Moins d'espace à "révéler" avant
+       le titre du plan = un hero (et une photo) nettement plus grands. */
+    padding: 4px 32px 90px;
   }
 
   /* Fondu vers la couleur de la section suivante (Statistiques). */
@@ -291,7 +280,7 @@
     line-height: 1.3;
     color: var(--lmm-text);
     text-align: left;
-    margin: 0 0 20px;
+    margin: 0 0 12px;
     max-width: 640px;
   }
 
@@ -316,7 +305,7 @@
     box-sizing: border-box;
     border: 1px solid var(--lmm-ivoire-line);
     border-radius: 10px;
-    padding: 32px 28px;
+    padding: 20px 28px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -354,7 +343,7 @@
        sinon la carte au titre le plus court laisserait sa description
        dépasser avant celle des autres, et la coupure au chargement du
        hero ne serait plus fiable. */
-    min-height: 54px;
+    min-height: 36px;
     text-decoration: none;
   }
 
