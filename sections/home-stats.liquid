@@ -3,19 +3,18 @@
     <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
 
     {% if section.settings.quote_text != blank %}
-      <blockquote class="lmm-stats__quote">
-        <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
-        {% if section.settings.quote_source != blank %}
-          <cite class="lmm-stats__quote-source">{{ section.settings.quote_source }}</cite>
+      <div class="lmm-stats__quote-wrap">
+        {% if section.settings.quote_description != blank %}
+          <div class="lmm-stats__quote-description">
+            <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
+          </div>
         {% endif %}
-      </blockquote>
-      {% if section.settings.quote_description != blank %}
-        <div class="lmm-stats__quote-description">
-          <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
-          {% if section.settings.quote_description_source != blank %}
-            <p class="lmm-stats__quote-description-source">{{ section.settings.quote_description_source }}</p>
-          {% endif %}
-        </div>
+        <blockquote class="lmm-stats__quote">
+          <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
+        </blockquote>
+      </div>
+      {% if section.settings.quote_source != blank %}
+        <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
       {% endif %}
     {% endif %}
   </div>
@@ -60,27 +59,38 @@
     max-width: 640px;
   }
 
-  /* Citation vedette — grande, bordeaux, gros guillemets décoratifs.
-     Sépare clairement 2 sources : la citation elle-même (adaptée/
-     traduite, attribution courte) et la description de l'étude
-     (référence académique complète), pour qu'il n'y ait aucune
-     ambiguïté sur ce qui vient d'où. Prend presque toute la largeur
-     de la section (plus de largeur qu'avant, à la demande de Felix). */
+  /* Citation vedette — description à gauche (plus petite, texte
+     courant), citation en gros à droite (bordeaux, gros guillemets
+     décoratifs). Une seule mention de source (complète), sous les
+     deux colonnes, pour ne pas la dupliquer. */
+  .lmm-stats__quote-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    column-gap: 56px;
+    align-items: center;
+  }
+
+  .lmm-stats__quote-description-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--lmm-text);
+    margin: 0;
+  }
+
   .lmm-stats__quote {
-    margin: 0 0 24px;
+    margin: 0;
     padding: 0;
     border: none;
-    max-width: 100%;
   }
 
   .lmm-stats__quote-text {
     position: relative;
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(24px, 3vw, 34px);
+    font-size: clamp(24px, 2.6vw, 34px);
     font-weight: 400;
     line-height: 1.4;
     color: var(--lmm-bordeaux);
-    margin: 0 0 16px;
+    margin: 0;
     padding-left: 46px;
   }
 
@@ -103,37 +113,12 @@
   }
 
   .lmm-stats__quote-source {
-    display: block;
-    font-style: normal;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: var(--lmm-bordeaux-soft);
-    padding-left: 46px;
-  }
-
-  /* Même largeur et même retrait gauche que la citation, alignée avec
-     le texte plutôt qu'avec les guillemets — pour que les deux blocs
-     forment un ensemble cohérent au lieu de deux largeurs différentes. */
-  .lmm-stats__quote-description {
-    max-width: 100%;
-    margin: 0 0 40px;
-    padding: 20px 0 0 46px;
+    margin: 24px 0 0;
+    padding-top: 20px;
     border-top: 1px solid var(--lmm-ivoire-line);
-  }
-
-  .lmm-stats__quote-description-text {
-    font-size: 15px;
-    line-height: 1.65;
-    color: var(--lmm-text);
-    margin: 0 0 8px;
-    max-width: 68ch;
-  }
-
-  .lmm-stats__quote-description-source {
     font-size: 12px;
     letter-spacing: 0.02em;
     color: var(--lmm-muted);
-    margin: 0;
   }
 
   @media (max-width: 767px) {
@@ -141,9 +126,13 @@
       font-size: 22px;
     }
 
+    .lmm-stats__quote-wrap {
+      grid-template-columns: 1fr;
+      row-gap: 28px;
+    }
+
     .lmm-stats__quote-text,
-    .lmm-stats__quote-source,
-    .lmm-stats__quote-description {
+    .lmm-stats__quote-text::before {
       padding-left: 30px;
     }
     .lmm-stats__quote-text::before {
@@ -160,10 +149,9 @@
 
     { "type": "header", "content": "Citation vedette (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Oh, Shafir & Todorov) n'a pas été obtenue." },
-    { "type": "textarea", "id": "quote_text", "label": "Citation (grande, bordeaux)" },
-    { "type": "text", "id": "quote_source", "label": "Source de la citation (courte)" },
-    { "type": "textarea", "id": "quote_description", "label": "Description de l'étude" },
-    { "type": "text", "id": "quote_description_source", "label": "Source de la description (référence complète)" }
+    { "type": "textarea", "id": "quote_description", "label": "Description (colonne gauche)" },
+    { "type": "textarea", "id": "quote_text", "label": "Citation (colonne droite, grande, bordeaux)" },
+    { "type": "text", "id": "quote_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" }
   ],
   "presets": [
     { "name": "Statistiques" }
