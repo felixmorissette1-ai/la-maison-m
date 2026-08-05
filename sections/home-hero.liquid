@@ -233,11 +233,13 @@
     text-align: center;
   }
 
+  /* Bordeaux + gras plutôt qu'un fond derrière le texte : garde un
+     bon contraste sur la photo sans avoir besoin d'une case pleine. */
   .lmm-hero__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(24px, 3.2vw, 44px);
-    font-weight: 400;
-    color: var(--lmm-text);
+    font-weight: 700;
+    color: var(--lmm-bordeaux);
     line-height: 1.3;
     text-align: center;
     margin: 0;
@@ -267,6 +269,11 @@
        Espacement d'origine restauré (plus besoin de le comprimer pour
        "agrandir la photo", elle n'est plus liée à la hauteur du hero). */
     background: transparent;
+    /* Ligne bordeaux : le hero et le plan d'action partagent maintenant
+       la même photo figée en fond (plus de changement de couleur pour
+       marquer la limite entre les deux) — cette ligne redonne un repère
+       visuel clair à cet endroit. */
+    border-top: 2px solid var(--lmm-bordeaux);
     padding: 40px 32px 90px;
   }
 
@@ -280,9 +287,9 @@
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 36px;
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.3;
-    color: var(--lmm-text);
+    color: var(--lmm-bordeaux);
     text-align: left;
     margin: 0 0 40px;
     max-width: 640px;
@@ -305,13 +312,13 @@
     align-items: stretch;
   }
 
+  /* Pas de fond plein (le fond ivoire "intense" par-dessus la photo) —
+     juste un contour bordeaux, plus discret et plus dans le ton que la
+     case pleine. */
   .lmm-plan__step {
     box-sizing: border-box;
-    /* Fond opaque — nécessaire maintenant que .lmm-plan est transparent
-       (la photo figée est visible derrière) : sans ça le texte des
-       cartes serait illisible par-dessus une photo. */
-    background: var(--lmm-ivoire);
-    border: 1px solid var(--lmm-ivoire-line);
+    background: transparent;
+    border: 1px solid var(--lmm-bordeaux);
     border-radius: 10px;
     padding: 32px 28px;
     display: flex;
