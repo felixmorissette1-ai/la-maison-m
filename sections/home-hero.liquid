@@ -177,10 +177,20 @@
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
   }
 
+  /* Voile en dégradé plutôt qu'uniforme : reste léger en haut (photo
+     vive derrière le slogan), s'intensifie vers le bas de l'écran — là
+     où le titre du plan et les cartes apparaissent en défilant — pour
+     leur donner un fond plus calme et éviter qu'ils aient l'air de
+     flotter sur un détail au hasard de la photo. */
   .lmm-hero-fixed-bg__wash {
     position: absolute;
     inset: 0;
-    background: rgba(var(--lmm-ivoire-rgb), 0.38);
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--lmm-ivoire-rgb), 0.3) 0%,
+      rgba(var(--lmm-ivoire-rgb), 0.4) 45%,
+      rgba(var(--lmm-ivoire-rgb), 0.72) 100%
+    );
   }
 
   .lmm-hero {
@@ -313,7 +323,10 @@
      case pleine. */
   .lmm-plan__step {
     box-sizing: border-box;
-    background: transparent;
+    /* Semi-transparent (88%) — assez opaque pour bien lire le texte,
+       assez léger pour laisser deviner la photo derrière (compromis
+       entre le fond plein "intense" et l'absence totale de fond). */
+    background: rgba(var(--lmm-ivoire-rgb), 0.88);
     border: 1px solid var(--lmm-bordeaux);
     border-radius: 10px;
     padding: 32px 28px;
