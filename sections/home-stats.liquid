@@ -18,39 +18,13 @@
         </div>
       {% endif %}
     {% endif %}
-
-    <div class="lmm-stats__row">
-      <div class="lmm-stats__card">
-        {% if section.settings.stat1_number != blank %}
-          <p class="lmm-stats__number">{{ section.settings.stat1_number }}</p>
-        {% endif %}
-        <p class="lmm-stats__finding">{{ section.settings.stat1_finding }}</p>
-        <p class="lmm-stats__source">{{ section.settings.stat1_source }}</p>
-      </div>
-      <div class="lmm-stats__card">
-        {% if section.settings.stat2_number != blank %}
-          <p class="lmm-stats__number">{{ section.settings.stat2_number }}</p>
-        {% endif %}
-        <p class="lmm-stats__finding">{{ section.settings.stat2_finding }}</p>
-        <p class="lmm-stats__source">{{ section.settings.stat2_source }}</p>
-      </div>
-      <div class="lmm-stats__card">
-        {% if section.settings.stat3_number != blank %}
-          <p class="lmm-stats__number">{{ section.settings.stat3_number }}</p>
-        {% endif %}
-        <p class="lmm-stats__finding">{{ section.settings.stat3_finding }}</p>
-        <p class="lmm-stats__source">{{ section.settings.stat3_source }}</p>
-      </div>
-    </div>
   </div>
 </section>
 
 {% stylesheet %}
   /* Ivoire foncé — inversé avec "Pourquoi nous choisir" (maintenant en
      ivoire pâle) à la demande de Felix. Texte charcoal, comme les autres
-     sections claires. Section volontairement vide de vrai contenu pour
-     l'instant (voir schéma : les valeurs par défaut sont des espaces
-     réservés). */
+     sections claires. */
   .lmm-stats {
     position: relative;
     background: var(--lmm-ivoire-deep);
@@ -90,12 +64,13 @@
      Sépare clairement 2 sources : la citation elle-même (adaptée/
      traduite, attribution courte) et la description de l'étude
      (référence académique complète), pour qu'il n'y ait aucune
-     ambiguïté sur ce qui vient d'où. */
+     ambiguïté sur ce qui vient d'où. Prend presque toute la largeur
+     de la section (plus de largeur qu'avant, à la demande de Felix). */
   .lmm-stats__quote {
-    margin: 0 0 20px;
+    margin: 0 0 24px;
     padding: 0;
     border: none;
-    max-width: 780px;
+    max-width: 100%;
   }
 
   .lmm-stats__quote-text {
@@ -136,10 +111,13 @@
     padding-left: 46px;
   }
 
+  /* Même largeur et même retrait gauche que la citation, alignée avec
+     le texte plutôt qu'avec les guillemets — pour que les deux blocs
+     forment un ensemble cohérent au lieu de deux largeurs différentes. */
   .lmm-stats__quote-description {
-    max-width: 680px;
-    margin: 0 0 56px;
-    padding: 20px 0 0;
+    max-width: 100%;
+    margin: 0 0 40px;
+    padding: 20px 0 0 46px;
     border-top: 1px solid var(--lmm-ivoire-line);
   }
 
@@ -148,57 +126,12 @@
     line-height: 1.65;
     color: var(--lmm-text);
     margin: 0 0 8px;
+    max-width: 68ch;
   }
 
   .lmm-stats__quote-description-source {
     font-size: 12px;
     letter-spacing: 0.02em;
-    color: var(--lmm-muted);
-    margin: 0;
-  }
-
-  .lmm-stats__row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 28px;
-    row-gap: 28px;
-    align-items: stretch;
-  }
-
-  .lmm-stats__card {
-    box-sizing: border-box;
-    border: 1px solid var(--lmm-ivoire-line);
-    border-radius: 10px;
-    padding: 32px 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    text-align: left;
-  }
-
-  /* Grand chiffre, quand la statistique en a un de vérifiable — sinon
-     omis (voir schéma), la case n'affiche que le constat en texte. */
-  .lmm-stats__number {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 44px;
-    font-weight: 400;
-    line-height: 1;
-    color: var(--lmm-bordeaux-soft);
-    margin: 0;
-  }
-
-  .lmm-stats__finding {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 18px;
-    font-weight: 400;
-    line-height: 1.5;
-    color: var(--lmm-text);
-    margin: 0;
-  }
-
-  .lmm-stats__source {
-    font-size: 12px;
-    letter-spacing: 0.04em;
     color: var(--lmm-muted);
     margin: 0;
   }
@@ -209,15 +142,12 @@
     }
 
     .lmm-stats__quote-text,
-    .lmm-stats__quote-source {
+    .lmm-stats__quote-source,
+    .lmm-stats__quote-description {
       padding-left: 30px;
     }
     .lmm-stats__quote-text::before {
       font-size: 2.1em;
-    }
-
-    .lmm-stats__row {
-      grid-template-columns: 1fr;
     }
   }
 {% endstylesheet %}
@@ -226,29 +156,14 @@
 {
   "name": "Statistiques",
   "settings": [
-    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la science dit sur la première impression" },
+    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la psychologie dit sur la première impression" },
 
     { "type": "header", "content": "Citation vedette (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Oh, Shafir & Todorov) n'a pas été obtenue." },
     { "type": "textarea", "id": "quote_text", "label": "Citation (grande, bordeaux)" },
     { "type": "text", "id": "quote_source", "label": "Source de la citation (courte)" },
     { "type": "textarea", "id": "quote_description", "label": "Description de l'étude" },
-    { "type": "text", "id": "quote_description_source", "label": "Source de la description (référence complète)" },
-
-    { "type": "header", "content": "Statistique 1" },
-    { "type": "text", "id": "stat1_number", "label": "Chiffre en gros (vide = aucun)" },
-    { "type": "textarea", "id": "stat1_finding", "label": "Constat", "default": "Statistique à venir — contenu à ajouter." },
-    { "type": "text", "id": "stat1_source", "label": "Source", "default": "Source à venir" },
-
-    { "type": "header", "content": "Statistique 2 (espace réservé — à remplir)" },
-    { "type": "text", "id": "stat2_number", "label": "Chiffre en gros (vide = aucun)" },
-    { "type": "textarea", "id": "stat2_finding", "label": "Constat", "default": "Statistique à venir — contenu à ajouter." },
-    { "type": "text", "id": "stat2_source", "label": "Source", "default": "Source à venir" },
-
-    { "type": "header", "content": "Statistique 3 (espace réservé — à remplir)" },
-    { "type": "text", "id": "stat3_number", "label": "Chiffre en gros (vide = aucun)" },
-    { "type": "textarea", "id": "stat3_finding", "label": "Constat", "default": "Statistique à venir — contenu à ajouter." },
-    { "type": "text", "id": "stat3_source", "label": "Source", "default": "Source à venir" }
+    { "type": "text", "id": "quote_description_source", "label": "Source de la description (référence complète)" }
   ],
   "presets": [
     { "name": "Statistiques" }
