@@ -1,5 +1,8 @@
 <section class="lmm-stats full-width">
   <div class="lmm-stats__inner">
+    {% if section.settings.section_eyebrow != blank %}
+      <p class="lmm-stats__eyebrow">{{ section.settings.section_eyebrow }}</p>
+    {% endif %}
     <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
 
     {% if section.settings.quote_text != blank %}
@@ -62,6 +65,15 @@
     max-width: 1180px;
     margin: 0 auto;
     padding: 90px 32px;
+  }
+
+  .lmm-stats__eyebrow {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 12px;
   }
 
   .lmm-stats__heading {
@@ -167,6 +179,7 @@
 {
   "name": "Statistiques",
   "settings": [
+    { "type": "text", "id": "section_eyebrow", "label": "Petit mot-clé au-dessus du titre", "default": "Recherche" },
     { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la psychologie dit sur la première impression" },
 
     { "type": "header", "content": "Citation vedette 1 (permission requise)" },

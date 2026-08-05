@@ -25,6 +25,9 @@
 
 <section class="lmm-plan full-width">
   <div class="lmm-plan__inner">
+    {% if section.settings.plan_eyebrow != blank %}
+      <p class="lmm-plan__eyebrow">{{ section.settings.plan_eyebrow }}</p>
+    {% endif %}
     <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
 
     <div class="lmm-plan__row">
@@ -318,6 +321,19 @@
      titres de section du site soient cohérents. Plus petit que le
      slogan (clamp 24-44px) : jamais un titre de section ne devrait
      rivaliser en taille avec le slogan principal. */
+  /* Petit mot-clé au-dessus du titre — le rend plus évident sans
+     toucher à sa taille/couleur (qui doit rester nettement plus
+     discrète que le slogan du hero). Même traitement sur les 3
+     titres de section du site. */
+  .lmm-plan__eyebrow {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 12px;
+  }
+
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 28px;
@@ -518,6 +534,7 @@
     { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte" },
 
     { "type": "header", "content": "Plan d'action" },
+    { "type": "text", "id": "plan_eyebrow", "label": "Petit mot-clé au-dessus du titre", "default": "Le processus" },
     { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment ça fonctionne ?" },
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },

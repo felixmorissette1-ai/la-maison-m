@@ -1,5 +1,8 @@
 <section class="lmm-why full-width">
   <div class="lmm-why__inner">
+    {% if section.settings.section_eyebrow != blank %}
+      <p class="lmm-why__eyebrow">{{ section.settings.section_eyebrow }}</p>
+    {% endif %}
     <h2 class="lmm-why__heading">{{ section.settings.section_title }}</h2>
 
     <div class="lmm-why__row">
@@ -117,6 +120,15 @@
      des prochaines sections de la page. Poids normal (pas de gras) et
      plus petit que le slogan du hero (clamp 24-44px) : un titre de
      section ne doit jamais rivaliser en taille avec le slogan. */
+  .lmm-why__eyebrow {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    margin: 0 0 12px;
+  }
+
   .lmm-why__heading {
     text-align: left;
     font-family: Georgia, 'Times New Roman', serif;
@@ -224,6 +236,7 @@
 {
   "name": "Pourquoi nous choisir",
   "settings": [
+    { "type": "text", "id": "section_eyebrow", "label": "Petit mot-clé au-dessus du titre", "default": "Pourquoi nous" },
     { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Comment nous vous accompagnons vers une élégance subtile" },
     { "type": "image_picker", "id": "placeholder_photo", "label": "Photo générique (le temps d'avoir les vraies photos)" },
 
