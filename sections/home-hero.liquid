@@ -245,7 +245,7 @@
 
   .lmm-hero__title {
     font-family: Georgia, 'Times New Roman', serif;
-    font-size: clamp(24px, 3.2vw, 44px);
+    font-size: clamp(30px, 4vw, 56px);
     font-weight: 400;
     color: var(--lmm-text);
     line-height: 1.3;
@@ -323,10 +323,9 @@
      case pleine. */
   .lmm-plan__step {
     box-sizing: border-box;
-    /* Semi-transparent (88%) — assez opaque pour bien lire le texte,
-       assez léger pour laisser deviner la photo derrière (compromis
-       entre le fond plein "intense" et l'absence totale de fond). */
-    background: rgba(var(--lmm-ivoire-rgb), 0.88);
+    /* Moins opaque (78%, contre 88%) — laisse deviner davantage la
+       photo derrière. */
+    background: rgba(var(--lmm-ivoire-rgb), 0.78);
     border: 1px solid var(--lmm-bordeaux);
     border-radius: 10px;
     padding: 32px 28px;
@@ -446,7 +445,7 @@
     { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte" },
 
     { "type": "header", "content": "Plan d'action" },
-    { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "En seulement trois étapes" },
+    { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment ça fonctionne ?" },
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
