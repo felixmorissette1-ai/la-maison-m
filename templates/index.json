@@ -19,7 +19,10 @@
       }
     },
     "pourquoi": {
-      "type": "home-pourquoi"
+      "type": "home-pourquoi",
+      "settings": {
+        "placeholder_photo": "shopify://shop_images/hero-accueil-test.jpg"
+      }
     },
     "stats": {
       "type": "home-stats",
