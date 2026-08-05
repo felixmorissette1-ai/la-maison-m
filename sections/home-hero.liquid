@@ -278,6 +278,10 @@
        "agrandir la photo", elle n'est plus liée à la hauteur du hero). */
     background: transparent;
     padding: 40px 32px 90px;
+    /* Floutage sur toute la section (pas juste dans les cases) — la photo
+       derrière tout .lmm-plan est adoucie de façon uniforme. */
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .lmm-plan__inner {
@@ -351,15 +355,20 @@
      que l'étape est cliquable ou non. */
   .lmm-plan__num {
     display: block;
+    width: 100%;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 32px;
     font-weight: 400;
     color: var(--lmm-bordeaux-soft);
+    text-align: center;
   }
 
   .lmm-plan__step-head {
     display: flex;
     align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
     /* Fixe à la hauteur d'un titre sur 2 lignes : même si un titre est
        plus court qu'un autre (une ligne au lieu de deux), la description
        qui suit démarre toujours à la même hauteur dans les 3 cartes —
