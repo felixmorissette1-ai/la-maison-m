@@ -8,29 +8,6 @@
 
   <div class="lmm-hero__text">
     <div class="lmm-hero__inner">
-      <!-- Aperçu du titre + numéros/titres du plan — mêmes réglages
-           (section.settings), donc toujours identique au vrai plan plus
-           bas, sans jamais avoir à les garder synchronisés à la main. -->
-      <div class="lmm-hero__plan-preview">
-        <div class="lmm-plan__inner">
-          <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
-          <div class="lmm-plan__row lmm-plan__row--preview">
-            <span class="lmm-plan__num">01</span>
-            <span class="lmm-plan__num">02</span>
-            <span class="lmm-plan__num">03</span>
-            <div class="lmm-plan__step-head">
-              <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-            </div>
-            <div class="lmm-plan__step-head">
-              <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
-            </div>
-            <div class="lmm-plan__step-head">
-              <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="lmm-hero__title-wrap">
         <div class="lmm-hero__title-block">
           <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
@@ -39,20 +16,38 @@
       <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
         {{ section.settings.step1_label }}
       </a>
+
+      <!-- Titre + numéros/titres du plan d'action — vivent ici (une seule
+           instance, pas une copie) pour pouvoir rester figés avec le
+           slogan/bouton pendant le défilement. Seules les descriptions de
+           chaque étape restent dans la section .lmm-plan plus bas. -->
+      <div class="lmm-hero__plan-head">
+        <div class="lmm-plan__inner">
+          <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
+          <div class="lmm-plan__num-row">
+            <span class="lmm-plan__num">01</span>
+            <span class="lmm-plan__num">02</span>
+            <span class="lmm-plan__num">03</span>
+            <div class="lmm-plan__step-head">
+              <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+            </div>
+            <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
+              <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
+            </a>
+            <div class="lmm-plan__step-head">
+              <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="lmm-plan full-width">
   <div class="lmm-plan__inner">
-    <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
-
     <div class="lmm-plan__row">
       <div class="lmm-plan__step">
-        <span class="lmm-plan__num">01</span>
-        <div class="lmm-plan__step-head">
-          <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
-        </div>
         <div class="lmm-plan__desc">
           <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
           <ul class="lmm-plan__list">
@@ -67,10 +62,6 @@
       </div>
 
       <div class="lmm-plan__step">
-        <span class="lmm-plan__num">02</span>
-        <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
-          <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
-        </a>
         <div class="lmm-plan__desc">
           <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
           <ul class="lmm-plan__list">
@@ -85,10 +76,6 @@
       </div>
 
       <div class="lmm-plan__step">
-        <span class="lmm-plan__num">03</span>
-        <div class="lmm-plan__step-head">
-          <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
-        </div>
         <div class="lmm-plan__desc">
           <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
           <ul class="lmm-plan__list">
@@ -128,71 +115,41 @@
     }, function () {}, { timeout: 8000 });
   })();
 
-  // Deux comportements selon la taille d'écran :
+  // Le titre + les numéros du plan vivent maintenant dans le hero, donc
+  // il n'y a plus besoin de mesurer un "reveal height" séparé — le hero
+  // prend simplement tout l'espace disponible sous le header, sur les
+  // deux tailles d'écran.
   //
-  // Mobile (<768px) : comportement d'origine — le hero est dimensionné
-  // pour que le titre du plan reste visible au chargement sans défiler
-  // (mesuré en temps réel, pas de pixels devinés).
+  // Mobile (<768px) : défilement normal, aucun effet — le hero est juste
+  // dimensionné pour remplir l'écran.
   //
-  // Desktop (>=768px) : la photo occupe tout l'écran au chargement. Le
-  // texte du hero (slogan + bouton) reste fixé à l'écran (position:
-  // sticky) pendant qu'on défile — seul l'arrière-plan bouge — jusqu'à
-  // ce que la photo ait complètement défilé, puis le défilement redevient
-  // normal. Pas d'animation : juste du CSS sticky natif, aucune boucle
-  // JS à synchroniser avec le scroll.
+  // Desktop (>=768px) : la photo occupe tout l'écran dispo. Le contenu du
+  // hero (slogan, bouton, titre+numéros du plan) reste figé (position:
+  // sticky) pendant qu'on défile à travers une zone de 2 écrans de haut —
+  // seul l'arrière-plan bouge, jusqu'à ce qu'il devienne 100% beige, puis
+  // le défilement redevient normal et révèle les descriptions.
   (function () {
     var hero = document.querySelector('.lmm-hero');
     var header = document.querySelector('.lmm-header');
-    var plan = document.querySelector('.lmm-plan');
-    // Portée sur ".lmm-plan" explicitement : l'aperçu dans le hero réutilise
-    // les mêmes classes (.lmm-plan__title, .lmm-plan__step-head) pour hériter
-    // le style automatiquement, donc un sélecteur non-scopé attraperait
-    // l'aperçu au lieu du vrai contenu.
-    var planTitle = plan ? plan.querySelector('.lmm-plan__title') : null;
-    var stepHeads = plan ? plan.querySelectorAll('.lmm-plan__step-head') : [];
     var photoBlock = document.querySelector('.lmm-hero__photo-block');
     var heroText = document.querySelector('.lmm-hero__text');
-    var planPreview = document.querySelector('.lmm-hero__plan-preview');
-    var previewTitle = planPreview ? planPreview.querySelector('.lmm-plan__title') : null;
-    if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
+    if (!hero || !header) return;
 
-    var MIN_HERO_HEIGHT = 300;
-    var BUFFER_BELOW_TITLES = 20;
+    var MIN_HERO_HEIGHT = 560;
     var desktopQuery = window.matchMedia('(min-width: 768px)');
 
-    function measureRevealHeight() {
-      var planTop = plan.getBoundingClientRect().top;
-      var maxBottom = planTitle.getBoundingClientRect().bottom;
-      stepHeads.forEach(function (el) {
-        var bottom = el.getBoundingClientRect().bottom;
-        if (bottom > maxBottom) maxBottom = bottom;
-      });
-      return maxBottom - planTop;
-    }
-
-    function updateMobilePeek() {
-      var revealHeight = measureRevealHeight();
+    function updateMobile() {
       var headerHeight = header.getBoundingClientRect().height;
-      var target = window.innerHeight - headerHeight - revealHeight - BUFFER_BELOW_TITLES;
+      var target = window.innerHeight - headerHeight;
       hero.style.height = Math.max(target, MIN_HERO_HEIGHT) + 'px';
       if (photoBlock) photoBlock.style.height = '';
       if (heroText) heroText.style.height = '';
     }
 
-    // Desktop : la photo/texte remplissent tout l'écran dispo (photoHeight).
-    // Le décrochage (fin du "pin") arrive quand on a défilé de la hauteur
-    // totale du hero moins celle du texte fixe (mécanique native de
-    // position:sticky) — avec une hauteur totale = 2x photoHeight, ça
-    // donne un décrochage après exactement 1 écran de défilement, la
-    // durée validée précédemment ("Exactement"). Note : avec la photo qui
-    // occupe tout l'écran, il reste mathématiquement quelques dizaines de
-    // pixels de défilement normal après le décrochage avant que le titre
-    // du plan soit entièrement visible — inévitable si on garde la photo
-    // à 100% de l'écran (vérifié, voir le message précédent).
     function updateDesktopZone() {
-      if (!photoBlock || !heroText) { updateMobilePeek(); return; }
+      if (!photoBlock || !heroText) { updateMobile(); return; }
       var headerHeight = header.getBoundingClientRect().height;
-      var photoHeight = window.innerHeight - headerHeight;
+      var photoHeight = Math.max(window.innerHeight - headerHeight, MIN_HERO_HEIGHT);
       hero.style.height = (photoHeight * 2) + 'px';
       photoBlock.style.height = photoHeight + 'px';
       heroText.style.height = photoHeight + 'px';
@@ -202,7 +159,7 @@
       if (desktopQuery.matches) {
         updateDesktopZone();
       } else {
-        updateMobilePeek();
+        updateMobile();
       }
     }
 
@@ -221,14 +178,12 @@
 </script>
 
 {% stylesheet %}
-  /* ===== Base (mobile) — comportement d'origine, inchangé ===== */
+  /* ===== Hero ===== */
   .lmm-hero {
     position: relative;
     background: var(--lmm-ivoire);
-    /* Valeur de repli avant que le script en bas de page ne mesure le
-       vrai contenu et fixe la hauteur exacte en pixels. */
-    height: calc(100dvh - 284px);
-    min-height: 300px;
+    height: calc(100dvh - 104px);
+    min-height: 560px;
     overflow: hidden;
   }
 
@@ -271,30 +226,8 @@
     gap: 28px;
   }
 
-  /* Caché sur mobile — le mobile garde le comportement d'origine (pas de
-     photo pleine page, pas de pin), donc pas besoin de cet aperçu.
-     Réactivé uniquement dans le mode desktop plus bas. */
-  .lmm-hero__plan-preview {
-    display: none;
-    width: 100%;
-  }
-
-  .lmm-hero__plan-preview .lmm-plan__inner {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 0;
-  }
-
-  /* Seulement 2 des 3 "rangées" de la grille d'origine (numéros + titres,
-     pas de description) — la grille se remplit automatiquement en 2
-     lignes puisqu'on ne fournit que 6 éléments au lieu de 9. */
-  .lmm-hero__plan-preview .lmm-plan__row {
-    row-gap: 14px;
-  }
-
   /* Occupe tout l'espace entre le header et le bouton, et centre le
-     slogan à l'intérieur de cet espace — pas juste "centré dans le hero"
-     en général, qui le collait trop haut une fois le bouton poussé en bas. */
+     slogan à l'intérieur de cet espace. */
   .lmm-hero__title-wrap {
     flex: 1;
     width: 100%;
@@ -304,8 +237,7 @@
   }
 
   /* Boîte "inline-block" : sa largeur épouse exactement le texte du
-     slogan (pas la largeur du hero), pour que la ligne courbe en dessous
-     ait toujours la largeur du slogan lui-même — comme un soulignement. */
+     slogan (pas la largeur du hero). */
   .lmm-hero__title-block {
     display: inline-block;
     text-align: center;
@@ -333,16 +265,26 @@
     white-space: nowrap;
   }
 
+  .lmm-hero__plan-head {
+    width: 100%;
+  }
+
+  .lmm-hero__plan-head .lmm-plan__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
   @media (min-width: 768px) {
     .lmm-hero__title {
       white-space: nowrap;
     }
 
-    /* ===== Desktop : photo pleine page, texte figé pendant le défilement =====
-       La hauteur totale, celle de la photo et celle du texte sont fixées
-       en JS (voir <script>). Le texte est "sticky" : il reste à l'écran
-       tant qu'on défile à travers la zone, puis reprend le flux normal
-       une fois la zone terminée — pas d'animation, juste du CSS natif. */
+    /* ===== Desktop : photo pleine page, contenu figé pendant le défilement =====
+       Les hauteurs sont fixées en JS (voir <script>). Le texte est
+       "sticky" : il reste à l'écran tant qu'on défile à travers la zone,
+       puis reprend le flux normal une fois la zone terminée — pas
+       d'animation, juste du CSS natif. */
     .lmm-hero {
       overflow: visible;
     }
@@ -361,50 +303,9 @@
       position: sticky;
       top: 104px;
     }
-
-    .lmm-hero__plan-preview {
-      display: block;
-    }
-
-    .lmm-hero__plan-preview .lmm-plan__title,
-    .lmm-hero__plan-preview .lmm-plan__step-title {
-      color: var(--lmm-text);
-    }
-
-    .lmm-hero__plan-preview .lmm-plan__num {
-      color: var(--lmm-bordeaux-soft);
-    }
   }
 
-  .lmm-plan {
-    position: relative;
-    background: var(--lmm-ivoire);
-    /* padding-top et marge du titre revenus à leurs valeurs d'origine —
-       le débordement de la photo dans ce padding (l'ancien truc du
-       "bleed") a été remplacé par la zone sticky du hero, donc cet
-       espace supplémentaire ne sert plus à rien. */
-    padding: 40px 32px 90px;
-  }
-
-  /* Fondu vers la couleur de la section suivante (Statistiques). */
-  .lmm-plan::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 30px;
-    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-pale));
-    pointer-events: none;
-  }
-
-  .lmm-plan__inner {
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-
-  /* Même gabarit que .lmm-why__heading — grand, aligné à gauche, Georgia —
-     pour que tous les titres de section du site soient cohérents. */
+  /* ===== Titre + numéros/titres du plan (dans le hero) ===== */
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 36px;
@@ -412,7 +313,7 @@
     line-height: 1.3;
     color: var(--lmm-text);
     text-align: left;
-    margin: 0 0 40px;
+    margin: 0 0 24px;
     max-width: 640px;
   }
 
@@ -422,42 +323,13 @@
     }
   }
 
-  /* Une carte encadrée par étape — largeur égale, contenu aligné à
-     gauche. Les 3 cartes forment une seule rangée de grille, donc elles
-     s'étirent à la même hauteur peu importe la longueur du titre. */
-  .lmm-plan__row {
+  .lmm-plan__num-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     column-gap: 28px;
-    row-gap: 24px;
-    align-items: stretch;
+    row-gap: 10px;
   }
 
-  .lmm-plan__step {
-    box-sizing: border-box;
-    border: 1px solid var(--lmm-ivoire-line);
-    border-radius: 10px;
-    padding: 32px 28px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 14px;
-    text-align: left;
-  }
-
-  .lmm-plan__desc {
-    width: 100%;
-    /* Marge supplémentaire (en plus du gap de la carte) entre le titre et
-       la description : donne une vraie zone tampon au script de hauteur
-       du hero, pour que la coupure au chargement reste fiable même avec
-       de petites variations de rendu entre navigateurs. */
-    margin-top: 26px;
-    text-align: left;
-  }
-
-  /* Même format de numéro et de titre pour les 3 étapes — seule la
-     décoration (curseur pour l'étape 2, l'étape cliquable) change selon
-     que l'étape est cliquable ou non. */
   .lmm-plan__num {
     display: block;
     font-family: Georgia, 'Times New Roman', serif;
@@ -469,13 +341,7 @@
   .lmm-plan__step-head {
     display: flex;
     align-items: flex-start;
-    /* Fixe à la hauteur d'un titre sur 2 lignes : même si un titre est
-       plus court qu'un autre (une ligne au lieu de deux), la description
-       qui suit démarre toujours à la même hauteur dans les 3 cartes —
-       sinon la carte au titre le plus court laisserait sa description
-       dépasser avant celle des autres, et la coupure au chargement du
-       hero ne serait plus fiable. */
-    min-height: 54px;
+    text-align: left;
     text-decoration: none;
   }
 
@@ -499,9 +365,60 @@
     color: var(--lmm-bordeaux-soft);
   }
 
-  /* Phrase d'intro : donne le contexte en une phrase claire. Les puces qui
-     suivent ne portent que les détails concrets — jamais les deux à
-     répéter la même idée. */
+  @media (max-width: 767px) {
+    .lmm-plan__num-row {
+      grid-template-columns: 1fr;
+      row-gap: 20px;
+    }
+  }
+
+  /* ===== Section plan d'action (descriptions seulement) ===== */
+  .lmm-plan {
+    position: relative;
+    background: var(--lmm-ivoire);
+    padding: 60px 32px 90px;
+  }
+
+  /* Fondu vers la couleur de la section suivante (Statistiques). */
+  .lmm-plan::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 30px;
+    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-pale));
+    pointer-events: none;
+  }
+
+  .lmm-plan__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .lmm-plan__row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 28px;
+    row-gap: 24px;
+    align-items: stretch;
+  }
+
+  .lmm-plan__step {
+    box-sizing: border-box;
+    border: 1px solid var(--lmm-ivoire-line);
+    border-radius: 10px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .lmm-plan__desc {
+    width: 100%;
+    text-align: left;
+  }
+
   .lmm-plan__intro {
     font-size: 15.5px;
     color: var(--lmm-text);
@@ -528,8 +445,7 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Beau rond vide devant chaque point — inline, pas positionné en absolu,
-     pour rester correct même avec du texte centré sur plusieurs lignes. */
+  /* Beau rond vide devant chaque point. */
   .lmm-plan__list li::before {
     content: '○';
     display: inline-block;
@@ -543,6 +459,12 @@
     color: var(--lmm-bordeaux-soft);
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  @media (max-width: 767px) {
+    .lmm-plan__row {
+      grid-template-columns: 1fr;
+    }
   }
 {% endstylesheet %}
 
