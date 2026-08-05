@@ -166,20 +166,19 @@
   }
 
   /* Pas de fondu ici — coupure nette voulue. La photo, le voile
-     débordent de 50px sous la boîte du hero (bottom: -50px) pour que la
-     photo se rende plus bas sur la page, sans toucher à la hauteur du
-     hero lui-même (donc sans déplacer le bouton). .lmm-plan a 60px de
-     padding avant le titre maintenant (voir plus bas) : le débordement
-     reste dans cette marge, jamais sur du texte, et le titre a été
-     rapproché des cartes d'autant pour laisser cette place sans que les
-     cartes elles-mêmes ne bougent (60px de padding + 20px de marge sous
-     le titre = les mêmes 80px qu'avant, juste redistribués). */
+     débordent de 20px sous la boîte du hero (bottom: -20px) pour se
+     rendre un peu plus bas, sans toucher à la hauteur du hero lui-même
+     (donc sans déplacer le bouton). .lmm-plan a 30px de padding avant le
+     titre (réduit de 60px, voir plus bas) : moins de marge = un titre du
+     plan qui prend moins de hauteur "reveal", donc un hero (et la photo)
+     plus grand. Le débordement de 20px reste dans cette marge de 30px,
+     10px de sécurité avant le texte. */
   .lmm-hero__photo {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: -50px;
+    bottom: -20px;
     background-size: cover;
     background-position: center 30%;
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
@@ -190,7 +189,7 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: -50px;
+    bottom: -20px;
     background: rgba(var(--lmm-ivoire-rgb), 0.38);
   }
 
@@ -258,12 +257,12 @@
   .lmm-plan {
     position: relative;
     background: var(--lmm-ivoire);
-    /* padding-top monté de 40 à 60px, et margin-bottom du titre descendu
-       de 40 à 20px (voir .lmm-plan__title) — 60+20 = 40+40 = 80px avant
-       les cartes dans les deux cas, donc les cartes ne bougent pas. Le
-       20px de plus en haut laisse de la place à la photo qui déborde du
-       hero. */
-    padding: 60px 32px 90px;
+    /* padding-top réduit à 30px (contre 60px) pour agrandir la photo —
+       moins d'espace à "révéler" avant le titre du plan veut dire un
+       hero plus grand. Les cartes descendent un peu (elles ne sont plus
+       protégées à une position fixe), mais restent bien positionnées
+       sous le titre. */
+    padding: 30px 32px 90px;
   }
 
   /* Fondu vers la couleur de la section suivante (Statistiques). */
