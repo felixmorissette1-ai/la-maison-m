@@ -8,6 +8,29 @@
 
   <div class="lmm-hero__text">
     <div class="lmm-hero__inner">
+      <!-- Aperçu du titre + numéros/titres du plan — mêmes réglages
+           (section.settings), donc toujours identique au vrai plan plus
+           bas, sans jamais avoir à les garder synchronisés à la main. -->
+      <div class="lmm-hero__plan-preview">
+        <div class="lmm-plan__inner">
+          <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
+          <div class="lmm-plan__row lmm-plan__row--preview">
+            <span class="lmm-plan__num">01</span>
+            <span class="lmm-plan__num">02</span>
+            <span class="lmm-plan__num">03</span>
+            <div class="lmm-plan__step-head">
+              <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
+            </div>
+            <div class="lmm-plan__step-head">
+              <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
+            </div>
+            <div class="lmm-plan__step-head">
+              <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="lmm-hero__title-wrap">
         <div class="lmm-hero__title-block">
           <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
@@ -121,10 +144,16 @@
     var hero = document.querySelector('.lmm-hero');
     var header = document.querySelector('.lmm-header');
     var plan = document.querySelector('.lmm-plan');
-    var planTitle = document.querySelector('.lmm-plan__title');
-    var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
+    // Portée sur ".lmm-plan" explicitement : l'aperçu dans le hero réutilise
+    // les mêmes classes (.lmm-plan__title, .lmm-plan__step-head) pour hériter
+    // le style automatiquement, donc un sélecteur non-scopé attraperait
+    // l'aperçu au lieu du vrai contenu.
+    var planTitle = plan ? plan.querySelector('.lmm-plan__title') : null;
+    var stepHeads = plan ? plan.querySelectorAll('.lmm-plan__step-head') : [];
     var photoBlock = document.querySelector('.lmm-hero__photo-block');
     var heroText = document.querySelector('.lmm-hero__text');
+    var planPreview = document.querySelector('.lmm-hero__plan-preview');
+    var previewTitle = planPreview ? planPreview.querySelector('.lmm-plan__title') : null;
     if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
 
     var MIN_HERO_HEIGHT = 300;
@@ -150,12 +179,21 @@
       if (heroText) heroText.style.height = '';
     }
 
+    // Desktop : la photo/texte remplissent tout l'écran dispo (photoHeight).
+    // Le décrochage (fin du "pin") arrive quand on a défilé de la hauteur
+    // totale du hero moins celle du texte fixe (mécanique native de
+    // position:sticky) — avec une hauteur totale = 2x photoHeight, ça
+    // donne un décrochage après exactement 1 écran de défilement, la
+    // durée validée précédemment ("Exactement"). Note : avec la photo qui
+    // occupe tout l'écran, il reste mathématiquement quelques dizaines de
+    // pixels de défilement normal après le décrochage avant que le titre
+    // du plan soit entièrement visible — inévitable si on garde la photo
+    // à 100% de l'écran (vérifié, voir le message précédent).
     function updateDesktopZone() {
       if (!photoBlock || !heroText) { updateMobilePeek(); return; }
       var headerHeight = header.getBoundingClientRect().height;
       var photoHeight = window.innerHeight - headerHeight;
-      var pinDistance = photoHeight;
-      hero.style.height = (photoHeight + pinDistance) + 'px';
+      hero.style.height = (photoHeight * 2) + 'px';
       photoBlock.style.height = photoHeight + 'px';
       heroText.style.height = photoHeight + 'px';
     }
@@ -233,6 +271,27 @@
     gap: 28px;
   }
 
+  /* Caché sur mobile — le mobile garde le comportement d'origine (pas de
+     photo pleine page, pas de pin), donc pas besoin de cet aperçu.
+     Réactivé uniquement dans le mode desktop plus bas. */
+  .lmm-hero__plan-preview {
+    display: none;
+    width: 100%;
+  }
+
+  .lmm-hero__plan-preview .lmm-plan__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Seulement 2 des 3 "rangées" de la grille d'origine (numéros + titres,
+     pas de description) — la grille se remplit automatiquement en 2
+     lignes puisqu'on ne fournit que 6 éléments au lieu de 9. */
+  .lmm-hero__plan-preview .lmm-plan__row {
+    row-gap: 14px;
+  }
+
   /* Occupe tout l'espace entre le header et le bouton, et centre le
      slogan à l'intérieur de cet espace — pas juste "centré dans le hero"
      en général, qui le collait trop haut une fois le bouton poussé en bas. */
@@ -301,6 +360,19 @@
     .lmm-hero__text {
       position: sticky;
       top: 104px;
+    }
+
+    .lmm-hero__plan-preview {
+      display: block;
+    }
+
+    .lmm-hero__plan-preview .lmm-plan__title,
+    .lmm-hero__plan-preview .lmm-plan__step-title {
+      color: var(--lmm-text);
+    }
+
+    .lmm-hero__plan-preview .lmm-plan__num {
+      color: var(--lmm-bordeaux-soft);
     }
   }
 
