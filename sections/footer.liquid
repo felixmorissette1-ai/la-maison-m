@@ -21,7 +21,7 @@
       <h3 class="lmm-footer__heading">{{ section.settings.magasine_heading }}</h3>
       <ul class="lmm-footer__links">
         <li><a href="{{ section.settings.personnalise_url | default: '/pages/sur-mesure' }}">{{ section.settings.personnalise_label }}</a></li>
-        <li><a href="{{ section.settings.collection_url | default: '/collections/frontpage' }}">{{ section.settings.collection_label }}</a></li>
+        <li><a href="{{ section.settings.collection_url | default: '/collections/collection' }}">{{ section.settings.collection_label }}</a></li>
         <li><a href="{{ section.settings.chemise_url | default: '/collections/chemises' }}">{{ section.settings.chemise_label }}</a></li>
       </ul>
     </div>
@@ -234,7 +234,7 @@
     { "type": "text", "id": "personnalise_label", "label": "Texte du lien — Personnalisé", "default": "Personnalisé" },
     { "type": "url", "id": "personnalise_url", "label": "Lien — Personnalisé (vide = /pages/sur-mesure)" },
     { "type": "text", "id": "collection_label", "label": "Texte du lien — Collection", "default": "Collection" },
-    { "type": "url", "id": "collection_url", "label": "Lien — Collection (vide = /collections/frontpage)" },
+    { "type": "url", "id": "collection_url", "label": "Lien — Collection (vide = /collections/collection)" },
     { "type": "text", "id": "chemise_label", "label": "Texte du lien — Chemise", "default": "Chemise" },
     { "type": "url", "id": "chemise_url", "label": "Lien — Chemise (vide = /collections/chemises)" },
 
