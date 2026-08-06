@@ -32,7 +32,10 @@
   <div class="lmm-plan__inner">
     <div class="lmm-plan__layout">
       <div class="lmm-plan__title-col">
-        <p class="lmm-plan__title">{{ section.settings.plan_title }}</p>
+        <p class="lmm-plan__title" id="lmm-plan-title">
+          {% assign title_words = section.settings.plan_title | split: ' ' %}
+          {% for word in title_words %}<span class="lmm-plan__title-word" style="--i: {{ forloop.index0 }};">{{ word }}</span>{% unless forloop.last %} {% endunless %}{% endfor %}
+        </p>
       </div>
 
       <div class="lmm-plan__content-col">
@@ -58,8 +61,12 @@
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
+            <li>Visitez une couturière partenaire pour voir et toucher les tissus — <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">prenez rendez-vous</a></li>
             {% if section.settings.step1_style_advice_label != blank %}
               <li>{{ section.settings.step1_style_advice_label }} <a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_link_label }}</a></li>
+            {% endif %}
+            {% if section.settings.step1_learnmore_label != blank %}
+              <li>{{ section.settings.step1_learnmore_label }} <a href="{{ section.settings.step1_learnmore_url | default: '/pages/comment-ca-fonctionne' }}" class="lmm-plan__link">{{ section.settings.step1_learnmore_link_label }}</a></li>
             {% endif %}
           </ul>
           <a href="{{ section.settings.step1_url }}" class="lmm-plan__btn">{{ section.settings.step1_btn_label }}</a>
@@ -195,36 +202,54 @@
     });
   })();
 
-  // Aligne "Comment procéder" (titre en marge) avec les flèches entre
-  // les étapes, pour que ça ait l'air continu avec le hero au-dessus —
-  // spécifique à cette section (le prototype de titre en marge n'est
-  // pour l'instant que sur "Comment procéder"). Mesuré plutôt que
-  // deviné, pour rester juste peu importe la taille de police ou le
-  // nombre de lignes du titre.
+  // "Comment procéder" (titre en marge) : deux ajustements mesurés
+  // plutôt que devinés, dans le bon ordre (l'effet escalier change la
+  // forme du titre, donc il doit tourner avant l'alignement vertical
+  // qui en dépend) —
+  // 1. Effet "escalier" seulement si le titre ne tient pas sur une
+  //    ligne : chaque mot passe sur sa propre ligne avec un décalage
+  //    progressif, plutôt qu'un retour à la ligne standard.
+  // 2. Alignement vertical avec le bloc qui fusionne le numéro + le
+  //    titre de l'étape (.lmm-plan__head-group), pour que ça ait l'air
+  //    continu avec le hero au-dessus.
+  // Spécifique à cette section (le prototype de titre en marge n'est
+  // pour l'instant que sur "Comment procéder").
   (function () {
     var title = document.querySelector('.lmm-plan__title');
-    var num = document.querySelector('.lmm-plan__num');
-    if (!title || !num) return;
+    var headGroup = document.querySelector('.lmm-plan__head-group');
+    if (!title || !headGroup) return;
+
+    function updateStaircase() {
+      title.classList.remove('lmm-plan__title--staircase');
+      if (title.getClientRects().length > 1) {
+        title.classList.add('lmm-plan__title--staircase');
+      }
+    }
 
     function alignTitleWithArrows() {
       title.style.marginTop = '0px';
       var titleRect = title.getBoundingClientRect();
       var titleCenter = titleRect.top + titleRect.height / 2;
-      var numRect = num.getBoundingClientRect();
-      var arrowY = numRect.top + numRect.height / 2;
-      title.style.marginTop = (arrowY - titleCenter) + 'px';
+      var hgRect = headGroup.getBoundingClientRect();
+      var targetY = hgRect.top + hgRect.height / 2;
+      title.style.marginTop = (targetY - titleCenter) + 'px';
     }
 
-    alignTitleWithArrows();
+    function updateTitle() {
+      updateStaircase();
+      alignTitleWithArrows();
+    }
+
+    updateTitle();
     if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(alignTitleWithArrows);
+      document.fonts.ready.then(updateTitle);
     }
-    window.addEventListener('load', alignTitleWithArrows);
+    window.addEventListener('load', updateTitle);
 
-    var alignResizeTimer;
+    var titleResizeTimer;
     window.addEventListener('resize', function () {
-      clearTimeout(alignResizeTimer);
-      alignResizeTimer = setTimeout(alignTitleWithArrows, 120);
+      clearTimeout(titleResizeTimer);
+      titleResizeTimer = setTimeout(updateTitle, 120);
     });
   })();
 </script>
@@ -415,7 +440,11 @@
      hauteur de la section. */
   .lmm-plan__layout {
     display: grid;
-    grid-template-columns: minmax(210px, 260px) 1fr;
+    /* clamp() plutôt qu'un minmax() à bornes fixes : une largeur fixe
+       est soit trop petite sur un grand écran (27"), soit trop grande
+       sur un petit (~20"). Le clamp() suit la largeur réelle de l'écran
+       en continu entre les deux bornes. */
+    grid-template-columns: clamp(170px, 15vw, 300px) 1fr;
     gap: 48px;
     padding: 0 40px 0 56px;
   }
@@ -441,6 +470,18 @@
     overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
+  }
+
+  .lmm-plan__title-word {
+    display: inline;
+  }
+
+  /* Effet "escalier" — activé par JS seulement quand le titre ne tient
+     déjà pas sur une ligne (voir <script>) : chaque mot passe sur sa
+     propre ligne, décalé un peu plus que le précédent. */
+  .lmm-plan__title--staircase .lmm-plan__title-word {
+    display: block;
+    margin-left: calc(var(--i) * 22px);
   }
 
   .lmm-plan__content-col {
@@ -509,7 +550,7 @@
     font-size: var(--lmm-fs-body);
     color: var(--lmm-text);
     line-height: 1.85;
-    text-align: left;
+    text-align: center;
     margin: 0 0 26px;
   }
 
@@ -720,20 +761,23 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou commandez directement dans notre collection." },
+    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z." },
     { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "5 minutes" },
     { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — texte avant le lien conseil stylistique", "default": "Conseil stylistique disponible — réponse en moins de 24h." },
     { "type": "text", "id": "step1_style_advice_link_label", "label": "Étape 1 — texte du lien conseil stylistique", "default": "Cliquez ici" },
     { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (vide = /pages/aide-configuration)" },
+    { "type": "text", "id": "step1_learnmore_label", "label": "Étape 1 — texte avant le lien \"en savoir plus\"", "default": "Envie de comprendre le processus en détail ?" },
+    { "type": "text", "id": "step1_learnmore_link_label", "label": "Étape 1 — texte du lien \"en savoir plus\"", "default": "En savoir plus" },
+    { "type": "url", "id": "step1_learnmore_url", "label": "Étape 1 — lien \"en savoir plus\" (vide = /pages/comment-ca-fonctionne)" },
     { "type": "text", "id": "step1_btn_label", "label": "Étape 1 — texte du bouton (dans la carte)", "default": "Configurer mon complet" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Vos mensurations sont prises par un de nos professionnels pour assurer un ajustement parfait." },
+    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Un ajustement parfait, pris par un professionnel." },
     { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "30 minutes" },
     { "type": "text", "id": "step2_btn_label", "label": "Étape 2 — texte du bouton (dans la carte)", "default": "Prendre rendez-vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Profitez d'un complet parfaitement ajusté à votre silhouette pour une allure à la hauteur de vos ambitions." },
+    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Un complet ajusté à votre silhouette, à la hauteur de vos ambitions." },
     { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" },
     { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Démarrer ma création" }
   ],
