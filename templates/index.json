@@ -7,15 +7,18 @@
         "title": "Parce que la première impression compte",
         "plan_title": "Comment procéder",
         "step1_label": "Configurez votre complet",
+        "step1_duration": "5 minutes",
         "step1_url": "/pages/sur-mesure",
         "step1_intro": "Configurez votre complet de A à Z.",
-        "step1_bullets": "5 minutes",
+        "step1_bullets": "",
         "step2_label": "Rendez-vous mensurations",
+        "step2_duration": "30 minutes",
         "step2_intro": "Un ajustement parfait, pris par un professionnel.",
-        "step2_bullets": "30 minutes",
+        "step2_bullets": "",
         "step3_label": "Recevez votre complet",
+        "step3_duration": "4-8 semaines",
         "step3_intro": "Un complet ajusté à votre silhouette, à la hauteur de vos ambitions.",
-        "step3_bullets": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin"
+        "step3_bullets": "Livraison à domicile\nRetouches gratuites au besoin"
       }
     },
     "collection": {
