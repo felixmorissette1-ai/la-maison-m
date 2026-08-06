@@ -12,7 +12,7 @@
         {% endif %}
         {% if section.settings.quote_description != blank %}
           <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
-            <span>En savoir plus</span>
+            <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
               <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -34,7 +34,7 @@
         {% endif %}
         {% if section.settings.quote2_description != blank %}
           <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
-            <span>En savoir plus</span>
+            <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
               <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -214,6 +214,7 @@
   "name": "Statistiques",
   "settings": [
     { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Ce que la psychologie dit sur la première impression" },
+    { "type": "text", "id": "quote_toggle_label", "label": "Texte du bouton \"en savoir plus\" (les 2 citations)", "default": "En savoir plus" },
 
     { "type": "header", "content": "Citation vedette 1 (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Oh, Shafir & Todorov) n'a pas été obtenue." },
