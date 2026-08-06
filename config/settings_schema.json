@@ -79,5 +79,36 @@
         "default": 4
       }
     ]
+  },
+  {
+    "name": "La Maison M — Couleurs",
+    "settings": [
+      { "type": "paragraph", "content": "La palette de marque, utilisée partout sur le site (en-tête, page d'accueil, boutons)." },
+      { "type": "header", "content": "Bordeaux" },
+      { "type": "color", "id": "lmm_bordeaux", "label": "Bordeaux principal (numéros, boutons, citations)", "default": "#3A0E16" },
+      { "type": "color", "id": "lmm_bordeaux_soft", "label": "Bordeaux doux (survol, liens, étiquettes)", "default": "#7A2A33" },
+      { "type": "color", "id": "lmm_bordeaux_pale", "label": "Bordeaux pâle", "default": "#D9BFC3" },
+      { "type": "header", "content": "Ivoire" },
+      { "type": "color", "id": "lmm_ivoire_pale", "label": "Ivoire pâle (fond section Statistiques)", "default": "#EDE3D3" },
+      { "type": "color", "id": "lmm_ivoire", "label": "Ivoire (fond hero, boutons)", "default": "#F2E8D6" },
+      { "type": "color", "id": "lmm_ivoire_deep", "label": "Ivoire foncé (fond section Pourquoi nous choisir)", "default": "#DCD2BC" },
+      { "type": "color", "id": "lmm_ivoire_line", "label": "Ivoire — traits et bordures", "default": "#E3D9C6" },
+      { "type": "header", "content": "Texte" },
+      { "type": "color", "id": "lmm_text", "label": "Texte principal", "default": "#1C1C1C" },
+      { "type": "color", "id": "lmm_muted", "label": "Texte discret (sources, mentions)", "default": "#888888" }
+    ]
+  },
+  {
+    "name": "La Maison M — Typographie",
+    "settings": [
+      { "type": "paragraph", "content": "Taille des différents types de texte utilisés sur la page d'accueil. Le slogan et les citations restent toujours plus grands que les titres de section, peu importe les valeurs choisies ici." },
+      { "type": "range", "id": "lmm_fs_slogan", "label": "Slogan (titre du hero)", "min": 36, "max": 72, "step": 2, "unit": "px", "default": 56 },
+      { "type": "range", "id": "lmm_fs_quote", "label": "Citations", "min": 24, "max": 52, "step": 2, "unit": "px", "default": 40 },
+      { "type": "range", "id": "lmm_fs_section_title", "label": "Titres de section", "min": 22, "max": 44, "step": 1, "unit": "px", "default": 34 },
+      { "type": "range", "id": "lmm_fs_card_title", "label": "Titres secondaires (étapes, caractéristiques)", "min": 18, "max": 34, "step": 1, "unit": "px", "default": 27 },
+      { "type": "range", "id": "lmm_fs_number", "label": "Numéros (01, 02, 03…)", "min": 22, "max": 44, "step": 1, "unit": "px", "default": 36 },
+      { "type": "range", "id": "lmm_fs_body", "label": "Texte courant (descriptions, paragraphes)", "min": 13, "max": 22, "step": 1, "unit": "px", "default": 18 },
+      { "type": "range", "id": "lmm_fs_label", "label": "Étiquettes (petit texte en majuscules)", "min": 10, "max": 18, "step": 1, "unit": "px", "default": 14 }
+    ]
   }
 ]

@@ -19,28 +19,44 @@
     --lmm-white:   #ffffff;
     --lmm-surface: #ffffff;
     --lmm-border:  #E8E8E8;
-    --lmm-text:    #1C1C1C;
-    --lmm-muted:   #888888;
+    --lmm-text:    {{ settings.lmm_text }};
+    --lmm-muted:   {{ settings.lmm_muted }};
     --lmm-gold:    #C9A96E;
     --lmm-error:   #c0392b;
     --lmm-success: #7DAF7D;
 
     /* Palette bordeaux/ivoire — en-tête + page d'accueil pour l'instant
-       (voir TODO.md : reste du site toujours sur la palette gold/text ci-dessus) */
-    --lmm-bordeaux:       #3A0E16;
-    --lmm-bordeaux-rgb:   58, 14, 22;
-    --lmm-bordeaux-soft:  #7A2A33;
-    --lmm-bordeaux-pale:  #D9BFC3;
+       (voir TODO.md : reste du site toujours sur la palette gold/text ci-dessus).
+       Toutes ces couleurs (et le texte/muted plus haut) sont pilotées depuis
+       Réglages du thème → La Maison M — Couleurs : un seul endroit pour tout
+       changer, sans toucher au code. */
+    --lmm-bordeaux:       {{ settings.lmm_bordeaux }};
+    --lmm-bordeaux-rgb:   {{ settings.lmm_bordeaux | color_extract: 'red' }}, {{ settings.lmm_bordeaux | color_extract: 'green' }}, {{ settings.lmm_bordeaux | color_extract: 'blue' }};
+    --lmm-bordeaux-soft:  {{ settings.lmm_bordeaux_soft }};
+    --lmm-bordeaux-pale:  {{ settings.lmm_bordeaux_pale }};
     /* Ivoire pâle = l'ancien "ivoire foncé" (Felix a demandé d'inverser
        la hiérarchie) ; ivoire foncé est un tout nouveau ton, plus foncé
        que tout ce qu'il y avait avant. */
-    --lmm-ivoire-pale:   #EDE3D3;
-    --lmm-ivoire:        #F2E8D6;
-    --lmm-ivoire-rgb:    242, 232, 214;
-    --lmm-ivoire-deep:   #DCD2BC;
-    --lmm-ivoire-deep-rgb: 220, 210, 188;
-    --lmm-ivoire-line:   #E3D9C6;
+    --lmm-ivoire-pale:   {{ settings.lmm_ivoire_pale }};
+    --lmm-ivoire:        {{ settings.lmm_ivoire }};
+    --lmm-ivoire-rgb:    {{ settings.lmm_ivoire | color_extract: 'red' }}, {{ settings.lmm_ivoire | color_extract: 'green' }}, {{ settings.lmm_ivoire | color_extract: 'blue' }};
+    --lmm-ivoire-deep:   {{ settings.lmm_ivoire_deep }};
+    --lmm-ivoire-deep-rgb: {{ settings.lmm_ivoire_deep | color_extract: 'red' }}, {{ settings.lmm_ivoire_deep | color_extract: 'green' }}, {{ settings.lmm_ivoire_deep | color_extract: 'blue' }};
+    --lmm-ivoire-line:   {{ settings.lmm_ivoire_line }};
     --lmm-ivoire-faint:  #A79F91;
+
+    /* Types de texte — pilotés depuis Réglages du thème → La Maison M —
+       Typographie. Le slogan et les citations gardent toujours une valeur
+       plus grande que les titres de section (imposé par les min/max des
+       curseurs dans settings_schema.json), pour ne jamais rivaliser avec
+       le slogan principal du hero. */
+    --lmm-fs-slogan:        {{ settings.lmm_fs_slogan }}px;
+    --lmm-fs-quote:         {{ settings.lmm_fs_quote }}px;
+    --lmm-fs-section-title: {{ settings.lmm_fs_section_title }}px;
+    --lmm-fs-card-title:    {{ settings.lmm_fs_card_title }}px;
+    --lmm-fs-number:        {{ settings.lmm_fs_number }}px;
+    --lmm-fs-body:          {{ settings.lmm_fs_body }}px;
+    --lmm-fs-label:         {{ settings.lmm_fs_label }}px;
   }
 
   /* Bouton d'action principal partagé — tous les boutons "continuer / ajouter au
