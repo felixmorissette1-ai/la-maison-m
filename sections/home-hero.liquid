@@ -116,7 +116,7 @@
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
           </ul>
-          <a href="{{ section.settings.step1_url }}" class="lmm-btn-primary lmm-plan__cta-btn">{{ section.settings.step3_btn_label }}</a>
+          <a href="{{ section.settings.step1_url }}" class="lmm-plan__cta-btn">{{ section.settings.step3_btn_label }}</a>
         </div>
       </div>
     </div>
@@ -520,27 +520,27 @@
     box-sizing: border-box;
     width: 100%;
     flex: 1;
-    margin-top: 26px;
+    margin-top: 20px;
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     border: 1px solid var(--lmm-text);
     border-radius: 10px;
-    padding: 44px 34px 36px;
+    padding: 30px 30px 26px;
   }
 
   .lmm-plan__icon {
     color: var(--lmm-bordeaux);
-    margin-bottom: 30px;
+    margin-bottom: 18px;
   }
 
   .lmm-plan__intro {
     font-size: var(--lmm-fs-body);
     color: var(--lmm-text);
-    line-height: 1.85;
+    line-height: 1.6;
     text-align: center;
-    margin: 0 0 26px;
+    margin: 0 0 18px;
   }
 
   .lmm-plan__head-group {
@@ -651,7 +651,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 12px;
   }
 
   /* La puce est un vrai item flex (pas juste un ::before inline) pour
@@ -663,7 +663,7 @@
     gap: 8px;
     font-size: var(--lmm-fs-body);
     color: var(--lmm-text);
-    line-height: 1.85;
+    line-height: 1.55;
     text-align: left;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
@@ -682,12 +682,29 @@
   }
 
   /* Seule l'étape 3 (l'action finale du parcours) garde un bouton dans
-     la carte — .lmm-btn-primary est la classe de bouton partagée du
-     site ; auto pousse le bouton en bas de la carte, peu importe
-     combien de points la liste contient. */
+     la carte — même langage visuel que le CTA du hero (bordeaux, coins
+     ronds, serif) plutôt que le bouton sombre partagé .lmm-btn-primary,
+     pour rester dans le ton du reste de la section. auto pousse le
+     bouton en bas de la carte, peu importe combien de points la liste
+     contient — et le centre horizontalement, hérité de
+     .lmm-plan__card { align-items: center }. */
   .lmm-plan__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin-top: auto;
-    padding-top: 24px;
+    padding: 15px 36px 14px;
+    background: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire);
+    text-decoration: none;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+  }
+
+  .lmm-plan__cta-btn:hover {
+    opacity: 0.85;
   }
 
   /* La colonne de marge n'a plus la place de respirer en dessous de
@@ -745,8 +762,8 @@
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "text", "id": "step1_duration", "label": "Étape 1 — durée (sous le titre)", "default": "5 minutes" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z." },
-    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points additionnels (un par ligne, optionnel)", "default": "Possibilité de commander un complet pré-configuré de la collection" },
+    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou optez pour un modèle pré-configuré de la collection." },
+    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points additionnels (un par ligne, optionnel)" },
     { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — point de liste (conseil stylistique)", "default": "Conseil stylistique disponible en ligne" },
     { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (non utilisé pour l'instant)" },
 
