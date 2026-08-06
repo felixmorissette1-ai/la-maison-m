@@ -4,9 +4,6 @@
     <div class="lmm-footer__col lmm-footer__brand">
       <span class="lmm-footer__logo">La Maison M.</span>
       <span class="lmm-footer__logo-sub">Tailleur sur mesure</span>
-      {% if section.settings.tagline != blank %}
-        <p class="lmm-footer__tagline">{{ section.settings.tagline }}</p>
-      {% endif %}
     </div>
 
     <div class="lmm-footer__col">
@@ -73,7 +70,7 @@
 {% stylesheet %}
   .lmm-footer {
     background: var(--lmm-bordeaux);
-    color: rgba(var(--lmm-ivoire-rgb), 0.65);
+    color: var(--lmm-ivoire-pale);
   }
 
   .lmm-footer__inner {
@@ -98,15 +95,8 @@
     font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--lmm-bordeaux-pale);
+    color: var(--lmm-ivoire-pale);
     margin-top: 3px;
-  }
-
-  .lmm-footer__tagline {
-    font-size: 12px;
-    line-height: 1.6;
-    margin: 12px 0 0;
-    max-width: 32ch;
   }
 
   .lmm-footer__heading {
@@ -129,7 +119,7 @@
 
   .lmm-footer__links a {
     text-decoration: none;
-    color: var(--lmm-ivoire-deep);
+    color: var(--lmm-ivoire-pale);
     font-size: 12px;
     letter-spacing: 0.02em;
     transition: color 0.2s;
@@ -146,7 +136,7 @@
   }
 
   .lmm-footer__contact-line a {
-    color: var(--lmm-ivoire-deep);
+    color: var(--lmm-ivoire-pale);
     text-decoration: none;
     transition: color 0.2s;
   }
@@ -159,7 +149,7 @@
     font-size: 12px;
     line-height: 1.7;
     margin-top: 8px;
-    color: rgba(var(--lmm-ivoire-rgb), 0.65);
+    color: var(--lmm-ivoire-pale);
   }
 
   .lmm-footer__bottom {
@@ -180,7 +170,7 @@
   }
 
   .lmm-footer__copyright a {
-    color: rgba(var(--lmm-ivoire-rgb), 0.65);
+    color: var(--lmm-ivoire-pale);
     text-decoration: none;
   }
 
@@ -220,7 +210,6 @@
 {
   "name": "t:general.footer",
   "settings": [
-    { "type": "text", "id": "tagline", "label": "Tagline (sous le nom)", "default": "Complets sur mesure, faits à la main." },
 
     { "type": "header", "content": "À propos" },
     { "type": "text", "id": "about_heading", "label": "Titre de la colonne", "default": "À propos" },

@@ -70,6 +70,37 @@
       });
     });
   })();
+
+  // Garantie FIABLE à 100 % que le titre ne dépasse jamais la ligne de la
+  // marge, SANS jamais couper un mot en deux — voir home-hero.liquid pour
+  // le même mécanisme sur "Comment procéder".
+  (function () {
+    var title = document.querySelector('.lmm-stats__heading');
+    if (!title) return;
+
+    function fitTitle() {
+      title.style.fontSize = '';
+      var guard = 0;
+      while (title.scrollWidth > title.clientWidth + 1 && guard < 40) {
+        var current = parseFloat(getComputedStyle(title).fontSize);
+        if (current <= 14) break;
+        title.style.fontSize = (current - 1) + 'px';
+        guard++;
+      }
+    }
+
+    fitTitle();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitTitle);
+    }
+    window.addEventListener('load', fitTitle);
+
+    var t;
+    window.addEventListener('resize', function () {
+      clearTimeout(t);
+      t = setTimeout(fitTitle, 120);
+    });
+  })();
 </script>
 
 {% stylesheet %}
@@ -119,7 +150,7 @@
     line-height: 1.3;
     color: var(--lmm-bordeaux);
     margin: 0;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
   }

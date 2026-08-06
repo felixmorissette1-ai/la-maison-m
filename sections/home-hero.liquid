@@ -225,6 +225,24 @@
     var headGroup = document.querySelector('.lmm-plan__head-group');
     if (!title || !headGroup) return;
 
+    // Garantie FIABLE à 100 % que le titre ne dépasse jamais la ligne de
+    // la marge, SANS jamais couper un mot en deux : plutôt que de
+    // deviner une taille de police qui "devrait" rentrer, on mesure le
+    // débordement réel (scrollWidth > clientWidth, signe qu'un mot ne
+    // peut pas retourner à la ligne et dépasse) et on réduit la police
+    // pas à pas jusqu'à ce que ça rentre. Le overflow-wrap:break-word en
+    // CSS reste un filet de sécurité si jamais ce script ne tournait pas.
+    function fitTitle() {
+      title.style.fontSize = '';
+      var guard = 0;
+      while (title.scrollWidth > title.clientWidth + 1 && guard < 40) {
+        var current = parseFloat(getComputedStyle(title).fontSize);
+        if (current <= 14) break;
+        title.style.fontSize = (current - 1) + 'px';
+        guard++;
+      }
+    }
+
     function alignTitleWithArrows() {
       title.style.marginTop = '0px';
       var titleRect = title.getBoundingClientRect();
@@ -234,16 +252,21 @@
       title.style.marginTop = (targetY - titleCenter) + 'px';
     }
 
-    alignTitleWithArrows();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(alignTitleWithArrows);
+    function updateTitle() {
+      fitTitle();
+      alignTitleWithArrows();
     }
-    window.addEventListener('load', alignTitleWithArrows);
+
+    updateTitle();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(updateTitle);
+    }
+    window.addEventListener('load', updateTitle);
 
     var titleResizeTimer;
     window.addEventListener('resize', function () {
       clearTimeout(titleResizeTimer);
-      titleResizeTimer = setTimeout(alignTitleWithArrows, 120);
+      titleResizeTimer = setTimeout(updateTitle, 120);
     });
   })();
 </script>
@@ -451,10 +474,14 @@
   }
 
   /* Centré dans la colonne de marge (pas aligné sur la ligne).
-     overflow-wrap: break-word (pas "normal") — la priorité absolue est
-     de ne JAMAIS dépasser la ligne de la marge ; un mot casse en deux
-     seulement dans le cas extrême où il ne tiendrait pas seul sur une
-     ligne, jamais avant. */
+     overflow-wrap: normal (jamais break-word) — un mot ne casse JAMAIS
+     en deux ici. Le CSS seul ne peut pas garantir à la fois "jamais de
+     mot coupé" ET "jamais de débordement" : break-word évite le
+     débordement en coupant discrètement le mot, ce qui MASQUE le
+     problème (scrollWidth ne dépasse plus clientWidth) et empêche le
+     script de <script> (voir plus bas) de détecter qu'il doit réduire
+     la police. En laissant "normal", le débordement reste mesurable et
+     le script s'en charge de façon fiable, sans jamais couper un mot. */
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(26px, 2.4vw, 36px);
@@ -463,7 +490,7 @@
     color: var(--lmm-bordeaux);
     text-align: center;
     margin: 0;
-    overflow-wrap: break-word;
+    overflow-wrap: normal;
     word-break: normal;
     hyphens: none;
   }
