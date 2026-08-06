@@ -41,7 +41,7 @@
     </div>
 
     <div class="lmm-header__cell lmm-header__cell--nav">
-      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurez votre complet</a>
+      <a href="/pages/sur-mesure" class="lmm-nav-link lmm-nav-link--cta{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurez votre complet</a>
     </div>
     <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
       <a href="/collections/collection" class="lmm-nav-link{% if request.path contains '/collections/collection' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collection</a>
@@ -80,7 +80,7 @@
   {% else %}
     <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
   {% endif %}
-  <a href="/pages/sur-mesure" class="lmm-mobile-nav__link{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurez votre complet</a>
+  <a href="/pages/sur-mesure" class="lmm-mobile-nav__link lmm-mobile-nav__link--cta{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurez votre complet</a>
   <a href="/collections/collection" class="lmm-mobile-nav__link{% if request.path contains '/collections/collection' %} lmm-mobile-nav__link--active{% endif %}">Complets</a>
   <a href="/collections/chemises" class="lmm-mobile-nav__link{% if request.path contains '/collections/chemises' %} lmm-mobile-nav__link--active{% endif %}">Chemises</a>
 </nav>
@@ -901,6 +901,15 @@
     color: var(--lmm-ivoire-pale);
   }
 
+  /* Même texte "Configurez votre complet" que les boutons pleins du hero
+     et de la carte étape 3 — même couleur de police (--lmm-ivoire) pour
+     rester identique partout, plutôt que le --lmm-ivoire-pale des autres
+     liens de nav. */
+  .lmm-nav-link--cta,
+  .lmm-nav-link--cta:hover {
+    color: var(--lmm-ivoire);
+  }
+
   /* Sous-menu "À propos" — s'ouvre au survol (desktop uniquement, voir
      le tiroir mobile pour l'équivalent tactile). La cellule doit couvrir
      toute la hauteur du header (contrairement aux autres cellules, qui
@@ -1084,6 +1093,11 @@
   }
 
   .lmm-mobile-nav__link--active {
+    color: var(--lmm-ivoire);
+  }
+
+  /* Même couleur que les boutons pleins pour "Configurez votre complet" — voir .lmm-nav-link--cta. */
+  .lmm-mobile-nav__link--cta {
     color: var(--lmm-ivoire);
   }
 
