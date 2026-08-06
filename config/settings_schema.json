@@ -91,7 +91,7 @@
       { "type": "header", "content": "Ivoire" },
       { "type": "color", "id": "lmm_ivoire_pale", "label": "Ivoire pâle (fond section Comment procéder)", "default": "#FAF6EC" },
       { "type": "color", "id": "lmm_ivoire", "label": "Ivoire (fond hero, boutons)", "default": "#F2E8D6" },
-      { "type": "color", "id": "lmm_ivoire_deep", "label": "Ivoire foncé (fond section Pourquoi nous choisir)", "default": "#EDE2CC" },
+      { "type": "color", "id": "lmm_ivoire_deep", "label": "Ivoire foncé (fond section Pourquoi nous choisir)", "default": "#F4ECDC" },
       { "type": "color", "id": "lmm_ivoire_line", "label": "Ivoire — traits et bordures", "default": "#E3D9C6" },
       { "type": "header", "content": "Texte" },
       { "type": "color", "id": "lmm_text", "label": "Texte principal", "default": "#1C1C1C" },
