@@ -194,6 +194,39 @@
       resizeTimer = setTimeout(updateHeroPeek, 120);
     });
   })();
+
+  // Aligne "Comment procéder" (titre en marge) avec les flèches entre
+  // les étapes, pour que ça ait l'air continu avec le hero au-dessus —
+  // spécifique à cette section (le prototype de titre en marge n'est
+  // pour l'instant que sur "Comment procéder"). Mesuré plutôt que
+  // deviné, pour rester juste peu importe la taille de police ou le
+  // nombre de lignes du titre.
+  (function () {
+    var title = document.querySelector('.lmm-plan__title');
+    var num = document.querySelector('.lmm-plan__num');
+    if (!title || !num) return;
+
+    function alignTitleWithArrows() {
+      title.style.marginTop = '0px';
+      var titleRect = title.getBoundingClientRect();
+      var titleCenter = titleRect.top + titleRect.height / 2;
+      var numRect = num.getBoundingClientRect();
+      var arrowY = numRect.top + numRect.height / 2;
+      title.style.marginTop = (arrowY - titleCenter) + 'px';
+    }
+
+    alignTitleWithArrows();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(alignTitleWithArrows);
+    }
+    window.addEventListener('load', alignTitleWithArrows);
+
+    var alignResizeTimer;
+    window.addEventListener('resize', function () {
+      clearTimeout(alignResizeTimer);
+      alignResizeTimer = setTimeout(alignTitleWithArrows, 120);
+    });
+  })();
 </script>
 
 {% stylesheet %}
@@ -382,7 +415,7 @@
      hauteur de la section. */
   .lmm-plan__layout {
     display: grid;
-    grid-template-columns: minmax(240px, 340px) 1fr;
+    grid-template-columns: minmax(150px, 200px) 1fr;
     gap: 48px;
     padding: 0 40px 0 56px;
   }
@@ -480,20 +513,33 @@
     margin: 0 0 26px;
   }
 
-  /* Regroupe numéro + titre pour que la flèche entre étapes se centre
-     verticalement sur les deux ensemble, pas juste sur le titre seul. */
   .lmm-plan__head-group {
-    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     gap: 14px;
   }
 
+  /* Même format de numéro et de titre pour les 3 étapes — seule la
+     décoration (curseur pour l'étape 2, l'étape cliquable) change selon
+     que l'étape est cliquable ou non. */
+  .lmm-plan__num {
+    position: relative;
+    display: block;
+    width: 100%;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: var(--lmm-fs-number);
+    font-weight: 400;
+    color: var(--lmm-bordeaux);
+    text-align: center;
+  }
+
   /* Petite flèche bordeaux entre les étapes (pas sur la dernière, rien
-     après), centrée sur le groupe numéro+titre entier plutôt que sur le
-     titre seul. Hampe (::before) + pointe (::after). */
-  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before {
+     après) — ancrée sur le NUMÉRO seul (pas tout le groupe numéro+titre)
+     pour toujours rester au même niveau que "01 → 02 → 03", peu importe
+     si un titre d'étape passe sur une ou deux lignes. Hampe (::before) +
+     pointe (::after). */
+  .lmm-plan__step:not(:last-child) .lmm-plan__num::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -505,7 +551,7 @@
     pointer-events: none;
   }
 
-  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
+  .lmm-plan__step:not(:last-child) .lmm-plan__num::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -517,19 +563,6 @@
     border-left: 7px solid var(--lmm-bordeaux);
     transform: translateY(-50%);
     pointer-events: none;
-  }
-
-  /* Même format de numéro et de titre pour les 3 étapes — seule la
-     décoration (curseur pour l'étape 2, l'étape cliquable) change selon
-     que l'étape est cliquable ou non. */
-  .lmm-plan__num {
-    display: block;
-    width: 100%;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: var(--lmm-fs-number);
-    font-weight: 400;
-    color: var(--lmm-bordeaux);
-    text-align: center;
   }
 
   .lmm-plan__step-head {
@@ -667,8 +700,8 @@
 
     /* Les flèches de connexion entre étapes n'ont de sens qu'en rangée
        horizontale — cachées une fois les cartes empilées. */
-    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before,
-    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
+    .lmm-plan__step:not(:last-child) .lmm-plan__num::before,
+    .lmm-plan__step:not(:last-child) .lmm-plan__num::after {
       display: none;
     }
   }
