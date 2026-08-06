@@ -1,25 +1,25 @@
-<section class="lmm-collection full-width">
-  <div class="lmm-collection__inner">
-    <h2 class="lmm-collection__heading">{{ section.settings.section_title }}</h2>
+<section class="lmm-home-collection full-width">
+  <div class="lmm-home-collection__inner">
+    <h2 class="lmm-home-collection__heading">{{ section.settings.section_title }}</h2>
 
     {% assign coll = section.settings.collection %}
     {% if coll != blank and coll.products.size > 0 %}
-      <div class="lmm-collection__track" id="lmm-collection-track">
+      <div class="lmm-home-collection__track" id="lmm-home-collection-track">
         {% for product in coll.products limit: 12 %}
-          <a href="{{ product.url }}" class="lmm-collection__card">
-            <div class="lmm-collection__card-img">
+          <a href="{{ product.url }}" class="lmm-home-collection__card">
+            <div class="lmm-home-collection__card-img">
               {% if product.featured_image %}
                 <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
               {% endif %}
             </div>
-            <p class="lmm-collection__card-title">{{ product.title }}</p>
-            <p class="lmm-collection__card-price">{{ product.price | money }}</p>
+            <p class="lmm-home-collection__card-title">{{ product.title }}</p>
+            <p class="lmm-home-collection__card-price">{{ product.price | money }}</p>
           </a>
         {% endfor %}
       </div>
 
-      <div class="lmm-collection__cta">
-        <a href="{{ section.settings.link_url | default: coll.url }}" class="lmm-collection__link">{{ section.settings.link_label }}</a>
+      <div class="lmm-home-collection__cta">
+        <a href="{{ section.settings.link_url | default: coll.url }}" class="lmm-home-collection__link">{{ section.settings.link_label }}</a>
       </div>
     {% endif %}
   </div>
@@ -27,11 +27,11 @@
 
 <script>
   (function () {
-    var track = document.getElementById('lmm-collection-track');
+    var track = document.getElementById('lmm-home-collection-track');
     if (!track) return;
 
     function avancer() {
-      var card = track.querySelector('.lmm-collection__card');
+      var card = track.querySelector('.lmm-home-collection__card');
       if (!card) return;
       var style = getComputedStyle(track);
       var gap = parseFloat(style.columnGap || style.gap || 24);
@@ -59,18 +59,21 @@
 </script>
 
 {% stylesheet %}
-  .lmm-collection {
+  .lmm-home-collection {
+    /* Alterne pâle/foncé avec les sections voisines : plan (pâle, fondu
+       photo) -> collection (foncé) -> statistiques (pâle) -> pourquoi
+       (foncé). */
     position: relative;
-    background: var(--lmm-ivoire-pale);
+    background: var(--lmm-ivoire-deep);
   }
 
-  .lmm-collection__inner {
+  .lmm-home-collection__inner {
     max-width: 1180px;
     margin: 0 auto;
     padding: 70px 32px 90px;
   }
 
-  .lmm-collection__heading {
+  .lmm-home-collection__heading {
     text-align: left;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-section-title);
@@ -81,7 +84,7 @@
     max-width: 640px;
   }
 
-  .lmm-collection__track {
+  .lmm-home-collection__track {
     display: flex;
     gap: 24px;
     overflow-x: auto;
@@ -91,18 +94,18 @@
     padding-bottom: 4px;
   }
 
-  .lmm-collection__track::-webkit-scrollbar {
+  .lmm-home-collection__track::-webkit-scrollbar {
     display: none;
   }
 
-  .lmm-collection__card {
+  .lmm-home-collection__card {
     flex: 0 0 calc((100% - 48px) / 3);
     scroll-snap-align: start;
     text-decoration: none;
     display: block;
   }
 
-  .lmm-collection__card-img {
+  .lmm-home-collection__card-img {
     width: 100%;
     aspect-ratio: 4 / 5;
     background: var(--lmm-ivoire-line);
@@ -111,32 +114,32 @@
     margin-bottom: 14px;
   }
 
-  .lmm-collection__card-img img {
+  .lmm-home-collection__card-img img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
   }
 
-  .lmm-collection__card-title {
+  .lmm-home-collection__card-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 17px;
     color: var(--lmm-text);
     margin: 0 0 4px;
   }
 
-  .lmm-collection__card-price {
+  .lmm-home-collection__card-price {
     font-size: 13px;
     color: var(--lmm-muted);
     margin: 0;
   }
 
-  .lmm-collection__cta {
+  .lmm-home-collection__cta {
     text-align: center;
     margin-top: 44px;
   }
 
-  .lmm-collection__link {
+  .lmm-home-collection__link {
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -145,22 +148,22 @@
     text-underline-offset: 4px;
   }
 
-  .lmm-collection__link:hover {
+  .lmm-home-collection__link:hover {
     color: var(--lmm-bordeaux);
   }
 
   @media (max-width: 900px) {
-    .lmm-collection__card {
+    .lmm-home-collection__card {
       flex: 0 0 calc((100% - 24px) / 2);
     }
   }
 
   @media (max-width: 600px) {
-    .lmm-collection__card {
+    .lmm-home-collection__card {
       flex: 0 0 85%;
     }
 
-    .lmm-collection__heading {
+    .lmm-home-collection__heading {
       font-size: 26px;
     }
   }

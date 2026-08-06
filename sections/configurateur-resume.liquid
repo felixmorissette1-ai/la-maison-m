@@ -65,7 +65,7 @@
     total += prix;
     document.getElementById(c.elId).textContent = val;
     if (c.prixElId) document.getElementById(c.prixElId).textContent = prix > 0 ? '+$' + prix.toLocaleString('fr-CA') : 'Inclus';
-    panelRows += '<div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">' + c.label + '</span><span class="lmm-cfg__panel-val">' + val + (prix > 0 ? ' <span style="color:var(--lmm-gold);font-size:10px;">(+$' + prix + ')</span>' : '') + '</span></div>';
+    panelRows += '<div class="lmm-cfg__panel-row"><span class="lmm-cfg__panel-key">' + c.label + '</span><span class="lmm-cfg__panel-val">' + val + (prix > 0 ? ' <span style="color:var(--lmm-bordeaux);font-size:10px;">(+$' + prix + ')</span>' : '') + '</span></div>';
   });
   document.getElementById('r-total').textContent = '$' + total.toLocaleString('fr-CA');
   document.getElementById('panel-total-resume').textContent = '$' + total.toLocaleString('fr-CA');

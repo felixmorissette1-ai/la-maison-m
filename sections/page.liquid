@@ -32,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-canva__card img, .lmm-canva__card img:hover { transform: none !important; transition: none !important; }
   .lmm-canva__card--selected,
   .lmm-canva__card--selected:hover { border-color: var(--lmm-text); }
-  .lmm-canva__card--recommended { border-color: var(--lmm-gold); }
-  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: var(--lmm-gold); color: var(--lmm-text); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; z-index: 1; }
+  .lmm-canva__card--recommended { border-color: var(--lmm-bordeaux); }
+  .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: var(--lmm-bordeaux); color: var(--lmm-text); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; z-index: 1; }
   .lmm-canva__card-photo { width: 100%; flex: 1; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; min-height: 0; }
   .lmm-canva__card-photo img { width: 100%; height: 100%; object-fit: cover; transform: none !important; transition: none !important; }
   .lmm-canva__card-photo-placeholder { font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); text-align: center; padding: 4px; }
   .lmm-canva__card-bottom { padding: 16px 20px 20px; flex-shrink: 0; }
   .lmm-canva__name { font-family: Georgia, serif; font-size: 18px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
   .lmm-canva__prix { position: absolute; top: -10px; right: 20px; background: var(--lmm-surface); color: var(--lmm-muted); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; z-index: 1; margin: 0; }
-  .lmm-canva__prix--recommande { background: var(--lmm-gold); color: var(--lmm-text); }
+  .lmm-canva__prix--recommande { background: var(--lmm-bordeaux); color: var(--lmm-text); }
   .lmm-canva__textbox { font-size: 12px; color: var(--lmm-muted); font-weight: 300; line-height: 1.7; }
   .lmm-canva__hint { font-size: 12px; color: var(--lmm-muted); margin-top: 12px; }
   #canva-next { opacity: 0.4; pointer-events: none; }
@@ -57,11 +57,11 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-stepper__step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .lmm-stepper__dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--lmm-border); background: transparent; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: var(--lmm-border); transition: all 0.2s; }
   .lmm-stepper__step--done .lmm-stepper__dot { background: var(--lmm-text); border-color: var(--lmm-text); color: var(--lmm-white); }
-  .lmm-stepper__step--active .lmm-stepper__dot { background: var(--lmm-gold); border-color: var(--lmm-gold); color: var(--lmm-white); }
+  .lmm-stepper__step--active .lmm-stepper__dot { background: var(--lmm-bordeaux); border-color: var(--lmm-bordeaux); color: var(--lmm-white); }
   .lmm-stepper__label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-border); white-space: nowrap; }
   .lmm-stepper__step--done .lmm-stepper__label { color: var(--lmm-muted); }
   .lmm-stepper__step--done { cursor: pointer; }
-  .lmm-stepper__step--done:hover .lmm-stepper__dot { background: var(--lmm-gold); border-color: var(--lmm-gold); }
+  .lmm-stepper__step--done:hover .lmm-stepper__dot { background: var(--lmm-bordeaux); border-color: var(--lmm-bordeaux); }
   .lmm-stepper__step--done:hover .lmm-stepper__label { color: var(--lmm-text); }
   .lmm-stepper__step--active .lmm-stepper__label { color: var(--lmm-text); font-weight: 600; }
   .lmm-stepper__line { width: 120px; height: 1px; background: var(--lmm-border); margin-bottom: 15px; flex-shrink: 0; }
@@ -456,10 +456,10 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-recap__price-note { font-size: 10px; color: var(--lmm-muted); margin-top: 4px; text-align: right; }
   .lmm-recap__cta { display: flex; flex-direction: column; gap: 12px; padding-top: 8px; }
   .lmm-recap__btn-pay { display: flex; align-items: center; justify-content: center; gap: 14px; width: 100%; background: var(--lmm-text); color: var(--lmm-white); text-decoration: none; padding: 22px 36px; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; transition: background 0.25s, gap 0.25s; box-sizing: border-box; border: none; cursor: pointer; }
-  .lmm-recap__btn-pay:hover { background: var(--lmm-gold); color: var(--lmm-text); gap: 20px; }
+  .lmm-recap__btn-pay:hover { background: var(--lmm-bordeaux); color: var(--lmm-text); gap: 20px; }
   .lmm-recap__btn-modify { display: block; text-align: center; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); text-decoration: none; padding: 12px; transition: color 0.2s; }
   .lmm-recap__btn-modify:hover { color: var(--lmm-text); }
-  .lmm-recap__divider { width: 40px; height: 1px; background: var(--lmm-gold); margin: 20px 0; }
+  .lmm-recap__divider { width: 40px; height: 1px; background: var(--lmm-bordeaux); margin: 20px 0; }
   .lmm-recap__note { font-size: 11px; color: var(--lmm-muted); line-height: 1.8; }
   .lmm-recap__note strong { color: var(--lmm-text); font-weight: 500; }
   .lmm-recap__visual { display: flex; flex-direction: column; gap: 16px; }
@@ -467,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-recap__photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .lmm-recap__photo-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
   .lmm-recap__photo-placeholder svg { opacity: 0.2; }
-  .lmm-recap__alert { background: var(--lmm-surface); border-left: 3px solid var(--lmm-gold); padding: 12px 16px; margin-bottom: 4px; }
+  .lmm-recap__alert { background: var(--lmm-surface); border-left: 3px solid var(--lmm-bordeaux); padding: 12px 16px; margin-bottom: 4px; }
   .lmm-recap__alert p { font-size: 11px; color: var(--lmm-muted); line-height: 1.7; margin: 0; }
   .lmm-recap__alert p strong { color: var(--lmm-text); }
   .lmm-recap__couturiere-card { border: 1px solid rgba(var(--lmm-text-rgb),0.12); padding: 14px 16px; margin-top: 12px; display: none; }

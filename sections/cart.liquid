@@ -27,7 +27,7 @@
   .lmm-cart__empty a {
     display: inline-block;
     margin-top: 24px;
-    color: var(--lmm-gold);
+    color: var(--lmm-bordeaux);
     text-decoration: none;
     font-size: 12px;
     letter-spacing: 0.12em;
@@ -218,7 +218,7 @@
   }
 
   .lmm-cart__checkout-btn:hover {
-    background: var(--lmm-gold);
+    background: var(--lmm-bordeaux);
   }
 
   .lmm-cart__continue {
@@ -258,7 +258,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: var(--lmm-gold);
+    background: var(--lmm-bordeaux);
     color: var(--lmm-text);
     font-size: 11px;
     line-height: 1;
@@ -348,7 +348,7 @@
                 <img class="lmm-cart__item-img" src="{{ item.image | image_url: width: 200 }}" alt="{{ item.product.title | escape }}" loading="lazy">
               {% else %}
                 <div class="lmm-cart__item-img-placeholder">
-                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="1" stroke="var(--lmm-gold)" stroke-width="1.2"/><path d="M11 4v4a5 5 0 0010 0V4" stroke="var(--lmm-gold)" stroke-width="1.2"/></svg>
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="4" width="20" height="24" rx="1" stroke="var(--lmm-bordeaux)" stroke-width="1.2"/><path d="M11 4v4a5 5 0 0010 0V4" stroke="var(--lmm-bordeaux)" stroke-width="1.2"/></svg>
                 </div>
               {% endif %}
             </div>
@@ -411,7 +411,7 @@
 
           {% elsif customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
             <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
-              <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-gold); flex-shrink:0;"></div>
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-bordeaux); flex-shrink:0;"></div>
               <p style="font-size:11px; color:var(--lmm-text); margin:0; letter-spacing:0.04em;">Rendez-vous confirmé</p>
             </div>
             <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
@@ -420,7 +420,7 @@
             </button>
 
           {% else %}
-            <div style="background:var(--lmm-surface); border-left:3px solid var(--lmm-gold); padding:12px 16px;">
+            <div style="background:var(--lmm-surface); border-left:3px solid var(--lmm-bordeaux); padding:12px 16px;">
               <p style="font-size:11px; color:var(--lmm-muted); line-height:1.7; margin:0;"><strong style="color:var(--lmm-text);">Rendez-vous requis.</strong> Prenez rendez-vous pour vos mensurations avant de procéder au paiement.</p>
             </div>
             <button type="button" class="lmm-cart__checkout-btn" onclick="ouvrirCalModal()">

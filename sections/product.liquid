@@ -43,7 +43,7 @@
 
         {% for tag in product.tags %}
           {% if tag == 'Prestige' or tag == 'Contemporain' or tag == 'Décontracté' %}
-            <p class="lmm-label" style="color:var(--lmm-gold); margin-bottom:16px;">Collection {{ tag }}</p>
+            <p class="lmm-label" style="color:var(--lmm-bordeaux); margin-bottom:16px;">Collection {{ tag }}</p>
           {% endif %}
         {% endfor %}
 
@@ -265,7 +265,7 @@
 
   .lmm-divider-gold {
     height: 1px;
-    background: var(--lmm-gold);
+    background: var(--lmm-bordeaux);
     width: 48px;
     margin-bottom: 24px;
   }
@@ -352,7 +352,7 @@
     width: 4px;
     height: 4px;
     border-radius: 50%;
-    background: var(--lmm-gold);
+    background: var(--lmm-bordeaux);
     flex-shrink: 0;
   }
 
@@ -433,7 +433,7 @@
   }
 
   .lmm-product__cta-primary:hover {
-    background: var(--lmm-gold);
+    background: var(--lmm-bordeaux);
     color: var(--lmm-text);
     gap: 18px;
   }
