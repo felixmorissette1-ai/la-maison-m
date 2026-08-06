@@ -18,6 +18,12 @@
         "step3_bullets": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin"
       }
     },
+    "collection": {
+      "type": "home-collection",
+      "settings": {
+        "collection": "frontpage"
+      }
+    },
     "pourquoi": {
       "type": "home-pourquoi",
       "settings": {
@@ -36,5 +42,5 @@
       }
     }
   },
-  "order": ["hero", "stats", "pourquoi"]
+  "order": ["hero", "collection", "stats", "pourquoi"]
 }

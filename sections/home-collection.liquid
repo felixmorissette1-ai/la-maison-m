@@ -1,0 +1,182 @@
+<section class="lmm-collection full-width">
+  <div class="lmm-collection__inner">
+    <h2 class="lmm-collection__heading">{{ section.settings.section_title }}</h2>
+
+    {% assign coll = section.settings.collection %}
+    {% if coll != blank and coll.products.size > 0 %}
+      <div class="lmm-collection__track" id="lmm-collection-track">
+        {% for product in coll.products limit: 12 %}
+          <a href="{{ product.url }}" class="lmm-collection__card">
+            <div class="lmm-collection__card-img">
+              {% if product.featured_image %}
+                <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
+              {% endif %}
+            </div>
+            <p class="lmm-collection__card-title">{{ product.title }}</p>
+            <p class="lmm-collection__card-price">{{ product.price | money }}</p>
+          </a>
+        {% endfor %}
+      </div>
+
+      <div class="lmm-collection__cta">
+        <a href="{{ section.settings.link_url | default: coll.url }}" class="lmm-collection__link">{{ section.settings.link_label }}</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+<script>
+  (function () {
+    var track = document.getElementById('lmm-collection-track');
+    if (!track) return;
+
+    function avancer() {
+      var card = track.querySelector('.lmm-collection__card');
+      if (!card) return;
+      var style = getComputedStyle(track);
+      var gap = parseFloat(style.columnGap || style.gap || 24);
+      var cardWidth = card.getBoundingClientRect().width + gap;
+      var atEnd = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+      track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + cardWidth, behavior: 'smooth' });
+    }
+
+    var timer = setInterval(avancer, 4000);
+
+    // L'interaction manuelle (survol, défilement tactile/molette) met
+    // l'avancement automatique en pause plutôt que de l'annuler
+    // définitivement — reprend tout seul après quelques secondes.
+    var resumeTimeout;
+    function pauserTemporairement() {
+      clearInterval(timer);
+      clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(function () { timer = setInterval(avancer, 4000); }, 6000);
+    }
+    track.addEventListener('mouseenter', function () { clearInterval(timer); });
+    track.addEventListener('mouseleave', function () { timer = setInterval(avancer, 4000); });
+    track.addEventListener('touchstart', pauserTemporairement, { passive: true });
+    track.addEventListener('wheel', pauserTemporairement, { passive: true });
+  })();
+</script>
+
+{% stylesheet %}
+  .lmm-collection {
+    position: relative;
+    background: var(--lmm-ivoire-pale);
+  }
+
+  .lmm-collection__inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 70px 32px 90px;
+  }
+
+  .lmm-collection__heading {
+    text-align: left;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: var(--lmm-fs-section-title);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--lmm-text);
+    margin: 0 0 40px;
+    max-width: 640px;
+  }
+
+  .lmm-collection__track {
+    display: flex;
+    gap: 24px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 4px;
+  }
+
+  .lmm-collection__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lmm-collection__card {
+    flex: 0 0 calc((100% - 48px) / 3);
+    scroll-snap-align: start;
+    text-decoration: none;
+    display: block;
+  }
+
+  .lmm-collection__card-img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: var(--lmm-ivoire-line);
+    overflow: hidden;
+    border-radius: 6px;
+    margin-bottom: 14px;
+  }
+
+  .lmm-collection__card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .lmm-collection__card-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 17px;
+    color: var(--lmm-text);
+    margin: 0 0 4px;
+  }
+
+  .lmm-collection__card-price {
+    font-size: 13px;
+    color: var(--lmm-muted);
+    margin: 0;
+  }
+
+  .lmm-collection__cta {
+    text-align: center;
+    margin-top: 44px;
+  }
+
+  .lmm-collection__link {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-soft);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .lmm-collection__link:hover {
+    color: var(--lmm-bordeaux);
+  }
+
+  @media (max-width: 900px) {
+    .lmm-collection__card {
+      flex: 0 0 calc((100% - 24px) / 2);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .lmm-collection__card {
+      flex: 0 0 85%;
+    }
+
+    .lmm-collection__heading {
+      font-size: 26px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Collection — Accueil",
+  "settings": [
+    { "type": "text", "id": "section_title", "label": "Titre de la section", "default": "Découvrez notre collection" },
+    { "type": "collection", "id": "collection", "label": "Collection à afficher" },
+    { "type": "text", "id": "link_label", "label": "Texte du lien", "default": "Voir la collection complète" },
+    { "type": "url", "id": "link_url", "label": "Lien (vide = page de la collection)" }
+  ],
+  "presets": [
+    { "name": "Collection — Accueil" }
+  ]
+}
+{% endschema %}
