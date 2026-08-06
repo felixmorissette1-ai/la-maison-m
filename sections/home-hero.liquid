@@ -20,6 +20,9 @@
     <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
       {{ section.settings.step1_label }}
     </a>
+    {% if section.settings.tissus_link_label != blank %}
+      <a href="#" class="lmm-hero__tissus-link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">{{ section.settings.tissus_link_label }}</a>
+    {% endif %}
   </div>
 </section>
 
@@ -43,7 +46,7 @@
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
             <li>Conseil stylistique — <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
-            <li>Envie de voir les tissus avant de commander ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a></li>
+            <li>Envie de voir les tissus avant de commander ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">Prenez rendez-vous</a></li>
           </ul>
         </div>
       </div>
@@ -51,7 +54,7 @@
       <div class="lmm-plan__step">
         <div class="lmm-plan__head-group">
           <span class="lmm-plan__num">02</span>
-          <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal()">
+          <a href="#" class="lmm-plan__step-head lmm-plan__step-head--link" onclick="event.preventDefault(); ouvrirLocalisationModal('mensurations')">
             <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
           </a>
         </div>
@@ -63,7 +66,7 @@
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
             <li id="lmm-plan-ville-item"><span id="lmm-plan-ville">Partenaire disponible près de chez vous</span></li>
-            <li><a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prenez rendez-vous</a> pour vos mensurations</li>
+            <li><a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('mensurations')">Prenez rendez-vous</a> pour vos mensurations</li>
           </ul>
         </div>
       </div>
@@ -275,6 +278,23 @@
     .lmm-hero__title {
       white-space: nowrap;
     }
+  }
+
+  .lmm-hero__tissus-link {
+    /* Rapproche le lien du bouton plutôt que de reprendre le même
+       espacement de 28px que le reste de .lmm-hero__inner (voir gap). */
+    margin-top: -14px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: var(--lmm-text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.75;
+    transition: opacity 0.2s;
+  }
+
+  .lmm-hero__tissus-link:hover {
+    opacity: 1;
   }
 
   .lmm-plan {
@@ -528,6 +548,7 @@
   "settings": [
     { "type": "image_picker", "id": "hero_photo", "label": "Photo de fond (laisser vide pour fond ivoire uni)" },
     { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte" },
+    { "type": "text", "id": "tissus_link_label", "label": "Lien sous le bouton — voir les tissus", "default": "Envie de voir les tissus avant de commander ? Prenez rendez-vous" },
 
     { "type": "header", "content": "Plan d'action" },
     { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment procéder" },
