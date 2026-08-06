@@ -3,6 +3,7 @@
 
     <div class="lmm-footer__col lmm-footer__brand">
       <span class="lmm-footer__logo">La Maison M.</span>
+      <span class="lmm-footer__logo-sub">Tailleur sur mesure</span>
       {% if section.settings.tagline != blank %}
         <p class="lmm-footer__tagline">{{ section.settings.tagline }}</p>
       {% endif %}
@@ -85,10 +86,20 @@
   }
 
   .lmm-footer__logo {
+    display: block;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 20px;
-    color: #ffffff;
+    color: var(--lmm-ivoire-pale);
     letter-spacing: 0.04em;
+  }
+
+  .lmm-footer__logo-sub {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux-pale);
+    margin-top: 3px;
   }
 
   .lmm-footer__tagline {
@@ -102,7 +113,7 @@
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #ffffff;
+    color: var(--lmm-ivoire-deep);
     font-weight: 400;
     margin: 0 0 16px;
   }
@@ -118,7 +129,7 @@
 
   .lmm-footer__links a {
     text-decoration: none;
-    color: rgba(245, 240, 235, 0.65);
+    color: var(--lmm-ivoire-pale);
     font-size: 12px;
     letter-spacing: 0.02em;
     transition: color 0.2s;
@@ -135,7 +146,7 @@
   }
 
   .lmm-footer__contact-line a {
-    color: rgba(245, 240, 235, 0.65);
+    color: var(--lmm-ivoire-pale);
     text-decoration: none;
     transition: color 0.2s;
   }
