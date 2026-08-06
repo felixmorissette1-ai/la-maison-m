@@ -59,9 +59,9 @@
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
-            <li>Voir et toucher les tissus par <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">rendez-vous</a></li>
+            <li><span>Voir et toucher les tissus par <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">rendez-vous</a></span></li>
             {% if section.settings.step1_style_advice_label != blank %}
-              <li><a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_label }}</a> disponibles en ligne</li>
+              <li><span><a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_label }}</a> disponibles en ligne</span></li>
             {% endif %}
           </ul>
         </div>
@@ -676,7 +676,7 @@
   }
 
   .lmm-plan__link {
-    color: var(--lmm-bordeaux-soft);
+    color: var(--lmm-bordeaux);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
