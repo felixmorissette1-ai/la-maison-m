@@ -3,38 +3,68 @@
     <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
 
     {% if section.settings.quote_text != blank %}
-      <div class="lmm-stats__quote-wrap">
-        {% if section.settings.quote_description != blank %}
-          <div class="lmm-stats__quote-description">
-            <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
-          </div>
-        {% endif %}
+      <div class="lmm-stats__quote-block">
         <blockquote class="lmm-stats__quote">
           <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
         </blockquote>
+        {% if section.settings.quote_source != blank %}
+          <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
+        {% endif %}
+        {% if section.settings.quote_description != blank %}
+          <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
+            <span>En savoir plus</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="lmm-stats__quote-description" hidden>
+            <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
+          </div>
+        {% endif %}
       </div>
-      {% if section.settings.quote_source != blank %}
-        <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
-      {% endif %}
     {% endif %}
 
     {% if section.settings.quote2_text != blank %}
-      <div class="lmm-stats__quote-wrap lmm-stats__quote-wrap--second">
-        {% if section.settings.quote2_description != blank %}
-          <div class="lmm-stats__quote-description">
-            <p class="lmm-stats__quote-description-text">{{ section.settings.quote2_description }}</p>
-          </div>
-        {% endif %}
+      <div class="lmm-stats__quote-block lmm-stats__quote-block--second">
         <blockquote class="lmm-stats__quote">
           <p class="lmm-stats__quote-text">{{ section.settings.quote2_text }}</p>
         </blockquote>
+        {% if section.settings.quote2_source != blank %}
+          <p class="lmm-stats__quote-source">{{ section.settings.quote2_source }}</p>
+        {% endif %}
+        {% if section.settings.quote2_description != blank %}
+          <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
+            <span>En savoir plus</span>
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <div class="lmm-stats__quote-description" hidden>
+            <p class="lmm-stats__quote-description-text">{{ section.settings.quote2_description }}</p>
+          </div>
+        {% endif %}
       </div>
-      {% if section.settings.quote2_source != blank %}
-        <p class="lmm-stats__quote-source">{{ section.settings.quote2_source }}</p>
-      {% endif %}
     {% endif %}
   </div>
 </section>
+
+<script>
+  (function () {
+    document.querySelectorAll('.lmm-stats__quote-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var desc = btn.nextElementSibling;
+        btn.setAttribute('aria-expanded', String(!expanded));
+        if (!desc) return;
+        if (expanded) {
+          desc.setAttribute('hidden', '');
+        } else {
+          desc.removeAttribute('hidden');
+        }
+      });
+    });
+  })();
+</script>
 
 {% stylesheet %}
   /* Ivoire pâle — inversé avec "Pourquoi nous choisir" (maintenant en
@@ -75,90 +105,106 @@
     max-width: 640px;
   }
 
-  /* Citation vedette — description à gauche (plus petite, texte
-     courant), citation en gros à droite (bordeaux, gros guillemets
-     décoratifs). Une seule mention de source (complète), sous les
-     deux colonnes, pour ne pas la dupliquer. */
-  .lmm-stats__quote-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    column-gap: 56px;
-    align-items: center;
+  /* Citation vedette — centrée, prend toute la largeur de la section.
+     Source toujours visible en dessous. La description (contexte de
+     l'étude) est cachée par défaut, révélée au clic sur la flèche. */
+  .lmm-stats__quote-block {
+    max-width: 100%;
+    text-align: center;
   }
 
-  .lmm-stats__quote-description-text {
-    font-size: 17px;
-    line-height: 1.7;
-    color: var(--lmm-text);
-    margin: 0;
+  .lmm-stats__quote-block--second {
+    margin-top: 64px;
+    padding-top: 64px;
+    border-top: 1px solid var(--lmm-ivoire-line);
   }
 
   .lmm-stats__quote {
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     border: none;
+    max-width: 900px;
   }
 
   .lmm-stats__quote-text {
-    position: relative;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(28px, 3vw, 40px);
     font-weight: 400;
-    line-height: 1.4;
+    line-height: 1.45;
     color: var(--lmm-bordeaux);
     margin: 0;
-    padding-left: 46px;
   }
 
-  .lmm-stats__quote-text::before {
-    content: '\201C';
-    position: absolute;
-    left: -6px;
-    top: -0.28em;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 2.6em;
-    line-height: 1;
-    color: var(--lmm-bordeaux);
-  }
-
+  /* Les 2 guillemets décoratifs sont maintenant de la même taille
+     (Felix a signalé qu'ils étaient inégaux) et coulent dans le texte
+     plutôt que d'être positionnés en absolu, pour rester bien centrés. */
+  .lmm-stats__quote-text::before,
   .lmm-stats__quote-text::after {
-    content: '\201D';
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 1.3em;
     color: var(--lmm-bordeaux);
   }
 
+  .lmm-stats__quote-text::before {
+    content: '\201C';
+    margin-right: 1px;
+  }
+
+  .lmm-stats__quote-text::after {
+    content: '\201D';
+    margin-left: 1px;
+  }
+
   .lmm-stats__quote-source {
-    margin: 24px 0 0;
-    padding-top: 20px;
-    border-top: 1px solid var(--lmm-ivoire-line);
+    margin: 20px 0 0;
     font-size: 13px;
     letter-spacing: 0.02em;
     color: var(--lmm-muted);
   }
 
-  .lmm-stats__quote-wrap--second {
-    margin-top: 56px;
-    padding-top: 56px;
-    border-top: 1px solid var(--lmm-ivoire-line);
+  .lmm-stats__quote-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 18px;
+    background: none;
+    border: none;
+    padding: 6px 2px;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--lmm-bordeaux-soft);
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-stats__quote-toggle svg {
+    transition: transform 0.2s ease;
+  }
+
+  .lmm-stats__quote-toggle[aria-expanded="true"] svg {
+    transform: rotate(180deg);
+  }
+
+  .lmm-stats__quote-description {
+    max-width: 640px;
+    margin: 18px auto 0;
+    text-align: left;
+  }
+
+  .lmm-stats__quote-description[hidden] {
+    display: none;
+  }
+
+  .lmm-stats__quote-description-text {
+    font-size: 18px;
+    line-height: 1.85;
+    color: var(--lmm-text);
+    margin: 0;
   }
 
   @media (max-width: 767px) {
     .lmm-stats__heading {
       font-size: 26px;
-    }
-
-    .lmm-stats__quote-wrap {
-      grid-template-columns: 1fr;
-      row-gap: 28px;
-    }
-
-    .lmm-stats__quote-text,
-    .lmm-stats__quote-text::before {
-      padding-left: 30px;
-    }
-    .lmm-stats__quote-text::before {
-      font-size: 2.1em;
     }
   }
 {% endstylesheet %}
@@ -171,15 +217,15 @@
 
     { "type": "header", "content": "Citation vedette 1 (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Oh, Shafir & Todorov) n'a pas été obtenue." },
-    { "type": "textarea", "id": "quote_description", "label": "Description (colonne gauche)" },
-    { "type": "textarea", "id": "quote_text", "label": "Citation (colonne droite, grande, bordeaux)" },
-    { "type": "text", "id": "quote_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" },
+    { "type": "textarea", "id": "quote_text", "label": "Citation (centrée, grande, bordeaux)" },
+    { "type": "text", "id": "quote_source", "label": "Source complète (visible sous la citation)" },
+    { "type": "textarea", "id": "quote_description", "label": "Description (cachée, révélée au clic sur la flèche)" },
 
     { "type": "header", "content": "Citation vedette 2 (permission requise)" },
     { "type": "paragraph", "content": "Ne pas publier tant que la permission de l'auteur (Willis & Todorov) n'a pas été obtenue." },
-    { "type": "textarea", "id": "quote2_description", "label": "Description (colonne gauche)" },
-    { "type": "textarea", "id": "quote2_text", "label": "Citation (colonne droite, grande, bordeaux)" },
-    { "type": "text", "id": "quote2_source", "label": "Source complète (une seule mention, sous les 2 colonnes)" }
+    { "type": "textarea", "id": "quote2_text", "label": "Citation (centrée, grande, bordeaux)" },
+    { "type": "text", "id": "quote2_source", "label": "Source complète (visible sous la citation)" },
+    { "type": "textarea", "id": "quote2_description", "label": "Description (cachée, révélée au clic sur la flèche)" }
   ],
   "presets": [
     { "name": "Statistiques" }
