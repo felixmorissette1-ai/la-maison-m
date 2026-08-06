@@ -27,7 +27,7 @@
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma demande</button>
     {% else %}
-      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary">Se connecter et envoyer ma demande</a>
+      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" onclick="lmmSauvegarderAideConfig()">Se connecter et envoyer ma demande</a>
     {% endif %}
     <p class="lmm-partenaire__error" id="aide-config-error"></p>
     <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
@@ -59,6 +59,23 @@
 </style>
 
 <script>
+  // Le client n'est pas forcément connecté quand il remplit ce formulaire —
+  // "Se connecter et envoyer ma demande" l'envoie vers /account/login puis
+  // le ramène ici via return_url. Sans ceci, il perdrait ce qu'il a tapé et
+  // devrait tout retaper + recliquer "Envoyer" une fois connecté. On
+  // sauvegarde donc les champs juste avant de partir, et on les restaure +
+  // on soumet automatiquement dès le retour, connecté.
+  function lmmSauvegarderAideConfig() {
+    try {
+      localStorage.setItem('lmm_aide_config_pending', JSON.stringify({
+        prenom: document.getElementById('ac-prenom').value,
+        nom: document.getElementById('ac-nom').value,
+        evenement: document.getElementById('ac-evenement').value,
+        note: document.getElementById('ac-note').value
+      }));
+    } catch (e) {}
+  }
+
   function lmmSoumettreAideConfig() {
     var btn = document.getElementById('aide-config-submit-btn');
     var errEl = document.getElementById('aide-config-error');
@@ -100,6 +117,27 @@
       btn.textContent = 'Envoyer ma demande';
     });
   }
+
+  {% if customer %}
+    // De retour de /account/login, maintenant connecté : restaure ce que le
+    // client avait tapé avant de partir et envoie la demande tout de suite,
+    // sans qu'il ait à retaper ou recliquer quoi que ce soit.
+    (function () {
+      var pending;
+      try {
+        pending = JSON.parse(localStorage.getItem('lmm_aide_config_pending') || 'null');
+      } catch (e) {
+        pending = null;
+      }
+      if (!pending) return;
+      localStorage.removeItem('lmm_aide_config_pending');
+      if (pending.prenom) document.getElementById('ac-prenom').value = pending.prenom;
+      if (pending.nom) document.getElementById('ac-nom').value = pending.nom;
+      document.getElementById('ac-evenement').value = pending.evenement || '';
+      document.getElementById('ac-note').value = pending.note || '';
+      lmmSoumettreAideConfig();
+    })();
+  {% endif %}
 </script>
 
 {% schema %}
