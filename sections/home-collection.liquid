@@ -36,6 +36,10 @@
     var track = document.getElementById('lmm-home-collection-track');
     if (!track) return;
 
+    // 7s plutôt que 4s — avec seulement 4 produits pour l'instant, les
+    // cartes changeaient trop vite pour avoir le temps d'être vues.
+    var AUTO_ADVANCE_MS = 7000;
+
     function avancer() {
       var card = track.querySelector('.lmm-home-collection__card');
       if (!card) return;
@@ -46,7 +50,7 @@
       track.scrollTo({ left: atEnd ? 0 : track.scrollLeft + cardWidth, behavior: 'smooth' });
     }
 
-    var timer = setInterval(avancer, 4000);
+    var timer = setInterval(avancer, AUTO_ADVANCE_MS);
 
     // L'interaction manuelle (survol, défilement tactile/molette) met
     // l'avancement automatique en pause plutôt que de l'annuler
@@ -55,10 +59,10 @@
     function pauserTemporairement() {
       clearInterval(timer);
       clearTimeout(resumeTimeout);
-      resumeTimeout = setTimeout(function () { timer = setInterval(avancer, 4000); }, 6000);
+      resumeTimeout = setTimeout(function () { timer = setInterval(avancer, AUTO_ADVANCE_MS); }, 6000);
     }
     track.addEventListener('mouseenter', function () { clearInterval(timer); });
-    track.addEventListener('mouseleave', function () { timer = setInterval(avancer, 4000); });
+    track.addEventListener('mouseleave', function () { timer = setInterval(avancer, AUTO_ADVANCE_MS); });
     track.addEventListener('touchstart', pauserTemporairement, { passive: true });
     track.addEventListener('wheel', pauserTemporairement, { passive: true });
   })();
