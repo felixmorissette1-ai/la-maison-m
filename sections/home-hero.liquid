@@ -46,20 +46,17 @@
             <path d="M4 26h36"/>
             <rect x="14" y="30" width="10" height="10" rx="1"/>
           </svg>
-          <p class="lmm-plan__card-title">{{ section.settings.step1_label }}</p>
-          <p class="lmm-plan__tag">{{ section.settings.step1_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
-            <li>Conseil stylistique</li>
+            {% if section.settings.step1_style_advice_label != blank %}
+              <li>{{ section.settings.step1_style_advice_label }} <a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_link_label }}</a></li>
+            {% endif %}
           </ul>
           <a href="{{ section.settings.step1_url }}" class="lmm-plan__btn">{{ section.settings.step1_btn_label }}</a>
         </div>
-        {% if section.settings.help_link_label != blank %}
-          <a href="{{ section.settings.help_link_url | default: '/pages/aide-configuration' }}" class="lmm-plan__help">{{ section.settings.help_link_label }} →</a>
-        {% endif %}
       </div>
 
       <div class="lmm-plan__step">
@@ -75,8 +72,6 @@
             <path d="M12 14v6M17 14v4M22 14v6M27 14v4M32 14v6"/>
             <path d="M22 32v6"/>
           </svg>
-          <p class="lmm-plan__card-title">{{ section.settings.step2_label }}</p>
-          <p class="lmm-plan__tag">{{ section.settings.step2_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
             {% for line in step2_lines %}
@@ -104,8 +99,6 @@
             <line x1="10" y1="19" x2="10" y2="34" stroke-opacity="0.4"/>
             <line x1="34" y1="19" x2="34" y2="34" stroke-opacity="0.4"/>
           </svg>
-          <p class="lmm-plan__card-title">{{ section.settings.step3_label }}</p>
-          <p class="lmm-plan__tag">{{ section.settings.step3_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
             {% for line in step3_lines %}
@@ -318,12 +311,17 @@
     text-align: left;
   }
 
-  /* Boîte encadrée — icône, titre répété, étiquette, points, bouton.
-     Bordure noire (pas bordeaux) pour rester dans le registre plus neutre
+  /* Boîte encadrée — icône, points, bouton. flex:1 + le bouton en
+     margin-top:auto font que les 3 cartes restent à la même hauteur et
+     que les boutons s'alignent tous en bas, peu importe le nombre de
+     points dans chaque carte (voir .lmm-plan__row align-items:stretch
+     qui donne d'abord aux 3 .lmm-plan__step la même hauteur). Bordure
+     noire (pas bordeaux) pour rester dans le registre plus neutre
      demandé pour les pastilles/boutons de cette zone du site. */
   .lmm-plan__card {
     box-sizing: border-box;
     width: 100%;
+    flex: 1;
     margin-top: 26px;
     text-align: center;
     display: flex;
@@ -331,28 +329,12 @@
     align-items: center;
     border: 1px solid var(--lmm-text);
     border-radius: 10px;
-    padding: 32px 24px 28px;
+    padding: 36px 28px 28px;
   }
 
   .lmm-plan__icon {
-    color: var(--lmm-text);
-    margin-bottom: 18px;
-  }
-
-  .lmm-plan__card-title {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-weight: 600;
-    font-size: 16px;
-    color: var(--lmm-text);
-    margin: 0 0 8px;
-  }
-
-  .lmm-plan__tag {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
     color: var(--lmm-bordeaux);
-    margin: 0 0 18px;
+    margin-bottom: 26px;
   }
 
   /* Regroupe numéro + titre pour que la flèche entre étapes se centre
@@ -453,7 +435,9 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
-    margin-top: 24px;
+    /* auto pousse le bouton en bas de la carte, peu importe combien de
+       points la liste contient — garde les 3 boutons alignés. */
+    margin-top: auto;
     background: var(--lmm-bordeaux);
     color: var(--lmm-ivoire);
     text-decoration: none;
@@ -467,15 +451,6 @@
 
   .lmm-plan__btn:hover {
     opacity: 0.85;
-  }
-
-  .lmm-plan__help {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--lmm-bordeaux-soft);
-    text-decoration: underline;
-    text-underline-offset: 3px;
   }
 
   @media (max-width: 767px) {
@@ -503,22 +478,19 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "5 minutes" },
-    { "type": "text", "id": "step1_tag", "label": "Étape 1 — étiquette", "default": "Démarrage rapide" },
+    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "Configurez votre complet vous-même en ligne, en quelques clics\nVisitez une couturière partenaire pour voir et toucher les tissus en personne" },
+    { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — texte avant le lien conseil stylistique", "default": "Conseil stylistique disponible — réponse en moins de 24h." },
+    { "type": "text", "id": "step1_style_advice_link_label", "label": "Étape 1 — texte du lien conseil stylistique", "default": "Cliquez ici" },
+    { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (vide = /pages/aide-configuration)" },
     { "type": "text", "id": "step1_btn_label", "label": "Étape 1 — texte du bouton (dans la carte)", "default": "Configurer mon complet" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "30 minutes" },
-    { "type": "text", "id": "step2_tag", "label": "Étape 2 — étiquette", "default": "Expertise professionnelle" },
+    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "Rencontrez une couturière partenaire près de chez vous\nVos mensurations exactes sont prises en 30 minutes" },
     { "type": "text", "id": "step2_btn_label", "label": "Étape 2 — texte du bouton (dans la carte)", "default": "Prendre rendez-vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
     { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" },
-    { "type": "text", "id": "step3_tag", "label": "Étape 3 — étiquette", "default": "Allure et ambition" },
-    { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Démarrer ma création" },
-
-    { "type": "text", "id": "help_link_label", "label": "Lien d'aide (sous la carte 1)", "default": "Besoin d'aide ? Écrivez-nous" },
-    { "type": "url", "id": "help_link_url", "label": "Lien d'aide — URL (vide = /pages/aide-configuration)" }
+    { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Démarrer ma création" }
   ],
   "presets": [
     { "name": "Hero — Accueil" }

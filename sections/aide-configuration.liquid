@@ -6,38 +6,32 @@
     <p class="lmm-partenaire__sub">{{ section.settings.sous_titre }}</p>
   </div>
 
-  {% if customer %}
-    <form id="aide-config-form" class="lmm-partenaire__form" onsubmit="event.preventDefault(); lmmSoumettreAideConfig();">
-      <div class="lmm-partenaire__field">
-        <label for="ac-prenom">Prénom</label>
-        <input type="text" id="ac-prenom" name="prenom" value="{{ customer.first_name | escape }}" required>
-      </div>
-      <div class="lmm-partenaire__field">
-        <label for="ac-nom">Nom</label>
-        <input type="text" id="ac-nom" name="nom" value="{{ customer.last_name | escape }}" required>
-      </div>
-      <div class="lmm-partenaire__field">
-        <label for="ac-evenement">Événement</label>
-        <input type="text" id="ac-evenement" name="evenement" placeholder="Mariage, travail, occasion spéciale…">
-      </div>
-      <div class="lmm-partenaire__field">
-        <label for="ac-note">Note</label>
-        <textarea id="ac-note" name="note" rows="5" placeholder="Dites-nous en un peu plus sur ce que vous cherchez."></textarea>
-      </div>
+  <form id="aide-config-form" class="lmm-partenaire__form" onsubmit="event.preventDefault(); {% if customer %}lmmSoumettreAideConfig();{% endif %}">
+    <div class="lmm-partenaire__field">
+      <label for="ac-prenom">Prénom</label>
+      <input type="text" id="ac-prenom" name="prenom" value="{{ customer.first_name | escape }}" required>
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="ac-nom">Nom</label>
+      <input type="text" id="ac-nom" name="nom" value="{{ customer.last_name | escape }}" required>
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="ac-evenement">Événement</label>
+      <input type="text" id="ac-evenement" name="evenement" placeholder="Mariage, travail, occasion spéciale…">
+    </div>
+    <div class="lmm-partenaire__field">
+      <label for="ac-note">Note</label>
+      <textarea id="ac-note" name="note" rows="5" placeholder="Dites-nous en un peu plus sur ce que vous cherchez."></textarea>
+    </div>
+    {% if customer %}
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma demande</button>
-      <p class="lmm-partenaire__error" id="aide-config-error"></p>
-      <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
-    </form>
-  {% else %}
-    <div class="lmm-partenaire__gate">
-      <p>Connectez-vous ou créez un compte pour nous écrire.</p>
-      <div class="lmm-partenaire__gate-actions">
-        <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary">Se connecter</a>
-        <a href="/account/register?return_url={{ request.path | url_encode }}" class="lmm-partenaire__gate-link">Créer un compte</a>
-      </div>
-    </div>
-  {% endif %}
+    {% else %}
+      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary">Se connecter et envoyer ma demande</a>
+    {% endif %}
+    <p class="lmm-partenaire__error" id="aide-config-error"></p>
+    <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
+  </form>
 </div>
 
 <style>
@@ -62,10 +56,6 @@
   .lmm-partenaire__field textarea:focus { outline: none; border-color: var(--lmm-bordeaux); }
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
-  .lmm-partenaire__gate { text-align: center; padding: 32px 0; }
-  .lmm-partenaire__gate p { font-size: 15px; color: var(--lmm-muted); margin: 0 0 24px; }
-  .lmm-partenaire__gate-actions { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-  .lmm-partenaire__gate-link { font-size: 12px; letter-spacing: 0.06em; color: var(--lmm-muted); text-decoration: underline; }
 </style>
 
 <script>
