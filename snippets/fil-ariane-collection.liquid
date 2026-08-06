@@ -1,6 +1,6 @@
 {% comment %} Paramètre: etape_active (1-5) {% endcomment %}
 <style>
-  .lmm-fil { background: var(--lmm-surface); border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 5%; overflow-x: auto; }
+  .lmm-fil { background: var(--lmm-surface); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 5%; overflow-x: auto; }
   .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
   .lmm-fil__step {
     display: flex; align-items: center; gap: 10px; padding: 0 20px;
@@ -18,8 +18,8 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; font-weight: 600;
   }
-  .lmm-fil__step--active .lmm-fil__num { background: var(--lmm-gold); color: #fff; }
-  .lmm-fil__step--done .lmm-fil__num { background: var(--lmm-text); color: #fff; }
+  .lmm-fil__step--active .lmm-fil__num { background: var(--lmm-gold); color: var(--lmm-white); }
+  .lmm-fil__step--done .lmm-fil__num { background: var(--lmm-text); color: var(--lmm-white); }
   .lmm-fil__sep { color: var(--lmm-border); font-size: 14px; display: flex; align-items: center; }
 </style>
 <nav class="lmm-fil">

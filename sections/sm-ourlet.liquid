@@ -15,8 +15,8 @@
 
   /* Grille pantalon (3 colonnes) */
   .lmm-smo-pant__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
-  .lmm-smo-pant__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
-  .lmm-smo-pant__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-smo-pant__card { background: var(--lmm-white); border: 1px solid rgba(var(--lmm-text-rgb),0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+  .lmm-smo-pant__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-smo-pant__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-smo-pant__card-photo { width: 100%; aspect-ratio: 4/3; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-smo-pant__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
@@ -36,8 +36,8 @@
 
   /* Grille ourlet (3 colonnes — même largeur que pantalon) */
   .lmm-smo__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 32px; }
-  .lmm-smo__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
-  .lmm-smo__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-smo__card { background: var(--lmm-white); border: 1px solid rgba(var(--lmm-text-rgb),0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+  .lmm-smo__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-smo__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-smo__card-photo { width: 100%; aspect-ratio: 4/3; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-smo__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
@@ -48,7 +48,7 @@
   .lmm-smo__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; }
 
   .lmm-smo__nav { display: flex; justify-content: center; }
-  .lmm-sm-btn { display: inline-block; background: var(--lmm-text); color: #ffffff; border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
+  .lmm-sm-btn { display: inline-block; background: var(--lmm-text); color: var(--lmm-white); border: none; padding: 16px 36px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.2s; opacity: 0.35; pointer-events: none; }
   .lmm-sm-btn:hover { background: var(--lmm-text); }
   .lmm-sm-btn.active { opacity: 1; pointer-events: auto; }
 

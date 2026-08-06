@@ -225,7 +225,7 @@
 
   .lmm-product__photo {
     background: var(--lmm-surface);
-    border: 1px solid rgba(28,28,28,0.08);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.08);
     padding: 48px;
     display: flex;
     align-items: center;
@@ -308,7 +308,7 @@
   .lmm-product__tissu-swatch {
     width: 48px;
     height: 48px;
-    border: 1px solid rgba(28,28,28,0.12);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.12);
     overflow: hidden;
     flex-shrink: 0;
   }
@@ -359,14 +359,14 @@
   .lmm-product__description-section {
     margin-top: 32px;
     padding-top: 28px;
-    border-top: 1px solid rgba(28,28,28,0.08);
+    border-top: 1px solid rgba(var(--lmm-text-rgb),0.08);
   }
 
   .lmm-product__description-text {
     font-family: Georgia, serif;
     font-size: 15px;
     font-weight: 400;
-    color: rgba(28,28,28,0.75);
+    color: rgba(var(--lmm-text-rgb),0.75);
     line-height: 1.9;
   }
 
@@ -383,7 +383,7 @@
   .lmm-product__variant-swatch {
     width: 48px;
     height: 48px;
-    border: 1px solid rgba(28,28,28,0.12);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.12);
     overflow: hidden;
     cursor: pointer;
     flex-shrink: 0;
@@ -421,7 +421,7 @@
     gap: 12px;
     width: 100%;
     background: var(--lmm-text);
-    color: #ffffff;
+    color: var(--lmm-white);
     text-decoration: none;
     padding: 20px 36px;
     font-size: 11px;
@@ -457,7 +457,7 @@
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    border: 1px solid rgba(28,28,28,0.15);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.15);
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     transition: border-color 0.2s, color 0.2s;
     box-sizing: border-box;
@@ -469,7 +469,7 @@
   }
 
   .lmm-related {
-    border-top: 1px solid rgba(28,28,28,0.08);
+    border-top: 1px solid rgba(var(--lmm-text-rgb),0.08);
     padding-top: 64px;
   }
 
@@ -493,9 +493,9 @@
     display: flex;
     gap: 16px;
     align-items: center;
-    background: #fff;
+    background: var(--lmm-white);
     padding: 20px;
-    border: 1px solid rgba(28,28,28,0.06);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.06);
   }
 
   .lmm-related__photo {

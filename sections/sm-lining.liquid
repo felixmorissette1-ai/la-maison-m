@@ -10,8 +10,8 @@
   .lmm-sm-lining__title { font-family: Georgia, serif; font-size: 26px; font-weight: 400; color: var(--lmm-text); margin-bottom: 4px; }
   .lmm-sm-lining__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.5; }
   .lmm-sm-lining__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 0; }
-  .lmm-sm-lining__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
-  .lmm-sm-lining__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-sm-lining__card { background: var(--lmm-white); border: 1px solid rgba(var(--lmm-text-rgb),0.1); cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; overflow: hidden; }
+  .lmm-sm-lining__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-sm-lining__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-sm-lining__card-photo { width: 100%; aspect-ratio: 1/1; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; overflow: hidden; }
   .lmm-sm-lining__card-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }

@@ -15,11 +15,11 @@
     gap: 14px; flex: 1; min-height: 0; margin-bottom: 16px;
   }
   .lmm-pieces__card {
-    background: #fff; border: 1px solid rgba(28,28,28,0.1);
+    background: var(--lmm-white); border: 1px solid rgba(var(--lmm-text-rgb),0.1);
     cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
     display: flex; flex-direction: column; overflow: hidden; min-height: 0;
   }
-  .lmm-pieces__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-pieces__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-pieces__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-pieces__card-photo {
     width: 100%; flex: 1; min-height: 0;

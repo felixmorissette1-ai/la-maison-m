@@ -127,7 +127,7 @@
     font-family: Georgia, serif;
     font-size: clamp(36px, 5vw, 64px);
     font-weight: 400;
-    color: #ffffff;
+    color: var(--lmm-white);
     line-height: 1.1;
     margin-bottom: 20px;
   }
@@ -137,7 +137,7 @@
   }
 
   .lmm-collection__sub {
-    color: rgba(245,240,235,0.55);
+    color: rgba(var(--lmm-ivoire-rgb),0.55);
     font-size: 15px;
     font-weight: 300;
     line-height: 1.7;
@@ -146,7 +146,7 @@
 
   .lmm-collection__toolbar {
     background: var(--lmm-surface);
-    border-bottom: 1px solid rgba(28,28,28,0.08);
+    border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08);
     position: sticky;
     top: 104px;
     z-index: 10;
@@ -214,7 +214,7 @@
     text-decoration: none;
     color: inherit;
     display: block;
-    background: #fff;
+    background: var(--lmm-white);
   }
 
   .lmm-suit-card__image {
@@ -271,8 +271,8 @@
     position: absolute;
     top: 16px;
     right: 16px;
-    background: rgba(28,28,28,0.7);
-    color: #ffffff;
+    background: rgba(var(--lmm-text-rgb),0.7);
+    color: var(--lmm-white);
     font-size: 9px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -289,7 +289,7 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    border: 1px solid rgba(28,28,28,0.15);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.15);
     background-color: var(--lmm-surface);
     background-size: cover;
     background-position: center;
@@ -331,7 +331,7 @@
 
   .lmm-collection__cta {
     background: var(--lmm-surface);
-    border: 1px solid rgba(28,28,28,0.08);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.08);
     padding: 80px;
     text-align: center;
   }

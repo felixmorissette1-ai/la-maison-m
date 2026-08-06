@@ -1,6 +1,6 @@
 {% comment %} Paramètre: etape_active (1-8) — Configurateur Custom {% endcomment %}
 <style>
-  .lmm-filc { background: var(--lmm-surface); border-bottom: 1px solid rgba(28,28,28,0.08); padding: 0 4%; overflow-x: auto; }
+  .lmm-filc { background: var(--lmm-surface); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 4%; overflow-x: auto; }
   .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
   .lmm-filc__step {
     display: flex; align-items: center; gap: 8px; padding: 0 10px;
@@ -18,8 +18,8 @@
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; font-weight: 600;
   }
-  .lmm-filc__step--active .lmm-filc__num { background: var(--lmm-gold); color: #fff; }
-  .lmm-filc__step--done .lmm-filc__num { background: var(--lmm-text); color: #fff; }
+  .lmm-filc__step--active .lmm-filc__num { background: var(--lmm-gold); color: var(--lmm-white); }
+  .lmm-filc__step--done .lmm-filc__num { background: var(--lmm-text); color: var(--lmm-white); }
   .lmm-filc__sep { color: var(--lmm-border); font-size: 14px; display: flex; align-items: center; flex-shrink: 0; }
 </style>
 <nav class="lmm-filc">

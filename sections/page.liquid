@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-canva__title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: var(--lmm-text); margin-bottom: 6px; }
   .lmm-canva__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; line-height: 1.6; }
   .lmm-canva__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; flex: 1; min-height: 0; margin-bottom: 20px; padding-top: 14px; }
-  .lmm-canva__card { background: #fff; border: 2px solid rgba(28,28,28,0.1); padding: 0; cursor: pointer; position: relative; transition: border-color 0.2s; display: flex; flex-direction: column; overflow: visible; transform: none !important; }
-  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); transform: none !important; }
+  .lmm-canva__card { background: var(--lmm-white); border: 2px solid rgba(var(--lmm-text-rgb),0.1); padding: 0; cursor: pointer; position: relative; transition: border-color 0.2s; display: flex; flex-direction: column; overflow: visible; transform: none !important; }
+  .lmm-canva__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); transform: none !important; }
   .lmm-canva__card *, .lmm-canva__card *:hover { transform: none !important; }
   .lmm-canva__card img, .lmm-canva__card img:hover { transform: none !important; transition: none !important; }
   .lmm-canva__card--selected,
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-stepper { display: flex; align-items: center; gap: 0; }
   .lmm-stepper__step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .lmm-stepper__dot { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid var(--lmm-border); background: transparent; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 600; color: var(--lmm-border); transition: all 0.2s; }
-  .lmm-stepper__step--done .lmm-stepper__dot { background: var(--lmm-text); border-color: var(--lmm-text); color: #fff; }
-  .lmm-stepper__step--active .lmm-stepper__dot { background: var(--lmm-gold); border-color: var(--lmm-gold); color: #fff; }
+  .lmm-stepper__step--done .lmm-stepper__dot { background: var(--lmm-text); border-color: var(--lmm-text); color: var(--lmm-white); }
+  .lmm-stepper__step--active .lmm-stepper__dot { background: var(--lmm-gold); border-color: var(--lmm-gold); color: var(--lmm-white); }
   .lmm-stepper__label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-border); white-space: nowrap; }
   .lmm-stepper__step--done .lmm-stepper__label { color: var(--lmm-muted); }
   .lmm-stepper__step--done { cursor: pointer; }
@@ -445,8 +445,8 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-recap__title { font-family: Georgia, serif; font-size: 28px; font-weight: 400; color: var(--lmm-text); margin-bottom: 6px; }
   .lmm-recap__sub { font-size: 13px; color: var(--lmm-muted); font-weight: 300; margin-bottom: 32px; }
   .lmm-recap__rows { display: flex; flex-direction: column; gap: 0; }
-  .lmm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(28,28,28,0.08); }
-  .lmm-recap__row:first-child { border-top: 1px solid rgba(28,28,28,0.08); }
+  .lmm-recap__row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); }
+  .lmm-recap__row:first-child { border-top: 1px solid rgba(var(--lmm-text-rgb),0.08); }
   .lmm-recap__key { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-muted); }
   .lmm-recap__val { font-family: Georgia, serif; font-size: 16px; color: var(--lmm-text); }
   .lmm-recap__val--empty { color: var(--lmm-border); font-style: italic; font-size: 13px; font-family: inherit; }
@@ -470,12 +470,12 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-recap__alert { background: var(--lmm-surface); border-left: 3px solid var(--lmm-gold); padding: 12px 16px; margin-bottom: 4px; }
   .lmm-recap__alert p { font-size: 11px; color: var(--lmm-muted); line-height: 1.7; margin: 0; }
   .lmm-recap__alert p strong { color: var(--lmm-text); }
-  .lmm-recap__couturiere-card { border: 1px solid rgba(28,28,28,0.12); padding: 14px 16px; margin-top: 12px; display: none; }
+  .lmm-recap__couturiere-card { border: 1px solid rgba(var(--lmm-text-rgb),0.12); padding: 14px 16px; margin-top: 12px; display: none; }
   .lmm-recap__couturiere-card-label { font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-muted); margin-bottom: 6px; }
   .lmm-recap__couturiere-card-nom { font-family: Georgia, serif; font-size: 16px; color: var(--lmm-text); margin-bottom: 2px; }
   .lmm-recap__couturiere-card-detail { font-size: 11px; color: var(--lmm-muted); }
   .lmm-recap__couturieres-list { display: none; flex-direction: column; gap: 8px; margin-top: 12px; }
-  .lmm-recap__couturiere-option { border: 1px solid rgba(28,28,28,0.1); padding: 12px 14px; cursor: pointer; transition: border-color 0.2s; text-align: left; background: #fff; width: 100%; }
+  .lmm-recap__couturiere-option { border: 1px solid rgba(var(--lmm-text-rgb),0.1); padding: 12px 14px; cursor: pointer; transition: border-color 0.2s; text-align: left; background: var(--lmm-white); width: 100%; }
   .lmm-recap__couturiere-option:hover { border-color: var(--lmm-text); }
   .lmm-recap__couturiere-option-nom { font-family: Georgia, serif; font-size: 14px; color: var(--lmm-text); }
   .lmm-recap__couturiere-option-ville { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); margin-top: 2px; }
@@ -488,9 +488,9 @@ document.addEventListener('DOMContentLoaded', function() {
   .lmm-recap__btn-secondary { display: flex; align-items: center; justify-content: center; width: 100%; background: transparent; color: var(--lmm-text); border: 1.5px solid var(--lmm-text); padding: 16px 24px; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; text-decoration: none; transition: background 0.2s, color 0.2s; cursor: pointer; box-sizing: border-box; }
   .lmm-recap__btn-secondary:hover { background: var(--lmm-text); color: var(--lmm-white); }
   .lmm-recap__btn-group { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
-  .lmm-recap__modal-overlay { display: none; position: fixed; inset: 0; background: rgba(28,28,28,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .lmm-recap__modal-overlay { display: none; position: fixed; inset: 0; background: rgba(var(--lmm-text-rgb),0.5); z-index: 1000; align-items: center; justify-content: center; }
   .lmm-recap__modal-overlay.open { display: flex; }
-  .lmm-recap__modal { background: #fff; padding: 40px; max-width: 420px; width: 90%; }
+  .lmm-recap__modal { background: var(--lmm-white); padding: 40px; max-width: 420px; width: 90%; }
   .lmm-recap__modal h3 { font-family: Georgia, serif; font-size: 20px; font-weight: 400; color: var(--lmm-text); margin-bottom: 10px; }
   .lmm-recap__modal p { font-size: 12px; color: var(--lmm-muted); line-height: 1.8; margin-bottom: 28px; }
   .lmm-recap__modal-btns { display: flex; flex-direction: column; gap: 10px; }
@@ -550,11 +550,11 @@ document.addEventListener('DOMContentLoaded', function() {
       </div>
 
       <div style="margin-top: 12px;">
-        <div class="lmm-recap__price-row" style="border-top: 1px solid rgba(28,28,28,0.08);">
+        <div class="lmm-recap__price-row" style="border-top: 1px solid rgba(var(--lmm-text-rgb),0.08);">
           <span class="lmm-recap__price-label">Prix du modèle</span>
           <span class="lmm-recap__price-note" id="recap-prix-base" style="font-size:14px; color:var(--lmm-text);">—</span>
         </div>
-        <div class="lmm-recap__price-row" id="recap-row-surcharge" style="display:none; border-top: 1px solid rgba(28,28,28,0.05);">
+        <div class="lmm-recap__price-row" id="recap-row-surcharge" style="display:none; border-top: 1px solid rgba(var(--lmm-text-rgb),0.05);">
           <span class="lmm-recap__price-label" id="recap-surcharge-label">Supplément construction</span>
           <span class="lmm-recap__price-note" id="recap-prix-surcharge" style="font-size:14px; color:var(--lmm-text);">—</span>
         </div>
@@ -704,7 +704,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {% stylesheet %}
   .lmm-page__inner { max-width: 1280px; margin: 0 auto; padding: 64px 32px; }
   .lmm-page__title { font-family: Georgia, serif; font-size: 40px; font-weight: 400; color: var(--lmm-text); margin-bottom: 32px; }
-  .lmm-page__content { font-size: 15px; color: rgba(28,28,28,0.7); line-height: 1.8; }
+  .lmm-page__content { font-size: 15px; color: rgba(var(--lmm-text-rgb),0.7); line-height: 1.8; }
 {% endstylesheet %}
 
 {% schema %}

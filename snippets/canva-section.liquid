@@ -11,8 +11,8 @@
   .lmm-canva__title { font-family: Georgia, serif; font-size: 36px; font-weight: 400; color: var(--lmm-text); margin-bottom: 12px; }
   .lmm-canva__sub { font-size: 14px; color: var(--lmm-muted); font-weight: 300; line-height: 1.7; }
   .lmm-canva__grid { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
-  .lmm-canva__card { background: #fff; border: 1px solid rgba(28,28,28,0.1); padding: 24px; cursor: pointer; position: relative; transition: border-color 0.2s; display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center; }
-  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); }
+  .lmm-canva__card { background: var(--lmm-white); border: 1px solid rgba(var(--lmm-text-rgb),0.1); padding: 24px; cursor: pointer; position: relative; transition: border-color 0.2s; display: grid; grid-template-columns: 80px 1fr; gap: 20px; align-items: center; }
+  .lmm-canva__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); }
   .lmm-canva__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-canva__card--recommended { border-color: var(--lmm-gold); }
   .lmm-badge-recommended { position: absolute; top: -10px; left: 20px; background: var(--lmm-gold); color: var(--lmm-text); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 12px; font-weight: 600; white-space: nowrap; }
@@ -32,12 +32,12 @@
 
   /* Panneau droit — aperçu */
   .lmm-canva__preview { position: sticky; top: 100px; }
-  .lmm-canva__preview-box { background: var(--lmm-surface); border: 1px solid rgba(28,28,28,0.08); padding: 32px 24px; }
+  .lmm-canva__preview-box { background: var(--lmm-surface); border: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 32px 24px; }
   .lmm-canva__preview-label { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lmm-muted); margin-bottom: 20px; }
   .lmm-canva__preview-suit { width: 100%; aspect-ratio: 3/4; background: var(--lmm-surface); display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
   .lmm-canva__preview-suit-placeholder { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); text-align: center; }
-  .lmm-canva__preview-summary { border-top: 1px solid rgba(28,28,28,0.08); padding-top: 20px; }
-  .lmm-canva__preview-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(28,28,28,0.05); }
+  .lmm-canva__preview-summary { border-top: 1px solid rgba(var(--lmm-text-rgb),0.08); padding-top: 20px; }
+  .lmm-canva__preview-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.05); }
   .lmm-canva__preview-row:last-child { border-bottom: none; }
   .lmm-canva__preview-key { font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--lmm-muted); }
   .lmm-canva__preview-val { font-size: 13px; font-weight: 500; color: var(--lmm-text); }

@@ -182,7 +182,7 @@
     color: var(--lmm-muted);
     text-transform: uppercase;
     padding-bottom: 16px;
-    border-bottom: 1px solid rgba(28,28,28,0.12);
+    border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.12);
   }
 
   .lmm-cart__subtotal-amount {
@@ -200,7 +200,7 @@
 
   .lmm-cart__checkout-btn {
     background: var(--lmm-text);
-    color: #ffffff;
+    color: var(--lmm-white);
     border: none;
     padding: 16px 40px;
     font-size: 12px;
@@ -286,12 +286,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(28,28,28,0.08);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.08);
     transition: border-color 0.2s;
   }
 
   .lmm-cart__upsell-card:hover .lmm-cart__upsell-photo {
-    border-color: rgba(28,28,28,0.3);
+    border-color: rgba(var(--lmm-text-rgb),0.3);
   }
 
   .lmm-cart__upsell-photo img {

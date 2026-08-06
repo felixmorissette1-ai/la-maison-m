@@ -28,8 +28,8 @@
     margin-bottom: 16px;
   }
   .lmm-canva__card {
-    background: #fff;
-    border: 1px solid rgba(28,28,28,0.1);
+    background: var(--lmm-white);
+    border: 1px solid rgba(var(--lmm-text-rgb),0.1);
     cursor: pointer;
     position: relative;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -38,7 +38,7 @@
     overflow: hidden;
     min-height: 0;
   }
-  .lmm-canva__card:hover { border-color: rgba(28,28,28,0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .lmm-canva__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-canva__card--selected { border: 2px solid var(--lmm-text) !important; }
   .lmm-canva__card--recommended { border-color: var(--lmm-gold); }
   .lmm-badge-recommended {
