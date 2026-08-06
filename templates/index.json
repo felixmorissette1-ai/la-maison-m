@@ -10,15 +10,16 @@
         "step1_duration": "5 minutes",
         "step1_url": "/pages/sur-mesure",
         "step1_intro": "Configurez votre complet de A à Z.",
-        "step1_bullets": "",
+        "step1_bullets": "Possibilité de commander un complet pré-configuré de la collection",
+        "step1_style_advice_label": "Conseil stylistique disponible en ligne",
         "step2_label": "Rendez-vous mensurations",
         "step2_duration": "30 minutes",
-        "step2_intro": "Un ajustement parfait, pris par un professionnel.",
-        "step2_bullets": "",
+        "step2_intro": "Des mensurations prises avec exactitude par des professionnels.",
+        "step2_bullets": "Prise de rendez-vous rapide et flexible",
         "step3_label": "Recevez votre complet",
         "step3_duration": "4-8 semaines",
         "step3_intro": "Un complet ajusté à votre silhouette, à la hauteur de vos ambitions.",
-        "step3_bullets": "Livraison à domicile\nRetouches gratuites au besoin"
+        "step3_bullets": "Livraison à domicile\nRetouches incluses au besoin"
       }
     },
     "collection": {
