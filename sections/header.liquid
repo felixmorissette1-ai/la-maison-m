@@ -1,16 +1,25 @@
 <header class="lmm-header full-width">
   <div class="lmm-header__inner">
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--toggle">
+      <button type="button" class="lmm-menu-toggle" aria-expanded="false" aria-controls="lmm-mobile-nav" onclick="toggleMobileNav()">
+        <span class="lmm-menu-toggle__bar"></span>
+        <span class="lmm-menu-toggle__bar"></span>
+        <span class="lmm-menu-toggle__bar"></span>
+        <span class="lmm-visually-hidden">Menu</span>
+      </button>
+    </div>
+
+    <div class="lmm-header__cell lmm-header__cell--nav">
       <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
     </div>
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--nav">
       <a href="/collections/frontpage" class="lmm-nav-link{% if request.path contains '/collections/frontpage' %} lmm-nav-link--active{% endif %}">Collection</a>
     </div>
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--nav">
       <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemise</a>
     </div>
 
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--logo">
       <a href="{{ routes.root_url }}" class="lmm-header__logo">
         {% if section.settings.logo_image %}
           <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
@@ -21,11 +30,11 @@
       </a>
     </div>
 
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--nav">
       <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
     </div>
 
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--nav">
       {% assign now_ts = 'now' | date: '%s' %}
       {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
       {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
@@ -35,7 +44,7 @@
       {% endif %}
     </div>
 
-    <div class="lmm-header__cell">
+    <div class="lmm-header__cell lmm-header__cell--icons">
       <div class="lmm-header__icons">
         <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
           {{ 'icon-cart.svg' | inline_asset_content }}
@@ -53,6 +62,19 @@
     </div>
   </div>
 </header>
+
+<div id="lmm-mobile-nav-backdrop" class="lmm-mobile-nav__backdrop" onclick="fermerMobileNav()"></div>
+<nav id="lmm-mobile-nav" class="lmm-mobile-nav" aria-hidden="true">
+  <a href="/pages/sur-mesure" class="lmm-mobile-nav__link{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurateur</a>
+  <a href="/collections/frontpage" class="lmm-mobile-nav__link{% if request.path contains '/collections/frontpage' %} lmm-mobile-nav__link--active{% endif %}">Collection</a>
+  <a href="/collections/chemises" class="lmm-mobile-nav__link{% if request.path contains '/collections/chemises' %} lmm-mobile-nav__link--active{% endif %}">Chemise</a>
+  <a href="/pages/a-propos" class="lmm-mobile-nav__link{% if request.path contains 'a-propos' %} lmm-mobile-nav__link--active{% endif %}">À propos</a>
+  {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+    <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirGestionModal()">Gestion du rendez-vous</a>
+  {% else %}
+    <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
+  {% endif %}
+</nav>
 
 <div class="lmm-cal-modal" id="lmm-localisation-modal" onclick="if(event.target===this) fermerLocalisationModal()">
   <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:600px; width:90vw; max-height:90vh; display:flex; flex-direction:column;">
@@ -209,6 +231,41 @@
 </div>
 
 <script>
+  // === Menu mobile ===
+  function toggleMobileNav() {
+    var nav = document.getElementById('lmm-mobile-nav');
+    if (nav.classList.contains('open')) {
+      fermerMobileNav();
+    } else {
+      ouvrirMobileNav();
+    }
+  }
+
+  function ouvrirMobileNav() {
+    document.getElementById('lmm-mobile-nav').classList.add('open');
+    document.getElementById('lmm-mobile-nav').setAttribute('aria-hidden', 'false');
+    document.getElementById('lmm-mobile-nav-backdrop').classList.add('open');
+    document.querySelector('.lmm-menu-toggle').setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function fermerMobileNav() {
+    document.getElementById('lmm-mobile-nav').classList.remove('open');
+    document.getElementById('lmm-mobile-nav').setAttribute('aria-hidden', 'true');
+    document.getElementById('lmm-mobile-nav-backdrop').classList.remove('open');
+    document.querySelector('.lmm-menu-toggle').setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  window.addEventListener('resize', function () {
+    if (window.innerWidth > 900) fermerMobileNav();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') fermerMobileNav();
+  });
+  // === Fin menu mobile ===
+
   // === Localisation / Tailleur ===
   var tunnelUrl = 'https://lmm-backend.vercel.app';
 
@@ -780,6 +837,144 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .lmm-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Bouton hamburger — caché en desktop, seule la grille du header en
+     dessous de 900px le fait apparaître (voir @media plus bas). Les 3
+     barres se transforment en croix à l'ouverture. */
+  .lmm-header__cell--toggle {
+    display: none;
+  }
+
+  .lmm-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .lmm-menu-toggle__bar {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: var(--lmm-ivoire-pale);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .lmm-menu-toggle[aria-expanded="true"] .lmm-menu-toggle__bar:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+
+  .lmm-menu-toggle[aria-expanded="true"] .lmm-menu-toggle__bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .lmm-menu-toggle[aria-expanded="true"] .lmm-menu-toggle__bar:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* Tiroir du menu mobile — panneau plein-largeur ancré sous le header
+     fixe (top: 104px, hauteur du header). Caché par défaut (opacity +
+     pointer-events) plutôt que display:none pour permettre la
+     transition d'ouverture. */
+  .lmm-mobile-nav {
+    position: fixed;
+    top: 104px;
+    left: 0;
+    right: 0;
+    background: var(--lmm-bordeaux);
+    z-index: 99;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 24px 24px;
+    max-height: calc(100dvh - 104px);
+    overflow-y: auto;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .lmm-mobile-nav.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .lmm-mobile-nav__link {
+    text-decoration: none;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--lmm-ivoire-pale);
+    padding: 16px 4px;
+    border-bottom: 1px solid rgba(var(--lmm-ivoire-deep-rgb), 0.18);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  .lmm-mobile-nav__link:last-child {
+    border-bottom: none;
+  }
+
+  .lmm-mobile-nav__link--active {
+    color: var(--lmm-ivoire);
+  }
+
+  .lmm-mobile-nav__backdrop {
+    display: none;
+    position: fixed;
+    top: 104px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(28, 28, 28, 0.45);
+    z-index: 98;
+  }
+
+  .lmm-mobile-nav__backdrop.open {
+    display: block;
+  }
+
+  /* En dessous de 900px, la grille à 7 colonnes du header déborde déjà
+     (liens qui se compressent/chevauchent) — on bascule sur un hamburger
+     plutôt que d'essayer de faire tenir 5 liens + logo + icônes sur une
+     seule rangée. */
+  @media (max-width: 900px) {
+    .lmm-header__inner {
+      grid-template-columns: 40px 1fr 76px;
+      padding: 0 20px;
+    }
+
+    .lmm-header__cell--toggle {
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .lmm-header__cell--nav {
+      display: none;
+    }
+
+    .lmm-header__cell + .lmm-header__cell::before {
+      display: none;
+    }
   }
 
   body {

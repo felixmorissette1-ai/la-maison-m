@@ -329,12 +329,6 @@
     max-width: 640px;
   }
 
-  @media (max-width: 767px) {
-    .lmm-plan__title {
-      font-size: 26px;
-    }
-  }
-
   /* Une carte encadrée par étape — largeur égale, contenu aligné à
      gauche. Les 3 cartes forment une seule rangée de grille, donc elles
      s'étirent à la même hauteur peu importe la longueur du titre. */
@@ -507,6 +501,24 @@
     color: var(--lmm-bordeaux-soft);
     text-decoration: underline;
     text-underline-offset: 3px;
+  }
+
+  @media (max-width: 767px) {
+    .lmm-plan__title {
+      font-size: 26px;
+    }
+
+    .lmm-plan__row {
+      grid-template-columns: 1fr;
+      row-gap: 40px;
+    }
+
+    /* Les flèches de connexion entre étapes n'ont de sens qu'en rangée
+       horizontale — cachées une fois les cartes empilées. */
+    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before,
+    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
+      display: none;
+    }
   }
 {% endstylesheet %}
 
