@@ -59,9 +59,9 @@
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
-            <li>Possibilité de voir et toucher les tissus</li>
+            <li>Voir et toucher les tissus par <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">rendez-vous</a></li>
             {% if section.settings.step1_style_advice_label != blank %}
-              <li>{{ section.settings.step1_style_advice_label }}</li>
+              <li><a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_label }}</a> disponibles en ligne</li>
             {% endif %}
           </ul>
         </div>
@@ -764,8 +764,8 @@
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
     { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou visitez notre collection." },
     { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points additionnels (un par ligne, optionnel)" },
-    { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — point de liste (conseil stylistique)", "default": "Conseils stylistiques disponibles en ligne" },
-    { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (non utilisé pour l'instant)" },
+    { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — point de liste, partie cliquable (conseil stylistique)", "default": "Conseils stylistiques" },
+    { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (vide = /pages/aide-configuration)" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
     { "type": "text", "id": "step2_duration", "label": "Étape 2 — durée (sous le titre)", "default": "30 minutes" },

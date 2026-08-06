@@ -9,14 +9,24 @@
       </button>
     </div>
 
-    <div class="lmm-header__cell lmm-header__cell--nav">
-      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurateur</a>
+    <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
+      <a href="/pages/qui-nous-sommes" class="lmm-nav-link{% if request.path contains 'qui-nous-sommes' or request.path contains 'comment-ca-fonctionne' %} lmm-nav-link--active{% endif %}">À propos</a>
+      <div class="lmm-header__dropdown">
+        <a href="/pages/qui-nous-sommes" class="lmm-header__dropdown-link">Qui nous sommes</a>
+        <a href="/pages/comment-ca-fonctionne" class="lmm-header__dropdown-link">Comment ça fonctionne</a>
+      </div>
     </div>
     <div class="lmm-header__cell lmm-header__cell--nav">
-      <a href="/collections/collection" class="lmm-nav-link{% if request.path contains '/collections/collection' %} lmm-nav-link--active{% endif %}">Collection</a>
+      <a href="/pages/aide-configuration" class="lmm-nav-link{% if request.path contains 'aide-configuration' %} lmm-nav-link--active{% endif %}">Conseils stylistiques</a>
     </div>
     <div class="lmm-header__cell lmm-header__cell--nav">
-      <a href="/collections/chemises" class="lmm-nav-link{% if request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Chemise</a>
+      {% assign now_ts = 'now' | date: '%s' %}
+      {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
+      {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
+        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion du rendez-vous</a>
+      {% else %}
+        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
+      {% endif %}
     </div>
 
     <div class="lmm-header__cell lmm-header__cell--logo">
@@ -30,22 +40,15 @@
       </a>
     </div>
 
-    <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
-      <a href="/pages/qui-nous-sommes" class="lmm-nav-link{% if request.path contains 'qui-nous-sommes' or request.path contains 'comment-ca-fonctionne' %} lmm-nav-link--active{% endif %}">À propos</a>
-      <div class="lmm-header__dropdown">
-        <a href="/pages/qui-nous-sommes" class="lmm-header__dropdown-link">Qui nous sommes</a>
-        <a href="/pages/comment-ca-fonctionne" class="lmm-header__dropdown-link">Comment ça fonctionne</a>
-      </div>
-    </div>
-
     <div class="lmm-header__cell lmm-header__cell--nav">
-      {% assign now_ts = 'now' | date: '%s' %}
-      {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
-      {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
-        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirGestionModal()">Gestion du rendez-vous</a>
-      {% else %}
-        <a href="#" class="lmm-nav-link" onclick="event.preventDefault(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
-      {% endif %}
+      <a href="/pages/sur-mesure" class="lmm-nav-link{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurez votre complet</a>
+    </div>
+    <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
+      <a href="/collections/collection" class="lmm-nav-link{% if request.path contains '/collections/collection' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collection</a>
+      <div class="lmm-header__dropdown">
+        <a href="/collections/collection" class="lmm-header__dropdown-link">Complets</a>
+        <a href="/collections/chemises" class="lmm-header__dropdown-link">Chemises</a>
+      </div>
     </div>
 
     <div class="lmm-header__cell lmm-header__cell--icons">
@@ -69,16 +72,17 @@
 
 <div id="lmm-mobile-nav-backdrop" class="lmm-mobile-nav__backdrop" onclick="fermerMobileNav()"></div>
 <nav id="lmm-mobile-nav" class="lmm-mobile-nav" aria-hidden="true">
-  <a href="/pages/sur-mesure" class="lmm-mobile-nav__link{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurateur</a>
-  <a href="/collections/collection" class="lmm-mobile-nav__link{% if request.path contains '/collections/collection' %} lmm-mobile-nav__link--active{% endif %}">Collection</a>
-  <a href="/collections/chemises" class="lmm-mobile-nav__link{% if request.path contains '/collections/chemises' %} lmm-mobile-nav__link--active{% endif %}">Chemise</a>
   <a href="/pages/qui-nous-sommes" class="lmm-mobile-nav__link{% if request.path contains 'qui-nous-sommes' %} lmm-mobile-nav__link--active{% endif %}">Qui nous sommes</a>
   <a href="/pages/comment-ca-fonctionne" class="lmm-mobile-nav__link{% if request.path contains 'comment-ca-fonctionne' %} lmm-mobile-nav__link--active{% endif %}">Comment ça fonctionne</a>
+  <a href="/pages/aide-configuration" class="lmm-mobile-nav__link{% if request.path contains 'aide-configuration' %} lmm-mobile-nav__link--active{% endif %}">Conseils stylistiques</a>
   {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
     <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirGestionModal()">Gestion du rendez-vous</a>
   {% else %}
     <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirLocalisationModal()">Prendre rendez-vous</a>
   {% endif %}
+  <a href="/pages/sur-mesure" class="lmm-mobile-nav__link{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurez votre complet</a>
+  <a href="/collections/collection" class="lmm-mobile-nav__link{% if request.path contains '/collections/collection' %} lmm-mobile-nav__link--active{% endif %}">Complets</a>
+  <a href="/collections/chemises" class="lmm-mobile-nav__link{% if request.path contains '/collections/chemises' %} lmm-mobile-nav__link--active{% endif %}">Chemises</a>
 </nav>
 
 <div class="lmm-cal-modal" id="lmm-localisation-modal" onclick="if(event.target===this) fermerLocalisationModal()">
