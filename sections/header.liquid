@@ -30,8 +30,12 @@
       </a>
     </div>
 
-    <div class="lmm-header__cell lmm-header__cell--nav">
-      <a href="/pages/a-propos" class="lmm-nav-link{% if request.path contains 'a-propos' %} lmm-nav-link--active{% endif %}">À propos</a>
+    <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
+      <a href="/pages/qui-nous-sommes" class="lmm-nav-link{% if request.path contains 'qui-nous-sommes' or request.path contains 'comment-ca-fonctionne' %} lmm-nav-link--active{% endif %}">À propos</a>
+      <div class="lmm-header__dropdown">
+        <a href="/pages/qui-nous-sommes" class="lmm-header__dropdown-link">Qui nous sommes</a>
+        <a href="/pages/comment-ca-fonctionne" class="lmm-header__dropdown-link">Comment ça fonctionne</a>
+      </div>
     </div>
 
     <div class="lmm-header__cell lmm-header__cell--nav">
@@ -68,7 +72,8 @@
   <a href="/pages/sur-mesure" class="lmm-mobile-nav__link{% if request.path contains 'sur-mesure' %} lmm-mobile-nav__link--active{% endif %}">Configurateur</a>
   <a href="/collections/frontpage" class="lmm-mobile-nav__link{% if request.path contains '/collections/frontpage' %} lmm-mobile-nav__link--active{% endif %}">Collection</a>
   <a href="/collections/chemises" class="lmm-mobile-nav__link{% if request.path contains '/collections/chemises' %} lmm-mobile-nav__link--active{% endif %}">Chemise</a>
-  <a href="/pages/a-propos" class="lmm-mobile-nav__link{% if request.path contains 'a-propos' %} lmm-mobile-nav__link--active{% endif %}">À propos</a>
+  <a href="/pages/qui-nous-sommes" class="lmm-mobile-nav__link{% if request.path contains 'qui-nous-sommes' %} lmm-mobile-nav__link--active{% endif %}">Qui nous sommes</a>
+  <a href="/pages/comment-ca-fonctionne" class="lmm-mobile-nav__link{% if request.path contains 'comment-ca-fonctionne' %} lmm-mobile-nav__link--active{% endif %}">Comment ça fonctionne</a>
   {% if customer and customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
     <a href="#" class="lmm-mobile-nav__link" onclick="event.preventDefault(); fermerMobileNav(); ouvrirGestionModal()">Gestion du rendez-vous</a>
   {% else %}
@@ -795,6 +800,52 @@
   .lmm-nav-link:hover,
   .lmm-nav-link--active {
     color: var(--lmm-ivoire-pale);
+  }
+
+  /* Sous-menu "À propos" — s'ouvre au survol (desktop uniquement, voir
+     le tiroir mobile pour l'équivalent tactile). La cellule doit couvrir
+     toute la hauteur du header (contrairement aux autres cellules, qui
+     s'ajustent à leur contenu) pour que le sous-menu, ancré à top:100%,
+     s'aligne exactement sous le header plutôt qu'au milieu. */
+  .lmm-header__cell--dropdown {
+    height: 100%;
+  }
+
+  .lmm-header__dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-6px);
+    background: var(--lmm-bordeaux);
+    border: 1px solid rgba(var(--lmm-ivoire-deep-rgb), 0.18);
+    min-width: 200px;
+    padding: 8px 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+    z-index: 50;
+  }
+
+  .lmm-header__cell--dropdown:hover .lmm-header__dropdown,
+  .lmm-header__cell--dropdown:focus-within .lmm-header__dropdown {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+
+  .lmm-header__dropdown-link {
+    display: block;
+    padding: 12px 22px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--lmm-ivoire-pale);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  .lmm-header__dropdown-link:hover {
+    background: rgba(255, 255, 255, 0.06);
   }
 
   .lmm-header__icons {

@@ -11,9 +11,8 @@
     <div class="lmm-footer__col">
       <h3 class="lmm-footer__heading">{{ section.settings.about_heading }}</h3>
       <ul class="lmm-footer__links">
-        {% for link in section.settings.about_menu.links %}
-          <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-        {% endfor %}
+        <li><a href="{{ section.settings.qui_sommes_url | default: '/pages/qui-nous-sommes' }}">{{ section.settings.qui_sommes_label }}</a></li>
+        <li><a href="{{ section.settings.comment_url | default: '/pages/comment-ca-fonctionne' }}">{{ section.settings.comment_label }}</a></li>
       </ul>
     </div>
 
@@ -214,7 +213,10 @@
 
     { "type": "header", "content": "À propos" },
     { "type": "text", "id": "about_heading", "label": "Titre de la colonne", "default": "À propos" },
-    { "type": "link_list", "id": "about_menu", "label": "Liens (à gérer dans Navigation)" },
+    { "type": "text", "id": "qui_sommes_label", "label": "Texte du lien — Qui nous sommes", "default": "Qui nous sommes" },
+    { "type": "url", "id": "qui_sommes_url", "label": "Lien — Qui nous sommes (vide = /pages/qui-nous-sommes)" },
+    { "type": "text", "id": "comment_label", "label": "Texte du lien — Comment ça fonctionne", "default": "Comment ça fonctionne" },
+    { "type": "url", "id": "comment_url", "label": "Lien — Comment ça fonctionne (vide = /pages/comment-ca-fonctionne)" },
 
     { "type": "header", "content": "Magasiner" },
     { "type": "text", "id": "magasine_heading", "label": "Titre de la colonne", "default": "Magasiner" },
