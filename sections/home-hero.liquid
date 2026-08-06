@@ -450,18 +450,20 @@
     padding-right: 28px;
   }
 
-  /* Centré dans la colonne de marge (pas aligné sur la ligne) — le
-     retour à la ligne normal du navigateur suffit, jamais de coupure
-     en plein mot. */
+  /* Centré dans la colonne de marge (pas aligné sur la ligne).
+     overflow-wrap: break-word (pas "normal") — la priorité absolue est
+     de ne JAMAIS dépasser la ligne de la marge ; un mot casse en deux
+     seulement dans le cas extrême où il ne tiendrait pas seul sur une
+     ligne, jamais avant. */
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(26px, 2.4vw, 36px);
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.3;
     color: var(--lmm-bordeaux);
     text-align: center;
     margin: 0;
-    overflow-wrap: normal;
+    overflow-wrap: break-word;
     word-break: normal;
     hyphens: none;
   }

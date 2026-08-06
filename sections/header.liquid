@@ -859,6 +859,20 @@
     background: rgba(var(--lmm-ivoire-deep-rgb), 0.18);
   }
 
+  /* La règle ci-dessus ne met un trait qu'AVANT chaque zone (sauf la
+     première) — la dernière zone (panier+compte) n'a donc jamais de
+     séparateur après elle, à droite. Même trait, à droite cette fois. */
+  .lmm-header__cell--icons::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1px;
+    height: 22px;
+    background: rgba(var(--lmm-ivoire-deep-rgb), 0.18);
+  }
+
   .lmm-header__logo {
     text-decoration: none;
     display: flex;
@@ -1138,7 +1152,8 @@
       display: none;
     }
 
-    .lmm-header__cell + .lmm-header__cell::before {
+    .lmm-header__cell + .lmm-header__cell::before,
+    .lmm-header__cell--icons::after {
       display: none;
     }
   }
