@@ -17,12 +17,14 @@
         <h1 class="lmm-hero__title">{{ section.settings.title }}</h1>
       </div>
     </div>
-    <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
-      {{ section.settings.step1_label }}
-    </a>
-    {% if section.settings.tissus_link_label != blank %}
-      <a href="#" class="lmm-hero__tissus-link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">{{ section.settings.tissus_link_label }}</a>
-    {% endif %}
+    <div class="lmm-hero__cta-row">
+      <a href="{{ section.settings.step1_url }}" class="lmm-hero__cta">
+        {{ section.settings.step1_label }}
+      </a>
+      {% if section.settings.tissus_link_label != blank %}
+        <a href="#" class="lmm-hero__cta-secondary" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">{{ section.settings.tissus_link_label }}</a>
+      {% endif %}
+    </div>
   </div>
 </section>
 
@@ -46,6 +48,7 @@
             <path d="M4 26h36"/>
             <rect x="14" y="30" width="10" height="10" rx="1"/>
           </svg>
+          <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
           <ul class="lmm-plan__list">
             {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
             {% for line in step1_lines %}
@@ -72,6 +75,7 @@
             <path d="M12 14v6M17 14v4M22 14v6M27 14v4M32 14v6"/>
             <path d="M22 32v6"/>
           </svg>
+          <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
           <ul class="lmm-plan__list">
             {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
             {% for line in step2_lines %}
@@ -99,6 +103,7 @@
             <line x1="10" y1="19" x2="10" y2="34" stroke-opacity="0.4"/>
             <line x1="34" y1="19" x2="34" y2="34" stroke-opacity="0.4"/>
           </svg>
+          <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
           <ul class="lmm-plan__list">
             {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
             {% for line in step3_lines %}
@@ -159,13 +164,19 @@
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
   }
 
-  /* Voile léger et uniforme — la photo occupe maintenant tout le premier
-     écran (le plan n'est plus superposé dessus, voir .lmm-hero ci-dessous),
-     donc plus besoin d'un dégradé qui s'intensifie vers le bas. */
+  /* Léger en haut (photo vive derrière le slogan), s'intensifie vers le
+     bas — la photo occupe ~87% de l'écran, le haut de "Comment procéder"
+     (titre + numéros/titres d'étapes) apparaît dans les ~13% restants dès
+     le chargement, sans avoir à défiler. Le dégradé adoucit la jonction. */
   .lmm-hero-fixed-bg__wash {
     position: absolute;
     inset: 0;
-    background: rgba(var(--lmm-ivoire-rgb), 0.32);
+    background: linear-gradient(
+      to bottom,
+      rgba(var(--lmm-ivoire-rgb), 0.28) 0%,
+      rgba(var(--lmm-ivoire-rgb), 0.34) 60%,
+      rgba(var(--lmm-ivoire-rgb), 0.55) 100%
+    );
   }
 
   .lmm-hero {
@@ -173,10 +184,11 @@
     /* Transparent volontairement : la photo figée derrière montre à
        travers. */
     background: transparent;
-    /* Occupe tout le premier écran (sous le header) — "Comment procéder"
-       est entièrement sous le pli, invisible tant qu'on n'a pas défilé. */
-    height: calc(100dvh - 104px);
-    min-height: 480px;
+    /* La photo (avec le header) occupe ~87% du premier écran ; le reste
+       laisse voir le haut de "Comment procéder" au chargement, sans
+       défiler — approximatif par design (plus de mesure JS précise). */
+    height: calc(87dvh - 104px);
+    min-height: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,6 +238,14 @@
     margin: 0;
   }
 
+  .lmm-hero__cta-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
   .lmm-hero__cta {
     display: inline-flex;
     background: var(--lmm-bordeaux);
@@ -238,27 +258,47 @@
     white-space: nowrap;
   }
 
+  /* Bouton secondaire — même gabarit que le CTA principal mais en
+     contour, pour rester clairement subordonné à "Configurez votre
+     complet" tout en restant un vrai bouton (pas juste un lien discret). */
+  .lmm-hero__cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: 1.5px solid var(--lmm-text);
+    color: var(--lmm-text);
+    text-decoration: none;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    padding: 20px 32px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .lmm-hero__cta-secondary:hover {
+    background: var(--lmm-text);
+    color: var(--lmm-ivoire);
+  }
+
   @media (min-width: 768px) {
     .lmm-hero__title {
       white-space: nowrap;
     }
   }
 
-  .lmm-hero__tissus-link {
-    /* Rapproche le lien du bouton plutôt que de reprendre le même
-       espacement de 28px que le reste de .lmm-hero__inner (voir gap). */
-    margin-top: -14px;
-    font-size: 13px;
-    letter-spacing: 0.02em;
-    color: var(--lmm-text);
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    opacity: 0.75;
-    transition: opacity 0.2s;
-  }
+  @media (max-width: 560px) {
+    .lmm-hero__cta-row {
+      flex-direction: column;
+      width: 100%;
+    }
 
-  .lmm-hero__tissus-link:hover {
-    opacity: 1;
+    .lmm-hero__cta,
+    .lmm-hero__cta-secondary {
+      width: 100%;
+      justify-content: center;
+      box-sizing: border-box;
+    }
   }
 
   .lmm-plan {
@@ -337,6 +377,14 @@
     margin-bottom: 26px;
   }
 
+  .lmm-plan__intro {
+    font-size: var(--lmm-fs-body);
+    color: var(--lmm-text);
+    line-height: 1.75;
+    text-align: left;
+    margin: 0 0 20px;
+  }
+
   /* Regroupe numéro + titre pour que la flèche entre étapes se centre
      verticalement sur les deux ensemble, pas juste sur le titre seul. */
   .lmm-plan__head-group {
@@ -345,6 +393,35 @@
     flex-direction: column;
     width: 100%;
     gap: 14px;
+  }
+
+  /* Petite flèche bordeaux entre les étapes (pas sur la dernière, rien
+     après), centrée sur le groupe numéro+titre entier plutôt que sur le
+     titre seul. Hampe (::before) + pointe (::after). */
+  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 20px;
+    height: 1.5px;
+    background: var(--lmm-bordeaux);
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 20px);
+    width: 0;
+    height: 0;
+    border-top: 4.5px solid transparent;
+    border-bottom: 4.5px solid transparent;
+    border-left: 7px solid var(--lmm-bordeaux);
+    transform: translateY(-50%);
+    pointer-events: none;
   }
 
   /* Même format de numéro et de titre pour les 3 étapes — seule la
@@ -406,7 +483,13 @@
     gap: 10px;
   }
 
+  /* La puce est un vrai item flex (pas juste un ::before inline) pour
+     que le texte qui passe à la ligne s'aligne sous le début du texte,
+     pas sous la puce — sinon la 2e ligne repart tout à gauche du bloc. */
   .lmm-plan__list li {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
     font-size: var(--lmm-fs-body);
     color: var(--lmm-text);
     line-height: 1.7;
@@ -414,15 +497,11 @@
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Beau rond vide devant chaque point — inline, pas positionné en absolu,
-     pour rester correct même avec du texte centré sur plusieurs lignes. */
   .lmm-plan__list li::before {
     content: '○';
-    display: inline-block;
-    margin-right: 7px;
+    flex-shrink: 0;
     color: var(--lmm-bordeaux-soft);
     font-size: 11px;
-    vertical-align: 1px;
   }
 
   .lmm-plan__link {
@@ -462,6 +541,13 @@
       grid-template-columns: 1fr;
       row-gap: 40px;
     }
+
+    /* Les flèches de connexion entre étapes n'ont de sens qu'en rangée
+       horizontale — cachées une fois les cartes empilées. */
+    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before,
+    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
+      display: none;
+    }
   }
 {% endstylesheet %}
 
@@ -478,17 +564,20 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "Configurez votre complet vous-même en ligne, en quelques clics\nVisitez une couturière partenaire pour voir et toucher les tissus en personne" },
+    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou commandez directement dans notre collection." },
+    { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "5 minutes" },
     { "type": "text", "id": "step1_style_advice_label", "label": "Étape 1 — texte avant le lien conseil stylistique", "default": "Conseil stylistique disponible — réponse en moins de 24h." },
     { "type": "text", "id": "step1_style_advice_link_label", "label": "Étape 1 — texte du lien conseil stylistique", "default": "Cliquez ici" },
     { "type": "url", "id": "step1_style_advice_url", "label": "Étape 1 — lien conseil stylistique (vide = /pages/aide-configuration)" },
     { "type": "text", "id": "step1_btn_label", "label": "Étape 1 — texte du bouton (dans la carte)", "default": "Configurer mon complet" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "Rencontrez une couturière partenaire près de chez vous\nVos mensurations exactes sont prises en 30 minutes" },
+    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Vos mensurations sont prises par un de nos professionnels pour assurer un ajustement parfait." },
+    { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "30 minutes" },
     { "type": "text", "id": "step2_btn_label", "label": "Étape 2 — texte du bouton (dans la carte)", "default": "Prendre rendez-vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
+    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Profitez d'un complet parfaitement ajusté à votre silhouette pour une allure à la hauteur de vos ambitions." },
     { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" },
     { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Démarrer ma création" }
   ],
