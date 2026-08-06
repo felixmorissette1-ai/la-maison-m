@@ -148,29 +148,36 @@
     }, function () {}, { timeout: 8000 });
   })();
 
-  // Hauteur du hero calculée à partir des vraies mesures du DOM (pas
-  // d'un pourcentage fixe, qui se comporte très différemment selon la
-  // hauteur réelle de l'écran) : on vise la hauteur des flèches entre
-  // les étapes — le centre vertical du premier groupe numéro+titre —
-  // pour que "Comment procéder" pointe toujours au même endroit du
-  // contenu au chargement, peu importe l'écran.
+  // Hauteur du hero calculée à partir des vraies mesures du DOM (pas de
+  // pixels devinés ni de pourcentage fixe) : on mesure combien d'espace
+  // prend le titre "Comment procéder" + le TITRE de chaque étape (pas
+  // juste les flèches) — cette distance ne dépend pas de la hauteur du
+  // hero lui-même, seulement du contenu du plan. Le hero prend tout le
+  // reste de l'écran, ce qui garantit que les titres d'étapes restent
+  // visibles au chargement, peu importe la taille de l'écran ou si un
+  // titre passe sur deux lignes.
   (function () {
     var hero = document.querySelector('.lmm-hero');
     var header = document.querySelector('.lmm-header');
     var plan = document.querySelector('.lmm-plan');
-    var headGroup = document.querySelector('.lmm-plan__head-group');
-    if (!hero || !header || !plan || !headGroup) return;
+    var planTitle = document.querySelector('.lmm-plan__title');
+    var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
+    if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
 
     var MIN_HERO_HEIGHT = 260;
+    var BUFFER_BELOW_TITLES = 20;
 
     function updateHeroPeek() {
       var planTop = plan.getBoundingClientRect().top;
-      var hgRect = headGroup.getBoundingClientRect();
-      var arrowY = hgRect.top + hgRect.height / 2;
+      var maxBottom = planTitle.getBoundingClientRect().bottom;
+      stepHeads.forEach(function (el) {
+        var bottom = el.getBoundingClientRect().bottom;
+        if (bottom > maxBottom) maxBottom = bottom;
+      });
 
-      var revealHeight = arrowY - planTop;
+      var revealHeight = maxBottom - planTop;
       var headerHeight = header.getBoundingClientRect().height;
-      var target = window.innerHeight - headerHeight - revealHeight;
+      var target = window.innerHeight - headerHeight - revealHeight - BUFFER_BELOW_TITLES;
 
       hero.style.height = Math.max(target, MIN_HERO_HEIGHT) + 'px';
     }
