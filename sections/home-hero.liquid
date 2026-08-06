@@ -38,17 +38,28 @@
             <span class="lmm-plan__step-title">{{ section.settings.step1_label }}</span>
           </div>
         </div>
-        <div class="lmm-plan__desc">
-          <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
+        <div class="lmm-plan__card">
+          <svg class="lmm-plan__icon" width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10a3 3 0 1 0-3-3"/>
+            <path d="M22 10v3"/>
+            <path d="M6 26 L20 13 a3 3 0 0 1 4 0 L38 26"/>
+            <path d="M4 26h36"/>
+            <rect x="14" y="30" width="10" height="10" rx="1"/>
+          </svg>
+          <p class="lmm-plan__card-title">{{ section.settings.step1_label }}</p>
+          <p class="lmm-plan__tag">{{ section.settings.step1_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
-            <li>Conseil stylistique — <a href="/pages/aide-configuration" class="lmm-plan__link">écrivez-nous</a></li>
-            <li>Envie de voir les tissus avant de commander ? <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">Prenez rendez-vous</a></li>
+            <li>Conseil stylistique</li>
           </ul>
+          <a href="{{ section.settings.step1_url }}" class="lmm-plan__btn">{{ section.settings.step1_btn_label }}</a>
         </div>
+        {% if section.settings.help_link_label != blank %}
+          <a href="{{ section.settings.help_link_url | default: '/pages/aide-configuration' }}" class="lmm-plan__help">{{ section.settings.help_link_label }} →</a>
+        {% endif %}
       </div>
 
       <div class="lmm-plan__step">
@@ -58,16 +69,22 @@
             <span class="lmm-plan__step-title">{{ section.settings.step2_label }}</span>
           </a>
         </div>
-        <div class="lmm-plan__desc">
-          <p class="lmm-plan__intro">{{ section.settings.step2_intro }}</p>
+        <div class="lmm-plan__card">
+          <svg class="lmm-plan__icon" width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="6" y="14" width="32" height="18" rx="3"/>
+            <path d="M12 14v6M17 14v4M22 14v6M27 14v4M32 14v6"/>
+            <path d="M22 32v6"/>
+          </svg>
+          <p class="lmm-plan__card-title">{{ section.settings.step2_label }}</p>
+          <p class="lmm-plan__tag">{{ section.settings.step2_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
             {% for line in step2_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
             <li id="lmm-plan-ville-item"><span id="lmm-plan-ville">Partenaire disponible près de chez vous</span></li>
-            <li><a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('mensurations')">Prenez rendez-vous</a> pour vos mensurations</li>
           </ul>
+          <a href="#" class="lmm-plan__btn" onclick="event.preventDefault(); ouvrirLocalisationModal('mensurations')">{{ section.settings.step2_btn_label }}</a>
         </div>
       </div>
 
@@ -78,14 +95,24 @@
             <span class="lmm-plan__step-title">{{ section.settings.step3_label }}</span>
           </div>
         </div>
-        <div class="lmm-plan__desc">
-          <p class="lmm-plan__intro">{{ section.settings.step3_intro }}</p>
+        <div class="lmm-plan__card">
+          <svg class="lmm-plan__icon" width="44" height="44" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 6a2.5 2.5 0 1 0-2.5-2.5"/>
+            <path d="M22 6v3"/>
+            <path d="M14 9 L9 15 L6 17 L6 38 L38 38 L38 17 L35 15 L30 9"/>
+            <path d="M14 9 L18 14 L22 11 L26 14 L30 9"/>
+            <line x1="10" y1="19" x2="10" y2="34" stroke-opacity="0.4"/>
+            <line x1="34" y1="19" x2="34" y2="34" stroke-opacity="0.4"/>
+          </svg>
+          <p class="lmm-plan__card-title">{{ section.settings.step3_label }}</p>
+          <p class="lmm-plan__tag">{{ section.settings.step3_tag }}</p>
           <ul class="lmm-plan__list">
             {% assign step3_lines = section.settings.step3_bullets | newline_to_br | split: '<br />' %}
             {% for line in step3_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
           </ul>
+          <a href="{{ section.settings.step1_url }}" class="lmm-plan__btn">{{ section.settings.step3_btn_label }}</a>
         </div>
       </div>
     </div>
@@ -116,53 +143,6 @@
         .catch(function () {});
     }, function () {}, { timeout: 8000 });
   })();
-
-  // Hauteur du hero calculée à partir des vraies mesures du DOM (pas de
-  // pixels devinés) : on mesure combien d'espace prend le titre "Comment
-  // ça fonctionne" + la rangée numéro/titre de chaque carte — cette
-  // distance ne dépend pas de la hauteur du hero lui-même, seulement du
-  // contenu du plan. Le hero prend tout le reste de l'écran, ce qui
-  // garantit que les titres restent visibles au chargement et que les
-  // descriptions restent sous le pli, peu importe la taille de l'écran
-  // ou si un titre passe sur deux lignes.
-  (function () {
-    var hero = document.querySelector('.lmm-hero');
-    var header = document.querySelector('.lmm-header');
-    var plan = document.querySelector('.lmm-plan');
-    var planTitle = document.querySelector('.lmm-plan__title');
-    var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
-    if (!hero || !header || !plan || !planTitle || !stepHeads.length) return;
-
-    var MIN_HERO_HEIGHT = 300;
-    var BUFFER_BELOW_TITLES = 20;
-
-    function updateHeroPeek() {
-      var planTop = plan.getBoundingClientRect().top;
-      var maxBottom = planTitle.getBoundingClientRect().bottom;
-      stepHeads.forEach(function (el) {
-        var bottom = el.getBoundingClientRect().bottom;
-        if (bottom > maxBottom) maxBottom = bottom;
-      });
-
-      var revealHeight = maxBottom - planTop;
-      var headerHeight = header.getBoundingClientRect().height;
-      var target = window.innerHeight - headerHeight - revealHeight - BUFFER_BELOW_TITLES;
-
-      hero.style.height = Math.max(target, MIN_HERO_HEIGHT) + 'px';
-    }
-
-    updateHeroPeek();
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(updateHeroPeek);
-    }
-    window.addEventListener('load', updateHeroPeek);
-
-    var resizeTimer;
-    window.addEventListener('resize', function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(updateHeroPeek, 120);
-    });
-  })();
 </script>
 
 {% stylesheet %}
@@ -186,20 +166,13 @@
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
   }
 
-  /* Voile en dégradé plutôt qu'uniforme : reste léger en haut (photo
-     vive derrière le slogan), s'intensifie vers le bas de l'écran — là
-     où le titre du plan et les cartes apparaissent en défilant — pour
-     leur donner un fond plus calme et éviter qu'ils aient l'air de
-     flotter sur un détail au hasard de la photo. */
+  /* Voile léger et uniforme — la photo occupe maintenant tout le premier
+     écran (le plan n'est plus superposé dessus, voir .lmm-hero ci-dessous),
+     donc plus besoin d'un dégradé qui s'intensifie vers le bas. */
   .lmm-hero-fixed-bg__wash {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(var(--lmm-ivoire-rgb), 0.3) 0%,
-      rgba(var(--lmm-ivoire-rgb), 0.4) 45%,
-      rgba(var(--lmm-ivoire-rgb), 0.72) 100%
-    );
+    background: rgba(var(--lmm-ivoire-rgb), 0.32);
   }
 
   .lmm-hero {
@@ -207,12 +180,10 @@
     /* Transparent volontairement : la photo figée derrière montre à
        travers. */
     background: transparent;
-    /* Valeur de repli avant que le script en bas de page ne mesure le
-       vrai contenu et fixe la hauteur exacte en pixels (voir <script> :
-       garantit que les titres du plan restent visibles au chargement et
-       que les descriptions restent sous le pli, de façon fiable). */
-    height: calc(100dvh - 284px);
-    min-height: 300px;
+    /* Occupe tout le premier écran (sous le header) — "Comment procéder"
+       est entièrement sous le pli, invisible tant qu'on n'a pas défilé. */
+    height: calc(100dvh - 104px);
+    min-height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -299,54 +270,27 @@
 
   .lmm-plan {
     position: relative;
-    background: transparent;
-    padding: 40px 32px 90px;
-  }
-
-  /* Le flou + la teinte vivent sur un calque séparé (::before) plutôt que
-     sur .lmm-plan directement, pour pouvoir le masquer en dégradé : sans
-     ça, backdrop-filter s'active net à la bordure du bloc et dessine une
-     ligne visible (net au-dessus, flou en dessous) peu importe l'opacité
-     de la teinte. Le mask-image fait monter le flou progressivement sur
-     les premiers ~18% de la section, au lieu d'un interrupteur. */
-  .lmm-plan::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom,
-      rgba(var(--lmm-ivoire-rgb), 0) 0%,
-      rgba(var(--lmm-ivoire-rgb), 0.0125) 30%,
-      rgba(var(--lmm-ivoire-rgb), 0.03) 60%,
-      rgba(var(--lmm-ivoire-rgb), 0.05) 100%);
-    backdrop-filter: blur(16.09px);
-    -webkit-backdrop-filter: blur(16.09px);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 100%);
-    pointer-events: none;
-    z-index: 0;
+    /* Fond plein et opaque — cette section est maintenant entièrement
+       sous le pli, sur son propre plan, plus superposée à la photo du
+       hero (voir .lmm-hero ci-dessus). */
+    background: var(--lmm-ivoire-pale);
+    padding: 80px 32px 90px;
   }
 
   .lmm-plan__inner {
     position: relative;
-    z-index: 1;
     max-width: 1180px;
     margin: 0 auto;
   }
 
-  /* Même gabarit que .lmm-why__heading/.lmm-stats__heading — aligné à
-     gauche, Georgia, poids normal (pas de gras) — pour que tous les
-     titres de section du site soient cohérents. Plus petit que le
-     slogan (clamp 24-44px) : jamais un titre de section ne devrait
-     rivaliser en taille avec le slogan principal. */
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-section-title);
     font-weight: 400;
     line-height: 1.3;
     color: var(--lmm-text);
-    text-align: left;
-    margin: 0 0 40px;
-    max-width: 640px;
+    text-align: center;
+    margin: 0 0 56px;
   }
 
   /* Une carte encadrée par étape — largeur égale, contenu aligné à
@@ -374,19 +318,41 @@
     text-align: left;
   }
 
-  .lmm-plan__desc {
+  /* Boîte encadrée — icône, titre répété, étiquette, points, bouton.
+     Bordure noire (pas bordeaux) pour rester dans le registre plus neutre
+     demandé pour les pastilles/boutons de cette zone du site. */
+  .lmm-plan__card {
     box-sizing: border-box;
     width: 100%;
-    /* Marge supplémentaire (en plus du gap de la carte) entre le titre et
-       la description : donne une vraie zone tampon au script de hauteur
-       du hero, pour que la coupure au chargement reste fiable même avec
-       de petites variations de rendu entre navigateurs. */
     margin-top: 26px;
-    text-align: left;
-    /* Seule zone encadrée de la case. */
-    border: 1px solid var(--lmm-bordeaux);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid var(--lmm-text);
     border-radius: 10px;
-    padding: 24px 24px 28px;
+    padding: 32px 24px 28px;
+  }
+
+  .lmm-plan__icon {
+    color: var(--lmm-text);
+    margin-bottom: 18px;
+  }
+
+  .lmm-plan__card-title {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--lmm-text);
+    margin: 0 0 8px;
+  }
+
+  .lmm-plan__tag {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux);
+    margin: 0 0 18px;
   }
 
   /* Regroupe numéro + titre pour que la flèche entre étapes se centre
@@ -428,35 +394,6 @@
     text-decoration: none;
   }
 
-  /* Petite flèche bordeaux entre les étapes (pas sur la dernière, rien
-     après), centrée sur le groupe numéro+titre entier plutôt que sur le
-     titre seul. Hampe (::before) + pointe (::after). */
-  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    width: 20px;
-    height: 1.5px;
-    background: var(--lmm-bordeaux);
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-
-  .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: calc(100% + 20px);
-    width: 0;
-    height: 0;
-    border-top: 4.5px solid transparent;
-    border-bottom: 4.5px solid transparent;
-    border-left: 7px solid var(--lmm-bordeaux);
-    transform: translateY(-50%);
-    pointer-events: none;
-  }
-
   .lmm-plan__step-title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-card-title);
@@ -475,17 +412,6 @@
 
   .lmm-plan__step-head--link:hover .lmm-plan__step-title {
     color: var(--lmm-bordeaux-soft);
-  }
-
-  /* Phrase d'intro : donne le contexte en une phrase claire. Les puces qui
-     suivent ne portent que les détails concrets — jamais les deux à
-     répéter la même idée. */
-  .lmm-plan__intro {
-    font-size: var(--lmm-fs-body);
-    color: var(--lmm-text);
-    line-height: 1.75;
-    text-align: left;
-    margin: 0 0 20px;
   }
 
   .lmm-plan__list {
@@ -523,6 +449,35 @@
     text-underline-offset: 3px;
   }
 
+  .lmm-plan__btn {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 24px;
+    background: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire);
+    text-decoration: none;
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    padding: 14px 20px;
+    border-radius: 6px;
+    transition: opacity 0.2s;
+  }
+
+  .lmm-plan__btn:hover {
+    opacity: 0.85;
+  }
+
+  .lmm-plan__help {
+    display: inline-block;
+    margin-top: 16px;
+    font-size: 13px;
+    color: var(--lmm-bordeaux-soft);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   @media (max-width: 767px) {
     .lmm-plan__title {
       font-size: 26px;
@@ -531,13 +486,6 @@
     .lmm-plan__row {
       grid-template-columns: 1fr;
       row-gap: 40px;
-    }
-
-    /* Les flèches de connexion entre étapes n'ont de sens qu'en rangée
-       horizontale — cachées une fois les cartes empilées. */
-    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::before,
-    .lmm-plan__step:not(:last-child) .lmm-plan__head-group::after {
-      display: none;
     }
   }
 {% endstylesheet %}
@@ -555,16 +503,22 @@
 
     { "type": "text", "id": "step1_label", "label": "Étape 1 — texte du bouton", "default": "Configurez votre complet" },
     { "type": "url", "id": "step1_url", "label": "Étape 1 — lien" },
-    { "type": "text", "id": "step1_intro", "label": "Étape 1 — phrase d'intro", "default": "Configurez votre complet de A à Z, ou commandez directement dans notre collection." },
     { "type": "textarea", "id": "step1_bullets", "label": "Étape 1 — points (un par ligne)", "default": "5 minutes" },
+    { "type": "text", "id": "step1_tag", "label": "Étape 1 — étiquette", "default": "Démarrage rapide" },
+    { "type": "text", "id": "step1_btn_label", "label": "Étape 1 — texte du bouton (dans la carte)", "default": "Configurer mon complet" },
 
     { "type": "text", "id": "step2_label", "label": "Étape 2 — titre", "default": "Rendez-vous mensurations" },
-    { "type": "text", "id": "step2_intro", "label": "Étape 2 — phrase d'intro", "default": "Vos mensurations sont prises par un de nos professionnels pour assurer un ajustement parfait." },
     { "type": "textarea", "id": "step2_bullets", "label": "Étape 2 — points (un par ligne)", "default": "30 minutes" },
+    { "type": "text", "id": "step2_tag", "label": "Étape 2 — étiquette", "default": "Expertise professionnelle" },
+    { "type": "text", "id": "step2_btn_label", "label": "Étape 2 — texte du bouton (dans la carte)", "default": "Prendre rendez-vous" },
 
     { "type": "text", "id": "step3_label", "label": "Étape 3 — titre", "default": "Recevez votre complet" },
-    { "type": "text", "id": "step3_intro", "label": "Étape 3 — phrase d'intro", "default": "Profitez d'un complet parfaitement ajusté à votre silhouette pour une allure à la hauteur de vos ambitions." },
-    { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" }
+    { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\n4-8 semaines\nRetouches gratuites au besoin" },
+    { "type": "text", "id": "step3_tag", "label": "Étape 3 — étiquette", "default": "Allure et ambition" },
+    { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Démarrer ma création" },
+
+    { "type": "text", "id": "help_link_label", "label": "Lien d'aide (sous la carte 1)", "default": "Besoin d'aide ? Écrivez-nous" },
+    { "type": "url", "id": "help_link_url", "label": "Lien d'aide — URL (vide = /pages/aide-configuration)" }
   ],
   "presets": [
     { "name": "Hero — Accueil" }
