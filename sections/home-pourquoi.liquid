@@ -17,8 +17,6 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
-        <span class="lmm-why__num">01</span>
-        <p class="lmm-why__subtitle">{{ section.settings.item1_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item1_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item1_text }}</p>
       </div>
@@ -26,8 +24,6 @@
 
     <div class="lmm-why__row">
       <div class="lmm-why__box">
-        <span class="lmm-why__num">02</span>
-        <p class="lmm-why__subtitle">{{ section.settings.item2_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item2_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item2_text }}</p>
       </div>
@@ -53,8 +49,6 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
-        <span class="lmm-why__num">03</span>
-        <p class="lmm-why__subtitle">{{ section.settings.item3_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item3_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item3_text }}</p>
       </div>
@@ -62,8 +56,6 @@
 
     <div class="lmm-why__row">
       <div class="lmm-why__box">
-        <span class="lmm-why__num">04</span>
-        <p class="lmm-why__subtitle">{{ section.settings.item4_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item4_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item4_text }}</p>
       </div>
@@ -89,8 +81,6 @@
         {% endif %}
       </div>
       <div class="lmm-why__box">
-        <span class="lmm-why__num">05</span>
-        <p class="lmm-why__subtitle">{{ section.settings.item5_subtitle }}</p>
         <h3 class="lmm-why__title">{{ section.settings.item5_title }}</h3>
         <p class="lmm-why__text">{{ section.settings.item5_text }}</p>
       </div>
@@ -227,33 +217,11 @@
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
   }
 
-  .lmm-why__num {
-    display: block;
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: var(--lmm-fs-number);
-    font-weight: 400;
-    color: var(--lmm-bordeaux);
-    margin: 0 0 6px;
-  }
-
-  /* Le sous-titre porte le nom exact de la caractéristique (par
-     opposition au titre, plus évocateur) — en gras et dans le rouge de
-     la marque pour qu'il se distingue clairement du reste du texte. */
-  .lmm-why__subtitle {
-    font-size: var(--lmm-fs-label);
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--lmm-bordeaux-soft);
-    margin: 0 0 10px;
-  }
-
   .lmm-why__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-card-title);
     font-weight: 400;
-    color: var(--lmm-text);
+    color: var(--lmm-bordeaux);
     margin: 0 0 16px;
     line-height: 1.3;
   }
@@ -302,31 +270,26 @@
     { "type": "image_picker", "id": "placeholder_photo", "label": "Photo générique (le temps d'avoir les vraies photos)" },
 
     { "type": "header", "content": "Caractéristique 1" },
-    { "type": "text", "id": "item1_subtitle", "label": "Sous-titre", "default": "Tout en ligne, couturière compétente près de chez vous" },
     { "type": "text", "id": "item1_title", "label": "Titre", "default": "Sans friction, du début à la fin" },
     { "type": "textarea", "id": "item1_text", "label": "Texte", "default": "Configurez, commandez et payez en ligne en quelques clics. Ensuite, une couturière compétente à proximité s'occupe de vos mensurations et de vos retouches. Aucun casse-tête, aucun détour." },
     { "type": "image_picker", "id": "item1_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 2" },
-    { "type": "text", "id": "item2_subtitle", "label": "Sous-titre", "default": "Un veston sur mesure" },
     { "type": "text", "id": "item2_title", "label": "Titre", "default": "Un ajustement qui vous donne toute votre liberté" },
     { "type": "textarea", "id": "item2_text", "label": "Texte", "default": "Chaque complet est taillé sur vos mensurations exactes, pour un veston qui tombe bien et une liberté de mouvement que le prêt-à-porter ne permet pas." },
     { "type": "image_picker", "id": "item2_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 3" },
-    { "type": "text", "id": "item3_subtitle", "label": "Sous-titre", "default": "Coutures critiques cousues à la main" },
     { "type": "text", "id": "item3_title", "label": "Titre", "default": "Des coutures pensées pour bouger" },
     { "type": "textarea", "id": "item3_text", "label": "Texte", "default": "Plus souples qu'une couture machine, pour un confort qui dure toute la journée." },
     { "type": "image_picker", "id": "item3_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 4" },
-    { "type": "text", "id": "item4_subtitle", "label": "Sous-titre", "default": "Tissus 100% naturels" },
     { "type": "text", "id": "item4_title", "label": "Titre", "default": "Les tissus nobles au cœur de notre produit" },
     { "type": "textarea", "id": "item4_text", "label": "Texte", "default": "Nous travaillons uniquement avec des matières naturelles, gage de crédibilité : plus belles, plus durables, et qui respirent mieux." },
     { "type": "image_picker", "id": "item4_image", "label": "Image (laisser vide pour un espace réservé)" },
 
     { "type": "header", "content": "Caractéristique 5" },
-    { "type": "text", "id": "item5_subtitle", "label": "Sous-titre", "default": "Mesures à domicile et retouches gratuites" },
     { "type": "text", "id": "item5_title", "label": "Titre", "default": "Un accompagnement qui inspire confiance" },
     { "type": "textarea", "id": "item5_text", "label": "Texte", "default": "Vos mensurations sont prises par un professionnel près de chez vous, du début à la fin. La confiance d'un vrai savoir-faire, pas un service impersonnel." },
     { "type": "image_picker", "id": "item5_image", "label": "Image (laisser vide pour un espace réservé)" }
