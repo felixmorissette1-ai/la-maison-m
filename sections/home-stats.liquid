@@ -75,19 +75,6 @@
     background: var(--lmm-ivoire-pale);
   }
 
-  /* Fondu vers la couleur de la section suivante (Pourquoi nous
-     choisir) plutôt qu'une coupure nette. */
-  .lmm-stats::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 30px;
-    background: linear-gradient(to bottom, transparent, var(--lmm-ivoire-deep));
-    pointer-events: none;
-  }
-
   .lmm-stats__inner {
     max-width: 1180px;
     margin: 0 auto;

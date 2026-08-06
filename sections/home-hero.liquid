@@ -6,7 +6,6 @@
      opaque) arrive par-dessus au défilement. -->
   <div class="lmm-hero-fixed-bg">
     <div class="lmm-hero-fixed-bg__photo" style="background-image: url({{ section.settings.hero_photo | image_url: width: 1800 }});"></div>
-    <div class="lmm-hero-fixed-bg__wash"></div>
   </div>
 {% endif %}
 
@@ -263,21 +262,6 @@
     background-size: cover;
     background-position: center 30%;
     filter: grayscale(0.55) sepia(0.35) brightness(1.18) contrast(0.86) saturate(0.85);
-  }
-
-  /* Léger en haut (photo vive derrière le slogan), s'intensifie vers le
-     bas — la photo occupe ~87% de l'écran, le haut de "Comment procéder"
-     (titre + numéros/titres d'étapes) apparaît dans les ~13% restants dès
-     le chargement, sans avoir à défiler. Le dégradé adoucit la jonction. */
-  .lmm-hero-fixed-bg__wash {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(var(--lmm-ivoire-rgb), 0.28) 0%,
-      rgba(var(--lmm-ivoire-rgb), 0.34) 60%,
-      rgba(var(--lmm-ivoire-rgb), 0.55) 100%
-    );
   }
 
   .lmm-hero {
