@@ -53,7 +53,8 @@
             <path d="M4 26h36"/>
             <rect x="14" y="30" width="10" height="10" rx="1"/>
           </svg>
-          <p class="lmm-plan__intro">{{ section.settings.step1_intro }}</p>
+          {% assign step1_intro_html = section.settings.step1_intro | replace: 'collection', '<a href="/collections/collection" class="lmm-plan__link">collection</a>' %}
+          <p class="lmm-plan__intro">{{ step1_intro_html }}</p>
           <ul class="lmm-plan__list">
             {% assign step1_lines = section.settings.step1_bullets | newline_to_br | split: '<br />' %}
             {% for line in step1_lines %}
@@ -85,7 +86,10 @@
           <ul class="lmm-plan__list">
             {% assign step2_lines = section.settings.step2_bullets | newline_to_br | split: '<br />' %}
             {% for line in step2_lines %}
-              {% if line != blank %}<li>{{ line }}</li>{% endif %}
+              {% if line != blank %}
+                {% assign line_html = line | replace: 'rendez-vous', '<a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal(&#39;mensurations&#39;)">rendez-vous</a>' %}
+                <li><span>{{ line_html }}</span></li>
+              {% endif %}
             {% endfor %}
             <li id="lmm-plan-ville-item"><span id="lmm-plan-ville">Ajustement disponible près de chez vous</span></li>
           </ul>
@@ -343,13 +347,18 @@
   .lmm-hero__cta {
     display: inline-flex;
     background: var(--lmm-bordeaux);
-    color: var(--lmm-ivoire);
+    color: var(--lmm-ivoire-pale);
     text-decoration: none;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 20px;
     padding: 22px 44px;
     border-radius: 8px;
     white-space: nowrap;
+    transition: opacity 0.2s;
+  }
+
+  .lmm-hero__cta:hover {
+    opacity: 0.8;
   }
 
   /* Bouton secondaire — même gabarit que le CTA principal mais en
@@ -447,7 +456,7 @@
   .lmm-plan__title {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: clamp(26px, 2.4vw, 36px);
-    font-weight: 400;
+    font-weight: 700;
     line-height: 1.3;
     color: var(--lmm-bordeaux);
     text-align: center;
@@ -689,7 +698,7 @@
     margin-top: auto;
     padding: 15px 36px 14px;
     background: var(--lmm-bordeaux);
-    color: var(--lmm-ivoire);
+    color: var(--lmm-ivoire-pale);
     text-decoration: none;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 15px;
@@ -698,7 +707,7 @@
   }
 
   .lmm-plan__cta-btn:hover {
-    opacity: 0.85;
+    opacity: 0.8;
   }
 
   /* La colonne de marge n'a plus la place de respirer en dessous de
