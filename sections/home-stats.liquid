@@ -1,50 +1,56 @@
 <section class="lmm-stats full-width">
   <div class="lmm-stats__inner">
-    <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
+    <div class="lmm-stats__layout">
+      <div class="lmm-stats__title-col">
+        <h2 class="lmm-stats__heading">{{ section.settings.section_title }}</h2>
+      </div>
 
-    {% if section.settings.quote_text != blank %}
-      <div class="lmm-stats__quote-block">
-        <blockquote class="lmm-stats__quote">
-          <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
-        </blockquote>
-        {% if section.settings.quote_source != blank %}
-          <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
+      <div class="lmm-stats__content-col">
+        {% if section.settings.quote_text != blank %}
+          <div class="lmm-stats__quote-block">
+            <blockquote class="lmm-stats__quote">
+              <p class="lmm-stats__quote-text">{{ section.settings.quote_text }}</p>
+            </blockquote>
+            {% if section.settings.quote_source != blank %}
+              <p class="lmm-stats__quote-source">{{ section.settings.quote_source }}</p>
+            {% endif %}
+            {% if section.settings.quote_description != blank %}
+              <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
+                <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="lmm-stats__quote-description" hidden>
+                <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
+              </div>
+            {% endif %}
+          </div>
         {% endif %}
-        {% if section.settings.quote_description != blank %}
-          <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
-            <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="lmm-stats__quote-description" hidden>
-            <p class="lmm-stats__quote-description-text">{{ section.settings.quote_description }}</p>
+
+        {% if section.settings.quote2_text != blank %}
+          <div class="lmm-stats__quote-block lmm-stats__quote-block--second">
+            <blockquote class="lmm-stats__quote">
+              <p class="lmm-stats__quote-text">{{ section.settings.quote2_text }}</p>
+            </blockquote>
+            {% if section.settings.quote2_source != blank %}
+              <p class="lmm-stats__quote-source">{{ section.settings.quote2_source }}</p>
+            {% endif %}
+            {% if section.settings.quote2_description != blank %}
+              <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
+                <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <div class="lmm-stats__quote-description" hidden>
+                <p class="lmm-stats__quote-description-text">{{ section.settings.quote2_description }}</p>
+              </div>
+            {% endif %}
           </div>
         {% endif %}
       </div>
-    {% endif %}
-
-    {% if section.settings.quote2_text != blank %}
-      <div class="lmm-stats__quote-block lmm-stats__quote-block--second">
-        <blockquote class="lmm-stats__quote">
-          <p class="lmm-stats__quote-text">{{ section.settings.quote2_text }}</p>
-        </blockquote>
-        {% if section.settings.quote2_source != blank %}
-          <p class="lmm-stats__quote-source">{{ section.settings.quote2_source }}</p>
-        {% endif %}
-        {% if section.settings.quote2_description != blank %}
-          <button type="button" class="lmm-stats__quote-toggle" aria-expanded="false">
-            <span>{{ section.settings.quote_toggle_label | default: "En savoir plus" }}</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
-              <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </button>
-          <div class="lmm-stats__quote-description" hidden>
-            <p class="lmm-stats__quote-description-text">{{ section.settings.quote2_description }}</p>
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
+    </div>
   </div>
 </section>
 
@@ -81,15 +87,35 @@
     padding: 90px 32px;
   }
 
+  /* Titre en marge — même gabarit que "Comment procéder" (voir
+     home-hero.liquid), essayé ici pour voir si ça vaut la peine de
+     l'uniformiser sur toutes les sections. */
+  .lmm-stats__layout {
+    display: grid;
+    grid-template-columns: clamp(170px, 15vw, 300px) 1fr;
+    gap: 48px;
+  }
+
+  .lmm-stats__title-col {
+    border-right: 1px solid var(--lmm-text);
+    padding-right: 28px;
+    display: flex;
+    align-items: center;
+  }
+
+  .lmm-stats__content-col {
+    min-width: 0;
+  }
+
   .lmm-stats__heading {
-    text-align: left;
+    width: 100%;
+    text-align: center;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-section-title);
     font-weight: 400;
     line-height: 1.3;
     color: var(--lmm-text);
-    margin: 0 0 56px;
-    max-width: 640px;
+    margin: 0;
   }
 
   /* Citation vedette — centrée, prend toute la largeur de la section.
@@ -187,6 +213,20 @@
     line-height: 1.85;
     color: var(--lmm-text);
     margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .lmm-stats__layout {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .lmm-stats__title-col {
+      border-right: none;
+      border-bottom: 1px solid var(--lmm-text);
+      padding-right: 0;
+      padding-bottom: 24px;
+    }
   }
 
   @media (max-width: 767px) {

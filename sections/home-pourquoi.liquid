@@ -1,6 +1,10 @@
 <section class="lmm-why full-width">
   <div class="lmm-why__inner">
-    <h2 class="lmm-why__heading">{{ section.settings.section_title }}</h2>
+    <div class="lmm-why__layout">
+      <div class="lmm-why__title-col">
+        <h2 class="lmm-why__heading">{{ section.settings.section_title }}</h2>
+      </div>
+      <div class="lmm-why__content-col">
 
     <div class="lmm-why__row">
       <div class="lmm-why__media">
@@ -91,6 +95,9 @@
         <p class="lmm-why__text">{{ section.settings.item5_text }}</p>
       </div>
     </div>
+
+      </div>
+    </div>
   </div>
 </section>
 
@@ -113,19 +120,35 @@
     padding: 90px 32px 50px;
   }
 
-  /* Titre principal, aligné à gauche — sert de gabarit pour les titres
-     des prochaines sections de la page. Poids normal (pas de gras) et
-     plus petit que le slogan du hero (clamp 24-44px) : un titre de
-     section ne doit jamais rivaliser en taille avec le slogan. */
+  /* Titre en marge — même gabarit que "Comment procéder" (voir
+     home-hero.liquid), essayé ici pour voir si ça vaut la peine de
+     l'uniformiser sur toutes les sections. */
+  .lmm-why__layout {
+    display: grid;
+    grid-template-columns: clamp(170px, 15vw, 300px) 1fr;
+    gap: 48px;
+  }
+
+  .lmm-why__title-col {
+    border-right: 1px solid var(--lmm-text);
+    padding-right: 28px;
+    display: flex;
+    align-items: center;
+  }
+
+  .lmm-why__content-col {
+    min-width: 0;
+  }
+
   .lmm-why__heading {
-    text-align: left;
+    width: 100%;
+    text-align: center;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-section-title);
     font-weight: 400;
     line-height: 1.3;
     color: var(--lmm-text);
-    margin: 0 0 56px;
-    max-width: 640px;
+    margin: 0;
   }
 
   .lmm-why__row {
@@ -200,6 +223,20 @@
     color: var(--lmm-muted);
     margin: 0;
     max-width: 420px;
+  }
+
+  @media (max-width: 900px) {
+    .lmm-why__layout {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .lmm-why__title-col {
+      border-right: none;
+      border-bottom: 1px solid var(--lmm-text);
+      padding-right: 0;
+      padding-bottom: 24px;
+    }
   }
 
   @media (max-width: 767px) {

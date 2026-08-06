@@ -1,27 +1,33 @@
 <section class="lmm-home-collection full-width">
   <div class="lmm-home-collection__inner">
-    <h2 class="lmm-home-collection__heading">{{ section.settings.section_title }}</h2>
-
-    {% assign coll = section.settings.collection %}
-    {% if coll != blank and coll.products.size > 0 %}
-      <div class="lmm-home-collection__track" id="lmm-home-collection-track">
-        {% for product in coll.products limit: 12 %}
-          <a href="{{ product.url }}" class="lmm-home-collection__card">
-            <div class="lmm-home-collection__card-img">
-              {% if product.featured_image %}
-                <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
-              {% endif %}
-            </div>
-            <p class="lmm-home-collection__card-title">{{ product.title }}</p>
-            <p class="lmm-home-collection__card-price">{{ product.price | money }}</p>
-          </a>
-        {% endfor %}
+    <div class="lmm-home-collection__layout">
+      <div class="lmm-home-collection__title-col">
+        <h2 class="lmm-home-collection__heading">{{ section.settings.section_title }}</h2>
       </div>
 
-      <div class="lmm-home-collection__cta">
-        <a href="{{ section.settings.link_url | default: coll.url }}" class="lmm-home-collection__link">{{ section.settings.link_label }}</a>
+      <div class="lmm-home-collection__content-col">
+        {% assign coll = section.settings.collection %}
+        {% if coll != blank and coll.products.size > 0 %}
+          <div class="lmm-home-collection__track" id="lmm-home-collection-track">
+            {% for product in coll.products limit: 12 %}
+              <a href="{{ product.url }}" class="lmm-home-collection__card">
+                <div class="lmm-home-collection__card-img">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | image_url: width: 700 }}" alt="{{ product.title | escape }}" loading="lazy">
+                  {% endif %}
+                </div>
+                <p class="lmm-home-collection__card-title">{{ product.title }}</p>
+                <p class="lmm-home-collection__card-price">{{ product.price | money }}</p>
+              </a>
+            {% endfor %}
+          </div>
+
+          <div class="lmm-home-collection__cta">
+            <a href="{{ section.settings.link_url | default: coll.url }}" class="lmm-home-collection__link">{{ section.settings.link_label }}</a>
+          </div>
+        {% endif %}
       </div>
-    {% endif %}
+    </div>
   </div>
 </section>
 
@@ -73,15 +79,35 @@
     padding: 70px 32px 90px;
   }
 
+  /* Titre en marge — même gabarit que "Comment procéder" (voir
+     home-hero.liquid), essayé ici pour voir si ça vaut la peine de
+     l'uniformiser sur toutes les sections. */
+  .lmm-home-collection__layout {
+    display: grid;
+    grid-template-columns: clamp(170px, 15vw, 300px) 1fr;
+    gap: 48px;
+  }
+
+  .lmm-home-collection__title-col {
+    border-right: 1px solid var(--lmm-text);
+    padding-right: 28px;
+    display: flex;
+    align-items: center;
+  }
+
+  .lmm-home-collection__content-col {
+    min-width: 0;
+  }
+
   .lmm-home-collection__heading {
-    text-align: left;
+    width: 100%;
+    text-align: center;
     font-family: Georgia, 'Times New Roman', serif;
     font-size: var(--lmm-fs-section-title);
     font-weight: 400;
     line-height: 1.3;
     color: var(--lmm-text);
-    margin: 0 0 40px;
-    max-width: 640px;
+    margin: 0;
   }
 
   .lmm-home-collection__track {
@@ -155,6 +181,18 @@
   @media (max-width: 900px) {
     .lmm-home-collection__card {
       flex: 0 0 calc((100% - 24px) / 2);
+    }
+
+    .lmm-home-collection__layout {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .lmm-home-collection__title-col {
+      border-right: none;
+      border-bottom: 1px solid var(--lmm-text);
+      padding-right: 0;
+      padding-bottom: 24px;
     }
   }
 
