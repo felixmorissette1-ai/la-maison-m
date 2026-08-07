@@ -117,7 +117,7 @@
     // changement, est le filet de sécurité qui garantit que ça finit
     // toujours par se mettre à jour, sans jamais avoir à rafraîchir.
     clearInterval(lmmAttentePollTimer);
-    lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 1500);
+    lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 500);
 
     // Après 8s, offrir un moyen de sortir plutôt que de bloquer
     // indéfiniment si le client abandonne la connexion dans l'autre onglet.
