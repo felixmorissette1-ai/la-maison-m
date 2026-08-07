@@ -74,7 +74,6 @@
 
 <script>
   var params = new URLSearchParams(window.location.search);
-  {% if customer %}var SM_CUSTOMER_ID = {{ customer.id }};{% else %}var SM_CUSTOMER_ID = null;{% endif %}
 
   document.getElementById('r-style').textContent = params.get('style') || '—';
   document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
@@ -111,15 +110,15 @@
   function goNext() { confirmer(); }
 
   // Le complet sur mesure n'a pas de prix fixe (le tissu détermine le prix
-  // de base, lining/boutons/construction ajoutent des suppléments) — donc
-  // pas de variante Shopify unique à ajouter au panier via /cart/add.js.
-  // Le serveur recalcule le vrai total à partir des mêmes tissus/lining/
+  // de base, lining/boutons/construction ajoutent des suppléments) — le
+  // serveur recalcule le vrai total à partir des mêmes tissus/lining/
   // boutons/construction (jamais le prix affiché ici, qui ne sert qu'à
-  // l'aperçu) et crée une commande à prix personnalisé, puis on redirige
-  // directement vers le paiement Shopify pour ce montant exact.
+  // l'aperçu), puis on ajoute au VRAI panier Shopify avec ce que le
+  // backend retourne (variante + quantité qui encodent ce prix) — voir
+  // handleSmCheckout dans couturiere-actions.js pour le détail.
   function confirmer() {
     var btn = document.getElementById('lmm-prev-btn-next');
-    btn.childNodes[0].textContent = 'Préparation du paiement…';
+    btn.childNodes[0].textContent = 'Ajout au panier…';
     btn.disabled = true;
     btn.classList.remove('active');
 
@@ -137,17 +136,24 @@
         hauteur: params.get('hauteur') || '',
         bas: params.get('bas') || '',
         monogramme: monogramme,
-        monogramme_prix: prixMonogramme * 100,
-        customer_id: SM_CUSTOMER_ID
+        monogramme_prix: prixMonogramme * 100
       })
     })
     .then(function(res) { return res.json().then(function(d) { return { ok: res.ok, d: d }; }); })
     .then(function(res) {
-      if (!res.ok || !res.d.invoice_url) throw new Error(res.d.error || 'Erreur');
-      window.location.href = res.d.invoice_url;
+      if (!res.ok) throw new Error(res.d.error || 'Erreur');
+      return fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: res.d.variant_id, quantity: res.d.quantity, properties: res.d.properties })
+      });
+    })
+    .then(function(cartRes) {
+      if (!cartRes.ok) throw new Error('Échec de l\'ajout au panier');
+      window.location.href = '/cart';
     })
     .catch(function(err) {
-      console.error('Erreur création commande:', err);
+      console.error('Erreur ajout panier:', err);
       btn.childNodes[0].textContent = 'Confirmer ma commande';
       btn.disabled = false;
       btn.classList.add('active');

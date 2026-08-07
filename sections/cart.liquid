@@ -355,25 +355,37 @@
 
             <div class="lmm-cart__item-details">
               <p class="lmm-cart__item-name">{{ item.product.title }}</p>
-              {% if item.properties.size > 0 %}
-                <ul class="lmm-cart__item-props">
-                  {% for p in item.properties %}
-                    {% unless p.last == blank %}
-                      <li>{{ p.first }} : <span>{{ p.last }}</span></li>
-                    {% endunless %}
-                  {% endfor %}
-                </ul>
-              {% endif %}
+              <ul class="lmm-cart__item-props">
+                {% for p in item.properties %}
+                  {% unless p.last == blank or p.first contains '_lmm' %}
+                    <li>{{ p.first }} : <span>{{ p.last }}</span></li>
+                  {% endunless %}
+                {% endfor %}
+              </ul>
               <a href="{{ item.url_to_remove }}" class="lmm-cart__item-remove">Retirer</a>
             </div>
 
             <div class="lmm-cart__item-right">
-              <p class="lmm-cart__item-price">{{ item.final_line_price | money }}</p>
-              <div class="lmm-cart__qty">
-                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
-                <span class="lmm-cart__qty-num">{{ item.quantity }}</span>
-                <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
-              </div>
+              {% if item.properties['_lmm_sur_mesure'] %}
+                {% comment %}
+                  Lignes "sur mesure" — le prix réel est encodé dans la
+                  quantité (voir handleSmCheckout, couturiere-actions.js),
+                  donc afficher/modifier la quantité brute n'aurait aucun
+                  sens pour le client. On montre le vrai prix (déjà calculé
+                  côté serveur, jamais deviné) via la propriété cachée
+                  _lmm_prix_total plutôt que final_line_price/quantity, et
+                  aucun contrôle +/- puisque ce n'est pas "1 article de plus"
+                  mais un tout autre prix.
+                {% endcomment %}
+                <p class="lmm-cart__item-price">${{ item.properties['_lmm_prix_total'] }}</p>
+              {% else %}
+                <p class="lmm-cart__item-price">{{ item.final_line_price | money }}</p>
+                <div class="lmm-cart__qty">
+                  <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | minus: 1 }})" {% if item.quantity <= 1 %}disabled{% endif %}>−</button>
+                  <span class="lmm-cart__qty-num">{{ item.quantity }}</span>
+                  <button type="button" class="lmm-cart__qty-btn" onclick="updateQty('{{ item.key }}', {{ item.quantity | plus: 1 }})">+</button>
+                </div>
+              {% endif %}
             </div>
 
           </div>
