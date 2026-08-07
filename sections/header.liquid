@@ -56,7 +56,16 @@
         <a href="{{ routes.cart_url }}" class="lmm-icon-btn lmm-cart-btn">
           {{ 'icon-cart.svg' | inline_asset_content }}
           {% if cart.item_count > 0 %}
-            <span class="lmm-cart-count">{{ cart.item_count }}</span>
+            {% comment %}
+              Pastille unie plutôt qu'un chiffre : cart.item_count additionne
+              les quantités de toutes les lignes, mais le configurateur
+              sur-mesure encode son prix dans la quantité (voir sm-checkout,
+              couturiere-actions.js) — un seul complet peut y afficher une
+              quantité de plusieurs centaines de milliers. Un chiffre exact
+              n'a donc plus de sens ici ; "le panier n'est pas vide" suffit.
+            {% endcomment %}
+            <span class="lmm-cart-count" aria-hidden="true"></span>
+            <span class="lmm-visually-hidden">Panier non vide</span>
           {% endif %}
         </a>
 
@@ -1026,18 +1035,13 @@
 
   .lmm-cart-count {
     position: absolute;
-    top: -6px;
-    right: -8px;
+    top: -2px;
+    right: -3px;
     background: var(--lmm-ivoire);
-    color: var(--lmm-bordeaux);
-    font-size: 9px;
-    font-weight: 600;
-    width: 16px;
-    height: 16px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border: 1.5px solid var(--lmm-bordeaux);
   }
 
   .lmm-visually-hidden {
