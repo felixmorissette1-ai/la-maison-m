@@ -104,11 +104,11 @@
 
   // Récap = toujours actionnable : le bouton partagé du panneau preview
   // (même bouton "Continuer" que sur toutes les autres étapes) devient
-  // "Confirmer ma commande" et déclenche la création de la commande.
+  // "Ajouter au panier" et déclenche la création de la commande.
   var lmmSharedBtn = document.getElementById('lmm-prev-btn-next');
   if (lmmSharedBtn) {
     lmmSharedBtn.classList.add('active');
-    lmmSharedBtn.childNodes[0].textContent = 'Confirmer ma commande';
+    lmmSharedBtn.childNodes[0].textContent = 'Ajouter au panier';
   }
   function goNext() { confirmer(); }
 
@@ -157,7 +157,7 @@
     })
     .catch(function(err) {
       console.error('Erreur ajout panier:', err);
-      btn.childNodes[0].textContent = 'Confirmer ma commande';
+      btn.childNodes[0].textContent = 'Ajouter au panier';
       btn.disabled = false;
       btn.classList.add('active');
       alert('Une erreur est survenue. Veuillez réessayer.');

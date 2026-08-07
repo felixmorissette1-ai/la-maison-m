@@ -1,15 +1,24 @@
 {% comment %} Panneau de prévisualisation — Configurateur Custom — v5 {% endcomment %}
 
 <style>
+  /* Le wrapper .shopify-section utilise CSS grid avec une colonne de
+     contenu plafonnée à --page-width (1400px) — sur un grand écran, le
+     panneau d'aperçu ET le contenu principal se partagent cette largeur
+     fixe au lieu de la largeur réelle de l'écran, donc les cartes restent
+     petites peu importe la taille du moniteur. Même solution déjà
+     utilisée pour .lmm-canva-wrap (page.liquid) : sortir du grid pour ces
+     pages, qui ont besoin de toute la largeur disponible. */
+  .shopify-section:has(.lmm-sm-main) { display: block !important; }
+
   .lmm-sm-preview {
     position: fixed;
     top: calc(104px + 16px);
     right: 16px;
     width: 30vw;
+    max-width: 420px;
     height: calc(100vh - 104px - 32px);
     background: var(--lmm-white);
     border: 1px solid var(--lmm-border);
-    border-radius: 4px;
     display: flex;
     flex-direction: column;
     z-index: 50;
@@ -177,35 +186,22 @@
   }
 
   .lmm-sm-preview__btn {
-    display: flex;
     width: 100%;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: var(--lmm-text);
-    color: var(--lmm-white);
-    border: none;
-    padding: 13px 20px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: inherit;
+    box-sizing: border-box;
     opacity: 0.35;
     pointer-events: none;
-    transition: background 0.2s, opacity 0.2s;
-    box-sizing: border-box;
+    transition: opacity 0.2s;
   }
 
-  .lmm-sm-preview__btn:hover { background: var(--lmm-text); }
   .lmm-sm-preview__btn.active { opacity: 1; pointer-events: auto; }
 
   /* Desktop */
   @media (min-width: 861px) {
     .lmm-sm-main {
       width: auto !important;
+      max-width: 1400px !important;
       margin-left: 5% !important;
-      margin-right: calc(30vw + 36px) !important;
+      margin-right: calc(min(30vw, 420px) + 36px) !important;
       min-height: calc(100vh - 130px);
       box-sizing: border-box;
     }
@@ -250,7 +246,6 @@
       width: 114px;
     }
 
-    .lmm-sm-preview__swatch { border-radius: 2px; }
 
     /* Textes : cachés sur mobile */
     .lmm-sm-preview__texts { display: none; }
@@ -334,10 +329,7 @@
 
   <!-- 5. Continuer -->
   <div class="lmm-sm-preview__footer">
-    <button class="lmm-sm-preview__btn" id="lmm-prev-btn-next" onclick="typeof goNext === 'function' && goNext()">
-      Continuer
-      <svg width="12" height="12" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+    <button class="lmm-btn lmm-btn-fill lmm-sm-preview__btn" id="lmm-prev-btn-next" onclick="typeof goNext === 'function' && goNext()">Continuer</button>
   </div>
 </div>
 
