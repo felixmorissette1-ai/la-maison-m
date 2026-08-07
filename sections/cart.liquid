@@ -8,12 +8,9 @@
   }
 
   .lmm-cart__title {
-    font-family: Georgia, 'Times New Roman', serif;
     font-size: 28px;
-    font-weight: 400;
     letter-spacing: 0.04em;
     margin-bottom: 28px;
-    color: var(--lmm-text);
   }
 
   .lmm-cart__empty {
@@ -24,14 +21,8 @@
     letter-spacing: 0.04em;
   }
 
-  .lmm-cart__empty a {
-    display: inline-block;
+  .lmm-cart__empty .lmm-btn {
     margin-top: 24px;
-    color: var(--lmm-bordeaux);
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
   }
 
   .lmm-cart__items {
@@ -91,20 +82,6 @@
 
   .lmm-cart__item-props span {
     color: var(--lmm-text);
-  }
-
-  .lmm-cart__item-remove {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--lmm-muted);
-    text-decoration: none;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--lmm-border);
-  }
-
-  .lmm-cart__item-remove:hover {
-    color: var(--lmm-text);
-    border-color: var(--lmm-text);
   }
 
   .lmm-cart__item-right {
@@ -169,7 +146,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    background: var(--lmm-surface);
+    background: var(--lmm-ivoire-deep);
     padding: 32px;
   }
 
@@ -199,38 +176,7 @@
   }
 
   .lmm-cart__checkout-btn {
-    background: var(--lmm-text);
-    color: var(--lmm-white);
-    border: none;
-    padding: 16px 40px;
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: background 0.2s;
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    text-decoration: none;
-  }
-
-  .lmm-cart__checkout-btn:hover {
-    background: var(--lmm-bordeaux);
-  }
-
-  .lmm-cart__continue {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--lmm-muted);
-    text-decoration: none;
-  }
-
-  .lmm-cart__continue:hover {
-    color: var(--lmm-text);
   }
 
   .lmm-cart__upsell {
@@ -259,7 +205,7 @@
     height: 16px;
     border-radius: 50%;
     background: var(--lmm-bordeaux);
-    color: var(--lmm-text);
+    color: var(--lmm-ivoire-pale);
     font-size: 11px;
     line-height: 1;
     font-weight: 600;
@@ -329,12 +275,12 @@
 </style>
 
 <div class="lmm-cart">
-  <h1 class="lmm-cart__title">Votre commande</h1>
+  <h1 class="lmm-heading lmm-cart__title">Votre commande</h1>
 
   {% if cart.item_count == 0 %}
     <div class="lmm-cart__empty">
       <p>Votre panier est vide.</p>
-      <a href="/collections/all">Découvrir nos modèles →</a>
+      <a href="/collections/all" class="lmm-btn lmm-btn-fill">Découvrir nos modèles</a>
     </div>
   {% else %}
     <form action="{{ routes.cart_url }}" method="post" id="cart-form">
@@ -362,7 +308,7 @@
                   {% endunless %}
                 {% endfor %}
               </ul>
-              <a href="{{ item.url_to_remove }}" class="lmm-cart__item-remove">Retirer</a>
+              <a href="{{ item.url_to_remove }}" class="lmm-btn lmm-btn-quiet">Retirer</a>
             </div>
 
             <div class="lmm-cart__item-right">
@@ -393,7 +339,7 @@
       </div>
 
       <div class="lmm-cart__footer">
-        <h2 style="font-family:Georgia,serif; font-size:18px; font-weight:400; color:var(--lmm-text); margin:0 0 8px;">Résumé</h2>
+        <h2 class="lmm-heading" style="font-size:18px; margin:0 0 8px;">Résumé</h2>
         <div class="lmm-cart__subtotal">
           <span>Sous-total</span>
           <span class="lmm-cart__subtotal-amount">{{ cart.total_price | money }}</span>
@@ -404,45 +350,31 @@
           {% assign now_ts = 'now' | date: '%s' %}
           {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
           {% unless customer %}
-            <a href="/account/login" class="lmm-cart__checkout-btn">
-              Se connecter pour continuer
-              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-            <a href="/account/register" class="lmm-cart__continue" style="text-align:center; display:block;">Créer un compte</a>
+            <a href="/account/login" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn">Se connecter pour continuer</a>
+            <a href="/account/register" class="lmm-btn lmm-btn-quiet" style="text-align:center; display:block; align-self:center;">Créer un compte</a>
 
           {% elsif customer.metafields.custom.mensurations %}
-            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
+            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-ivoire-pale); padding:10px 14px;">
               <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-success); flex-shrink:0;"></div>
               <p style="font-size:11px; color:var(--lmm-text); margin:0; letter-spacing:0.04em;">Mensurations enregistrées au dossier</p>
             </div>
-            <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
-              Procéder au paiement
-              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-            <button type="button" id="lmm-remeasure-btn" onclick="lmmDemanderReprise()" style="background:none; border:none; color:var(--lmm-muted); font-size:11px; text-decoration:underline; cursor:pointer; padding:4px 0; align-self:center;">Besoin de nouvelles mensurations ?</button>
+            <button type="submit" name="checkout" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn">Procéder au paiement</button>
+            <button type="button" id="lmm-remeasure-btn" onclick="lmmDemanderReprise()" class="lmm-btn lmm-btn-quiet" style="align-self:center;">Besoin de nouvelles mensurations ?</button>
 
           {% elsif customer.metafields.custom.rdv_futur and rdv_ts > now_ts %}
-            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-surface); padding:10px 14px;">
+            <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-ivoire-pale); padding:10px 14px;">
               <div style="width:8px; height:8px; border-radius:50%; background:var(--lmm-bordeaux); flex-shrink:0;"></div>
               <p style="font-size:11px; color:var(--lmm-text); margin:0; letter-spacing:0.04em;">Rendez-vous confirmé</p>
             </div>
-            <button type="submit" name="checkout" class="lmm-cart__checkout-btn">
-              Procéder au paiement
-              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+            <button type="submit" name="checkout" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn">Procéder au paiement</button>
 
           {% else %}
-            <div style="background:var(--lmm-surface); border-left:3px solid var(--lmm-bordeaux); padding:12px 16px;">
+            <div style="background:var(--lmm-ivoire-pale); border-left:3px solid var(--lmm-bordeaux); padding:12px 16px;">
               <p style="font-size:11px; color:var(--lmm-muted); line-height:1.7; margin:0;"><strong style="color:var(--lmm-text);">Rendez-vous requis.</strong> Prenez rendez-vous pour vos mensurations avant de procéder au paiement.</p>
             </div>
-            <button type="button" class="lmm-cart__checkout-btn" onclick="ouvrirCalModal()">
-              Prise de rendez-vous
-              <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M3 9H15M15 9L10 4M15 9L10 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
+            <button type="button" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn" onclick="ouvrirCalModal()">Prise de rendez-vous</button>
           {% endunless %}
         </div>
-
-        <a href="/collections/all" class="lmm-cart__continue">← Continuer mes achats</a>
       </div>
       </div>
 
