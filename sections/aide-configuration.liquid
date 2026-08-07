@@ -27,36 +27,12 @@
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma requête</button>
     {% else %}
-      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherAttenteConnexion();">Se connecter et envoyer ma demande</a>
+      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherBoutonRetour();">Se connecter et envoyer ma demande</a>
+      <button type="button" id="aide-config-retour-btn" class="lmm-partenaire__btn-secondaire" hidden onclick="window.location.reload()">J'ai terminé ma connexion — actualiser</button>
     {% endif %}
     <p class="lmm-partenaire__error" id="aide-config-error"></p>
     <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
   </form>
-</div>
-
-<!-- Ancien marqueur, plus utilisé (voir ANCIENNE VERSION dans <script> —
-     le fetch en arrière-plan qui le lisait s'est avéré peu fiable : le CDN
-     de Shopify sert parfois une réponse mise en cache incohérente pour ce
-     genre de requête, prouvé en direct — deux fetch consécutifs avec des
-     paramètres anti-cache différents ont donné des résultats différents).
-<div id="lmm-customer-flag" data-lmm-customer-status="{% if customer %}1{% else %}0{% endif %}" hidden></div>
--->
-
-<!-- Bloque la page pendant l'attente du retour du nouvel onglet — même
-     traitement visuel que #lmm-booking-overlay (prise de rendez-vous, voir
-     header.liquid), ID différent pour ne pas entrer en conflit avec lui.
-     Pas de détection automatique (voir <script> pour pourquoi) — un bouton
-     que le client clique lui-même une fois de retour, qui déclenche un
-     VRAI rechargement de page (fiable, contrairement au fetch en
-     arrière-plan) plutôt qu'un sondage répété. -->
-<div id="aide-config-overlay" style="display:none; position:fixed; inset:0; background:var(--lmm-text); z-index:99999; flex-direction:column; align-items:center; justify-content:center; gap:20px; text-align:center; padding:24px;">
-  <p style="font-family:Georgia,serif; font-size:22px; color:var(--lmm-white); letter-spacing:0.04em; margin:0;">En attente de votre connexion…</p>
-  <p style="font-size:13px; color:var(--lmm-ivoire-pale); line-height:1.7; margin:0; max-width:340px;">Une fois la connexion terminée dans l'autre onglet (au besoin, cliquez sur le logo « La Maison M » là-bas pour revenir sur notre site), cliquez ci-dessous.</p>
-  <div style="width:120px; height:2px; background:rgba(var(--lmm-ivoire-rgb),0.2); position:relative; overflow:hidden;">
-    <div style="position:absolute; top:0; width:40px; height:2px; background:var(--lmm-bordeaux); animation:lmm-aide-config-slide 1.2s ease-in-out infinite;"></div>
-  </div>
-  <button type="button" id="aide-config-overlay-done" class="lmm-btn-primary" onclick="window.location.reload()">J'ai terminé — envoyer ma demande</button>
-  <button type="button" id="aide-config-overlay-cancel" style="background:none; border:none; color:var(--lmm-border); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; margin-top:4px;" onclick="lmmMasquerAttenteConnexion()">Annuler</button>
 </div>
 
 <style>
@@ -82,19 +58,45 @@
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
 
-  @keyframes lmm-aide-config-slide {
-    0% { left: -40px; }
-    100% { left: 120px; }
+  /* Bouton secondaire (contour, pas plein) pour rester subordonné au CTA
+     principal — mêmes couleurs de marque que le reste de la page, pas le
+     fond sombre emprunté à l'overlay de prise de rendez-vous. */
+  .lmm-partenaire__btn-secondaire {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    background: none;
+    border: 1px solid var(--lmm-border);
+    color: var(--lmm-text);
+    padding: 14px 32px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .lmm-partenaire__btn-secondaire:hover {
+    border-color: var(--lmm-bordeaux);
+    color: var(--lmm-bordeaux);
+  }
+  .lmm-partenaire__btn-secondaire[hidden] {
+    display: none;
   }
 </style>
 
 <script>
   // Le client n'est pas forcément connecté quand il remplit ce formulaire —
-  // "Se connecter et envoyer ma demande" l'envoie vers /account/login puis
-  // le ramène ici via return_url. Sans ceci, il perdrait ce qu'il a tapé et
-  // devrait tout retaper + recliquer "Envoyer" une fois connecté. On
-  // sauvegarde donc les champs juste avant de partir, et on les restaure +
-  // on soumet automatiquement dès le retour, connecté.
+  // "Se connecter et envoyer ma demande" l'envoie vers /account/login,
+  // ouvert dans un nouvel onglet pour garder celui-ci intact. On sauvegarde
+  // les champs avant de partir pour ne pas les perdre, et on les restaure
+  // au retour — sans rien envoyer automatiquement : le client clique
+  // lui-même "Envoyer ma requête" une fois prêt. Pas de détection
+  // automatique de la connexion non plus (testée en direct et prouvée peu
+  // fiable — le cache CDN de Shopify sert des réponses incohérentes pour
+  // ce genre de requête) — juste un bouton "J'ai terminé" que le client
+  // clique lui-même, qui déclenche un vrai rechargement de page.
   function lmmSauvegarderAideConfig() {
     try {
       localStorage.setItem('lmm_aide_config_pending', JSON.stringify({
@@ -106,166 +108,9 @@
     } catch (e) {}
   }
 
-  // Le lien de connexion s'ouvre maintenant dans un nouvel onglet (voir
-  // target="_blank") plutôt que de quitter cette page — l'onglet original
-  // reste donc affiché avec le formulaire intact pendant que le client se
-  // connecte/s'inscrit ailleurs. On bloque la page avec un écran de
-  // chargement pendant l'attente (même traitement que la prise de
-  // rendez-vous) plutôt que de la laisser "retouchable" dans un état
-  // périmé — voir #aide-config-overlay plus haut.
-
-  /* === ANCIENNE VERSION — commentée à la demande de Felix le 2026-08-xx :
-     la page d'attente s'est terminée sans connexion réelle (faux positif).
-     Gardée ici pour référence, remplacée par la version plus simple
-     juste en dessous (une seule condition : confirmation serveur réelle
-     que le client est connecté, sondage 1x/seconde, anti-cache).
-
-  var lmmAttentePollTimer = null;
-  var lmmAttenteAuthPollTimer = null;
-  var lmmAttenteMaxTimer = null;
-  var lmmAttenteAbandonTimer = null;
-  var lmmAttenteDepuis = 0;
-
-  function lmmAfficherAttenteConnexion() {
-    lmmAttenteDepuis = Date.now();
-    var overlay = document.getElementById('aide-config-overlay');
-    var cancelBtn = document.getElementById('aide-config-overlay-cancel');
-    if (overlay) overlay.style.display = 'flex';
-    if (cancelBtn) cancelBtn.style.display = 'none';
-
-    clearInterval(lmmAttentePollTimer);
-    lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 500);
-
-    clearInterval(lmmAttenteAuthPollTimer);
-    lmmAttenteAuthPollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 500);
-
-    clearTimeout(lmmAttenteMaxTimer);
-    lmmAttenteMaxTimer = setTimeout(function () {
-      if (cancelBtn) cancelBtn.style.display = 'inline-block';
-    }, 8000);
-
-    clearTimeout(lmmAttenteAbandonTimer);
-    lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
-
-    document.addEventListener('visibilitychange', lmmVerifierEnvoiTermine);
-  }
-
-  function lmmMasquerAttenteConnexion() {
-    var overlay = document.getElementById('aide-config-overlay');
-    if (overlay) overlay.style.display = 'none';
-    clearInterval(lmmAttentePollTimer);
-    clearInterval(lmmAttenteAuthPollTimer);
-    clearTimeout(lmmAttenteMaxTimer);
-    clearTimeout(lmmAttenteAbandonTimer);
-    document.removeEventListener('visibilitychange', lmmVerifierEnvoiTermine);
-  }
-
-  function lmmVerifierEnvoiTermine() {
-    if (document.visibilityState === 'hidden') return;
-    var valeur;
-    try {
-      valeur = Number(localStorage.getItem('lmm_aide_config_done') || 0);
-    } catch (e) {
-      valeur = 0;
-    }
-    if (valeur && valeur >= lmmAttenteDepuis) {
-      lmmMasquerAttenteConnexion();
-      var okEl = document.getElementById('aide-config-success');
-      if (okEl) okEl.style.display = 'block';
-      document.removeEventListener('visibilitychange', lmmVerifierEnvoiTermine);
-    }
-  }
-
-  function lmmVerifierConnexionEnArrierePlan() {
-    if (document.visibilityState === 'hidden') return;
-    fetch(window.location.pathname + window.location.search, { credentials: 'same-origin', cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (html) {
-        if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
-        clearInterval(lmmAttenteAuthPollTimer);
-        window.location.reload();
-      })
-      .catch(function () {});
-  }
-
-  window.addEventListener('storage', function (e) {
-    if (e.key !== 'lmm_aide_config_done') return;
-    lmmVerifierEnvoiTermine();
-  });
-
-  === FIN ANCIENNE VERSION (2e passe, sondage/localStorage) === */
-
-  /* === 2e ANCIENNE VERSION — commentée aussi : fetch en arrière-plan pour
-     détecter la connexion sans action du client. Testée en direct et
-     PROUVÉE peu fiable : deux fetch consécutifs vers la même page, avec
-     des paramètres anti-cache DIFFÉRENTS à chaque fois, ont renvoyé des
-     résultats différents (un coup "connecté", un coup "pas connecté") —
-     le CDN de Shopify sert par moments une réponse mise en cache
-     incohérente pour ce type de requête, peu importe ce qu'on fait côté
-     client pour le contourner. Remplacée par un bouton manuel : plus
-     lent d'un clic, mais fiable à 100 % (un vrai rechargement de page
-     obtient toujours le rendu Liquid exact, pas une copie en cache).
-     (Le marqueur data-lmm-customer-status qu'utilisait ce fetch a aussi
-     été retiré du HTML plus haut.)
-
-  var lmmAttentePollTimer = null;
-  var lmmAttenteAbandonTimer = null;
-
-  function lmmAfficherAttenteConnexion() {
-    var overlay = document.getElementById('aide-config-overlay');
-    var cancelBtn = document.getElementById('aide-config-overlay-cancel');
-    if (overlay) overlay.style.display = 'flex';
-    if (cancelBtn) cancelBtn.style.display = 'none';
-
-    clearInterval(lmmAttentePollTimer);
-    lmmAttentePollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 1000);
-
-    setTimeout(function () {
-      if (cancelBtn) cancelBtn.style.display = 'inline-block';
-    }, 8000);
-
-    clearTimeout(lmmAttenteAbandonTimer);
-    lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
-  }
-
-  function lmmMasquerAttenteConnexion() {
-    var overlay = document.getElementById('aide-config-overlay');
-    if (overlay) overlay.style.display = 'none';
-    clearInterval(lmmAttentePollTimer);
-    clearTimeout(lmmAttenteAbandonTimer);
-  }
-
-  function lmmVerifierConnexionEnArrierePlan() {
-    if (document.visibilityState === 'hidden') return;
-    var url = window.location.pathname + '?lmm_check=' + Date.now();
-    fetch(url, { credentials: 'same-origin', cache: 'no-store' })
-      .then(function (r) { return r.text(); })
-      .then(function (html) {
-        if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
-        clearInterval(lmmAttentePollTimer);
-        clearTimeout(lmmAttenteAbandonTimer);
-        window.location.reload();
-      })
-      .catch(function () {});
-  }
-
-  === FIN 2e ANCIENNE VERSION === */
-
-  // === VERSION ACTUELLE — pas de sondage automatique du tout (prouvé peu
-  // fiable ci-dessus, à cause du cache CDN de Shopify). Le client clique
-  // lui-même un bouton une fois de retour ; ça déclenche un VRAI
-  // rechargement de la page, qui obtient toujours le rendu Liquid exact
-  // côté serveur (jamais une copie en cache) — le code qui restaure et
-  // envoie automatiquement la demande (plus bas) prend le relais à partir
-  // de là. Zéro requête en arrière-plan tant que le client n'a pas cliqué.
-  function lmmAfficherAttenteConnexion() {
-    var overlay = document.getElementById('aide-config-overlay');
-    if (overlay) overlay.style.display = 'flex';
-  }
-
-  function lmmMasquerAttenteConnexion() {
-    var overlay = document.getElementById('aide-config-overlay');
-    if (overlay) overlay.style.display = 'none';
+  function lmmAfficherBoutonRetour() {
+    var btn = document.getElementById('aide-config-retour-btn');
+    if (btn) btn.hidden = false;
   }
 
   function lmmSoumettreAideConfig() {
@@ -301,10 +146,6 @@
       okEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Envoyer ma requête';
-      /* Ancien signal cross-tab via localStorage, plus utilisé (voir
-         ANCIENNE VERSION plus haut) :
-      try { localStorage.setItem('lmm_aide_config_done', String(Date.now())); } catch (e) {}
-      */
     })
     .catch(function() {
       errEl.textContent = 'Erreur réseau. Réessayez.';
@@ -316,8 +157,8 @@
 
   {% if customer %}
     // De retour de /account/login, maintenant connecté : restaure ce que le
-    // client avait tapé avant de partir et envoie la demande tout de suite,
-    // sans qu'il ait à retaper ou recliquer quoi que ce soit.
+    // client avait tapé avant de partir dans les champs — mais ne l'envoie
+    // PAS automatiquement, le client clique lui-même "Envoyer ma requête".
     (function () {
       var pending;
       try {
@@ -331,7 +172,6 @@
       if (pending.nom) document.getElementById('ac-nom').value = pending.nom;
       document.getElementById('ac-evenement').value = pending.evenement || '';
       document.getElementById('ac-note').value = pending.note || '';
-      lmmSoumettreAideConfig();
     })();
   {% endif %}
 </script>
