@@ -72,16 +72,9 @@
 
 </div>
 
-{% assign sm_produit = section.settings.produit_sur_mesure %}
-{% if sm_produit %}
-  {% assign sm_variant_id = sm_produit.variants.first.id %}
-{% else %}
-  {% assign sm_variant_id = 51812728996130 %}
-{% endif %}
-
 <script>
   var params = new URLSearchParams(window.location.search);
-  var SM_VARIANT_ID = {{ sm_variant_id }};
+  {% if customer %}var SM_CUSTOMER_ID = {{ customer.id }};{% else %}var SM_CUSTOMER_ID = null;{% endif %}
 
   document.getElementById('r-style').textContent = params.get('style') || '—';
   document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
@@ -109,7 +102,7 @@
 
   // Récap = toujours actionnable : le bouton partagé du panneau preview
   // (même bouton "Continuer" que sur toutes les autres étapes) devient
-  // "Confirmer ma commande" et déclenche l'ajout au panier.
+  // "Confirmer ma commande" et déclenche la création de la commande.
   var lmmSharedBtn = document.getElementById('lmm-prev-btn-next');
   if (lmmSharedBtn) {
     lmmSharedBtn.classList.add('active');
@@ -117,37 +110,44 @@
   }
   function goNext() { confirmer(); }
 
+  // Le complet sur mesure n'a pas de prix fixe (le tissu détermine le prix
+  // de base, lining/boutons/construction ajoutent des suppléments) — donc
+  // pas de variante Shopify unique à ajouter au panier via /cart/add.js.
+  // Le serveur recalcule le vrai total à partir des mêmes tissus/lining/
+  // boutons/construction (jamais le prix affiché ici, qui ne sert qu'à
+  // l'aperçu) et crée une commande à prix personnalisé, puis on redirige
+  // directement vers le paiement Shopify pour ce montant exact.
   function confirmer() {
     var btn = document.getElementById('lmm-prev-btn-next');
-    btn.childNodes[0].textContent = 'Ajout au panier…';
+    btn.childNodes[0].textContent = 'Préparation du paiement…';
     btn.disabled = true;
     btn.classList.remove('active');
 
-    var properties = {};
-    if (params.get('style')) properties['Style'] = params.get('style');
-    if (params.get('pieces')) properties['Pièces'] = params.get('pieces');
-    if (params.get('tissu')) properties['Tissu'] = params.get('tissu');
-    if (params.get('lining')) properties['Lining'] = params.get('lining');
-    if (params.get('bouton')) properties['Boutons'] = params.get('bouton');
-    if (params.get('construction')) properties['Construction'] = params.get('construction');
-    if (params.get('hauteur')) properties['Hauteur du pantalon'] = params.get('hauteur');
-    if (params.get('bas')) properties['Bas de pantalon'] = params.get('bas');
-    if (monogramme) properties['Monogramme (nom brodé à l\'intérieur du veston)'] = monogramme;
-
-    fetch('/cart/add.js', {
+    fetch('https://lmm-backend.vercel.app/api/couturiere-actions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: SM_VARIANT_ID, quantity: 1, properties: properties })
+      body: JSON.stringify({
+        action: 'sm-checkout',
+        style: params.get('style') || '',
+        pieces: params.get('pieces') || '',
+        tissu: params.get('tissu') || '',
+        lining: params.get('lining') || '',
+        bouton: params.get('bouton') || '',
+        construction: params.get('construction') || '',
+        hauteur: params.get('hauteur') || '',
+        bas: params.get('bas') || '',
+        monogramme: monogramme,
+        monogramme_prix: prixMonogramme * 100,
+        customer_id: SM_CUSTOMER_ID
+      })
     })
+    .then(function(res) { return res.json().then(function(d) { return { ok: res.ok, d: d }; }); })
     .then(function(res) {
-      if (!res.ok) throw new Error('Erreur ' + res.status);
-      return res.json();
-    })
-    .then(function() {
-      window.location.href = '/cart';
+      if (!res.ok || !res.d.invoice_url) throw new Error(res.d.error || 'Erreur');
+      window.location.href = res.d.invoice_url;
     })
     .catch(function(err) {
-      console.error('Erreur ajout panier:', err);
+      console.error('Erreur création commande:', err);
       btn.childNodes[0].textContent = 'Confirmer ma commande';
       btn.disabled = false;
       btn.classList.add('active');
@@ -162,7 +162,6 @@
   "settings": [
     { "type": "text", "id": "titre", "label": "Titre", "default": "Votre complet sur mesure" },
     { "type": "textarea", "id": "sous_titre", "label": "Sous-titre", "default": "Vérifiez vos choix avant de confirmer votre commande." },
-    { "type": "product", "id": "produit_sur_mesure", "label": "Produit sur mesure (complet custom)" },
     { "type": "number", "id": "prix_monogramme", "label": "Prix du monogramme (en cents, ex: 1500 = 15,00$)", "default": 2000 }
   ],
   "presets": [{ "name": "Custom — Récapitulatif" }]
