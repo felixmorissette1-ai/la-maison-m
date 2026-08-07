@@ -106,6 +106,13 @@
   // chargement pendant l'attente (même traitement que la prise de
   // rendez-vous) plutôt que de la laisser "retouchable" dans un état
   // périmé — voir #aide-config-overlay plus haut.
+
+  /* === ANCIENNE VERSION — commentée à la demande de Felix le 2026-08-xx :
+     la page d'attente s'est terminée sans connexion réelle (faux positif).
+     Gardée ici pour référence, remplacée par la version plus simple
+     juste en dessous (une seule condition : confirmation serveur réelle
+     que le client est connecté, sondage 1x/seconde, anti-cache).
+
   var lmmAttentePollTimer = null;
   var lmmAttenteAuthPollTimer = null;
   var lmmAttenteMaxTimer = null;
@@ -119,46 +126,20 @@
     if (overlay) overlay.style.display = 'flex';
     if (cancelBtn) cancelBtn.style.display = 'none';
 
-    // Le "storage" event (déclenché dans CET onglet quand un AUTRE onglet
-    // écrit dans localStorage) est le chemin rapide, mais ce n'est pas
-    // fiable à 100 % selon le navigateur/l'état de l'onglet en arrière-plan
-    // — voir l'écouteur plus bas. Le sondage ci-dessous, qui relit
-    // directement la valeur plutôt que de dépendre d'être notifié d'un
-    // changement, est le filet de sécurité qui garantit que ça finit
-    // toujours par se mettre à jour, sans jamais avoir à rafraîchir.
     clearInterval(lmmAttentePollTimer);
     lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 500);
 
-    // Deuxième filet, complémentaire : le cookie de session Shopify est
-    // partagé entre onglets du même navigateur, donc CET onglet peut lui
-    // aussi devenir "connecté" dès que la connexion se termine dans l'autre
-    // onglet — même si celui-ci n'a jamais rechargé une page de notre site.
-    // On revérifie ça en arrière-plan (un fetch, jamais un rechargement
-    // visible) toutes les 500ms ; dès que c'est détecté, LÀ on recharge
-    // réellement pour de vrai, ce qui déclenche le remplissage + l'envoi
-    // automatique déjà en place plus bas.
     clearInterval(lmmAttenteAuthPollTimer);
     lmmAttenteAuthPollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 500);
 
-    // Après 8s, offrir un moyen de sortir plutôt que de bloquer
-    // indéfiniment si le client abandonne la connexion dans l'autre onglet.
     clearTimeout(lmmAttenteMaxTimer);
     lmmAttenteMaxTimer = setTimeout(function () {
       if (cancelBtn) cancelBtn.style.display = 'inline-block';
     }, 8000);
 
-    // Filet de sécurité DUR : si le client ferme l'onglet mentalement (n'y
-    // revient jamais) sans jamais cliquer "Annuler", les deux sondages
-    // ci-dessus tourneraient sinon indéfiniment tant que cet onglet reste
-    // ouvert quelque part en arrière-plan — 4 requêtes/seconde à vie. Après
-    // 10 minutes, on arrête tout d'office, peu importe ce que fait le
-    // client.
     clearTimeout(lmmAttenteAbandonTimer);
     lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
 
-    // Les navigateurs peuvent ralentir/mettre en pause les timers d'un
-    // onglet en arrière-plan — on revérifie donc aussi dès que ce
-    // premier onglet redevient visible (l'utilisateur y revient).
     document.addEventListener('visibilitychange', lmmVerifierEnvoiTermine);
   }
 
@@ -180,9 +161,6 @@
     } catch (e) {
       valeur = 0;
     }
-    // N'accepte que si le signal date d'APRÈS le clic sur "Se connecter" —
-    // sinon un vieux signal laissé par une session précédente afficherait
-    // faussement un succès immédiat.
     if (valeur && valeur >= lmmAttenteDepuis) {
       lmmMasquerAttenteConnexion();
       var okEl = document.getElementById('aide-config-success');
@@ -198,24 +176,75 @@
       .then(function (html) {
         if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
         clearInterval(lmmAttenteAuthPollTimer);
-        // Un vrai rechargement ici (pas juste une mise à jour du DOM) pour
-        // que le rendu du bloc "client connecté" se refasse correctement
-        // côté serveur (courriel du compte, bouton, etc.) et que le code
-        // qui restaure + envoie automatiquement la demande en attente
-        // s'exécute.
         window.location.reload();
       })
       .catch(function () {});
   }
 
-  // L'envoi effectif de la demande se produit dans l'AUTRE onglet (une fois
-  // connecté là-bas, voir plus bas + header.liquid) — c'est le chemin
-  // rapide quand le navigateur livre bien l'événement ; lmmVerifierEnvoiTermine
-  // (sondage) est le filet de sécurité si jamais il ne se déclenche pas.
   window.addEventListener('storage', function (e) {
     if (e.key !== 'lmm_aide_config_done') return;
     lmmVerifierEnvoiTermine();
   });
+
+  === FIN ANCIENNE VERSION === */
+
+  // === NOUVELLE VERSION — une seule source de vérité : l'état de connexion
+  // RÉEL renvoyé par le serveur (pas de signal intermédiaire type
+  // localStorage, qui pouvait déclencher un faux "connecté"). Sondage en
+  // arrière-plan de cette page, 1 fois par seconde, avec un paramètre
+  // anti-cache pour ne jamais lire une réponse mise en cache par erreur.
+  var lmmAttentePollTimer = null;
+  var lmmAttenteAbandonTimer = null;
+
+  function lmmAfficherAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    var cancelBtn = document.getElementById('aide-config-overlay-cancel');
+    if (overlay) overlay.style.display = 'flex';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+
+    clearInterval(lmmAttentePollTimer);
+    lmmAttentePollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 1000);
+
+    // Après 8s, offrir un moyen de sortir plutôt que de bloquer
+    // indéfiniment si le client abandonne la connexion dans l'autre onglet.
+    setTimeout(function () {
+      if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    }, 8000);
+
+    // Filet de sécurité dur : arrête tout après 10 minutes peu importe ce
+    // que fait le client, pour ne jamais sonder indéfiniment en arrière-plan.
+    clearTimeout(lmmAttenteAbandonTimer);
+    lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
+  }
+
+  function lmmMasquerAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    if (overlay) overlay.style.display = 'none';
+    clearInterval(lmmAttentePollTimer);
+    clearTimeout(lmmAttenteAbandonTimer);
+  }
+
+  function lmmVerifierConnexionEnArrierePlan() {
+    if (document.visibilityState === 'hidden') return;
+    // Paramètre anti-cache unique à chaque appel — sans ça, une réponse
+    // mise en cache (CDN ou navigateur) pourrait montrer "connecté" à tort
+    // même sans connexion réelle, ce qui est probablement ce qui vient de
+    // se produire avec l'ancienne version.
+    var url = window.location.pathname + '?lmm_check=' + Date.now();
+    fetch(url, { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
+        clearInterval(lmmAttentePollTimer);
+        clearTimeout(lmmAttenteAbandonTimer);
+        // Vrai rechargement (pas juste une mise à jour du DOM) — le rendu
+        // Liquid se refait correctement côté serveur (courriel du compte,
+        // bouton, etc.) et le code qui restaure + envoie automatiquement
+        // la demande en attente s'exécute.
+        window.location.reload();
+      })
+      .catch(function () {});
+  }
 
   function lmmSoumettreAideConfig() {
     var btn = document.getElementById('aide-config-submit-btn');
@@ -250,9 +279,10 @@
       okEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Envoyer ma requête';
-      // Signale aux AUTRES onglets du même site (voir l'écouteur "storage"
-      // plus haut) que la demande vient d'être envoyée avec succès.
+      /* Ancien signal cross-tab via localStorage, plus utilisé (voir
+         ANCIENNE VERSION plus haut) :
       try { localStorage.setItem('lmm_aide_config_done', String(Date.now())); } catch (e) {}
+      */
     })
     .catch(function() {
       errEl.textContent = 'Erreur réseau. Réessayez.';
