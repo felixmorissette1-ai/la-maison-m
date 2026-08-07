@@ -101,24 +101,24 @@
     <p style="font-size:12px; color:var(--lmm-muted); letter-spacing:0.04em; margin:0 0 20px; line-height:1.7;">Nous trouvons le tailleur le plus près de vous.</p>
 
     <div id="lmm-loc-type" style="display:none; flex-direction:column; gap:10px; margin-bottom:20px;">
-      <button onclick="choisirTypeRdv('mensurations')" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
+      <button onclick="choisirTypeRdv('mensurations')" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
         <span style="display:block; font-size:13px; letter-spacing:0.02em;">Rendez-vous mensurations</span>
         <span style="display:block; font-size:11px; font-weight:300; opacity:0.8; margin-top:4px;">Prise de vos mesures et retouches.</span>
       </button>
-      <button onclick="choisirTypeRdv('tissus')" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
+      <button onclick="choisirTypeRdv('tissus')" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
         <span style="display:block; font-size:13px; letter-spacing:0.02em;">Voir les tissus et conseils vestimentaires</span>
         <span style="display:block; font-size:11px; font-weight:300; opacity:0.8; margin-top:4px;">Touchez les tissus et soyez conseillé avant de commander.</span>
       </button>
     </div>
 
     <div id="lmm-loc-auto" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-      <button onclick="localiserAuto()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center;">
+      <button onclick="localiserAuto()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center;">
         Utiliser ma localisation
       </button>
       <p style="text-align:center; font-size:11px; color:var(--lmm-border); margin:0;">— ou —</p>
       <div style="display:flex; gap:8px;">
         <input id="lmm-code-postal" type="text" placeholder="Code postal (ex: G6V 1A1)" style="flex:1; border:1px solid var(--lmm-border); padding:12px; font-family:inherit; font-size:13px; color:var(--lmm-text);">
-        <button onclick="localiserParCodePostal()" style="background:var(--lmm-bordeaux); color:var(--lmm-ivoire-pale); border:none; padding:12px 20px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        <button onclick="localiserParCodePostal()" style="background:var(--lmm-bordeaux); color:var(--lmm-ivoire-pale); border:none; border-radius:8px; padding:12px 20px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
           OK
         </button>
       </div>
@@ -151,10 +151,10 @@
       <div id="lmm-couturieres-liste" style="display:flex; flex-direction:column; gap:8px; overflow-y:auto; flex:1; min-height:0; margin-top:12px;"></div>
 
       <div style="flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding-top:4px;">
-        <button onclick="confirmerCouturiereEtOuvrirCal()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        <button onclick="confirmerCouturiereEtOuvrirCal()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
           Prendre rendez-vous
         </button>
-        <button onclick="afficherLocAuto()" style="background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        <button onclick="afficherLocAuto()" style="background:none; border:1px solid var(--lmm-border); border-radius:8px; color:var(--lmm-muted); padding:12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
           Changer de localisation
         </button>
       </div>
@@ -171,10 +171,10 @@
     <p style="font-size:12px; color:var(--lmm-muted); letter-spacing:0.04em; margin:0 0 24px;">Veuillez indiquer la raison de votre annulation.</p>
     <textarea id="lmm-annulation-raison" placeholder="Raison de l'annulation..." style="width:100%; height:100px; border:1px solid var(--lmm-border); padding:12px; font-family:inherit; font-size:13px; color:var(--lmm-text); resize:none; box-sizing:border-box; margin-bottom:16px;"></textarea>
     <div style="display:flex; flex-direction:column; gap:10px;">
-      <button onclick="confirmerAnnulation()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+      <button onclick="confirmerAnnulation()" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
         Confirmer l'annulation
       </button>
-      <button onclick="fermerAnnulationModal()" style="background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+      <button onclick="fermerAnnulationModal()" style="background:none; border:1px solid var(--lmm-border); border-radius:8px; color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
         Retour
       </button>
     </div>
@@ -186,7 +186,7 @@
   <div class="lmm-cal-modal__inner" style="padding:40px 32px; max-width:480px;">
     <h2 style="font-family:Georgia,serif; font-size:22px; font-weight:400; color:var(--lmm-text); margin:0 0 8px;">Rendez-vous confirmé ✓</h2>
     <p style="font-size:13px; color:var(--lmm-muted); margin:0 0 24px; line-height:1.6;">Connectez-vous pour accéder au paiement et que vos mensurations soient enregistrées à votre nom.</p>
-    <a id="lmm-signup-link" href="/account/login" style="display:flex; align-items:center; justify-content:center; background:var(--lmm-bordeaux); color:var(--lmm-ivoire-pale); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; font-family:inherit; margin-bottom:10px;">
+    <a id="lmm-signup-link" href="/account/login" style="display:flex; align-items:center; justify-content:center; background:var(--lmm-bordeaux); color:var(--lmm-ivoire-pale); border-radius:8px; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; text-decoration:none; font-family:inherit; margin-bottom:10px;">
       Se connecter
     </a>
     <a href="/account/register" style="display:block; text-align:center; font-size:11px; letter-spacing:0.08em; color:var(--lmm-muted); text-decoration:none; margin-bottom:16px;">
@@ -241,13 +241,13 @@
 
     <div style="display:flex; flex-direction:column; gap:10px;">
       {% if customer and customer.metafields.custom.rdv_uid != blank %}
-        <button onclick="ouvrirRescheduleModal()" style="display:flex; align-items:center; justify-content:center; background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+        <button onclick="ouvrirRescheduleModal()" style="display:flex; align-items:center; justify-content:center; background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; border-radius:8px; padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Modifier le rendez-vous
         </button>
-        <button onclick="ouvrirChangementCouturiere()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+        <button onclick="ouvrirChangementCouturiere()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); border-radius:8px; color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Changer de tailleur
         </button>
-        <button onclick="ouvrirAnnulationModal()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
+        <button onclick="ouvrirAnnulationModal()" style="display:flex; align-items:center; justify-content:center; background:none; border:1px solid var(--lmm-border); border-radius:8px; color:var(--lmm-muted); padding:14px 32px; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:inherit; width:100%;">
           Annuler le rendez-vous
         </button>
       {% endif %}
