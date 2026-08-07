@@ -28,11 +28,20 @@
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma requête</button>
     {% else %}
       <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherAttenteConnexion();">Se connecter et envoyer ma demande</a>
-      <p class="lmm-partenaire__waiting" id="aide-config-waiting" hidden>Une nouvelle fenêtre s'est ouverte pour vous connecter. Votre demande s'enverra automatiquement dès que ce sera fait — vous pouvez ensuite fermer cette fenêtre-là et revenir ici.</p>
     {% endif %}
     <p class="lmm-partenaire__error" id="aide-config-error"></p>
     <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
   </form>
+</div>
+
+<!-- Bloque la page pendant l'attente du retour du nouvel onglet — même
+     traitement visuel que #lmm-booking-overlay (prise de rendez-vous, voir
+     header.liquid), ID différent pour ne pas entrer en conflit avec lui. -->
+<div id="aide-config-overlay" style="display:none; position:fixed; inset:0; background:var(--lmm-text); z-index:99999; flex-direction:column; align-items:center; justify-content:center; gap:20px; text-align:center; padding:24px;">
+  <p style="font-family:Georgia,serif; font-size:22px; color:var(--lmm-white); letter-spacing:0.04em; margin:0;">En attente de votre connexion…</p>
+  <p style="font-size:12px; color:var(--lmm-bordeaux); letter-spacing:0.12em; text-transform:uppercase; margin:0; max-width:320px;">Une fois connecté dans l'autre onglet, votre demande s'envoie automatiquement ici</p>
+  <div style="width:40px; height:2px; background:var(--lmm-bordeaux); animation:lmm-aide-config-pulse 1.4s ease-in-out infinite;"></div>
+  <button type="button" id="aide-config-overlay-cancel" style="display:none; background:none; border:none; color:var(--lmm-border); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; margin-top:12px;" onclick="lmmMasquerAttenteConnexion()">Annuler l'attente</button>
 </div>
 
 <style>
@@ -57,7 +66,11 @@
   .lmm-partenaire__field textarea:focus { outline: none; border-color: var(--lmm-bordeaux); }
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
-  .lmm-partenaire__waiting { color: var(--lmm-muted); font-size: 13px; line-height: 1.6; margin-top: 14px; }
+
+  @keyframes lmm-aide-config-pulse {
+    0%, 100% { opacity: 0.3; transform: scaleX(0.4); }
+    50% { opacity: 1; transform: scaleX(1); }
+  }
 </style>
 
 <script>
@@ -81,27 +94,77 @@
   // Le lien de connexion s'ouvre maintenant dans un nouvel onglet (voir
   // target="_blank") plutôt que de quitter cette page — l'onglet original
   // reste donc affiché avec le formulaire intact pendant que le client se
-  // connecte/s'inscrit ailleurs. On remplace le lien par ce message
-  // d'attente le temps que ça se termine.
+  // connecte/s'inscrit ailleurs. On bloque la page avec un écran de
+  // chargement pendant l'attente (même traitement que la prise de
+  // rendez-vous) plutôt que de la laisser "retouchable" dans un état
+  // périmé — voir #aide-config-overlay plus haut.
+  var lmmAttentePollTimer = null;
+  var lmmAttenteMaxTimer = null;
+  var lmmAttenteDepuis = 0;
+
   function lmmAfficherAttenteConnexion() {
-    var link = document.getElementById('aide-config-login-link');
-    var waiting = document.getElementById('aide-config-waiting');
-    if (link) link.style.display = 'none';
-    if (waiting) waiting.hidden = false;
+    lmmAttenteDepuis = Date.now();
+    var overlay = document.getElementById('aide-config-overlay');
+    var cancelBtn = document.getElementById('aide-config-overlay-cancel');
+    if (overlay) overlay.style.display = 'flex';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+
+    // Le "storage" event (déclenché dans CET onglet quand un AUTRE onglet
+    // écrit dans localStorage) est le chemin rapide, mais ce n'est pas
+    // fiable à 100 % selon le navigateur/l'état de l'onglet en arrière-plan
+    // — voir l'écouteur plus bas. Le sondage ci-dessous, qui relit
+    // directement la valeur plutôt que de dépendre d'être notifié d'un
+    // changement, est le filet de sécurité qui garantit que ça finit
+    // toujours par se mettre à jour, sans jamais avoir à rafraîchir.
+    clearInterval(lmmAttentePollTimer);
+    lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 1500);
+
+    // Après 8s, offrir un moyen de sortir plutôt que de bloquer
+    // indéfiniment si le client abandonne la connexion dans l'autre onglet.
+    clearTimeout(lmmAttenteMaxTimer);
+    lmmAttenteMaxTimer = setTimeout(function () {
+      if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    }, 8000);
+
+    // Les navigateurs peuvent ralentir/mettre en pause les timers d'un
+    // onglet en arrière-plan — on revérifie donc aussi dès que ce
+    // premier onglet redevient visible (l'utilisateur y revient).
+    document.addEventListener('visibilitychange', lmmVerifierEnvoiTermine);
+  }
+
+  function lmmMasquerAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    if (overlay) overlay.style.display = 'none';
+    clearInterval(lmmAttentePollTimer);
+    clearTimeout(lmmAttenteMaxTimer);
+  }
+
+  function lmmVerifierEnvoiTermine() {
+    if (document.visibilityState === 'hidden') return;
+    var valeur;
+    try {
+      valeur = Number(localStorage.getItem('lmm_aide_config_done') || 0);
+    } catch (e) {
+      valeur = 0;
+    }
+    // N'accepte que si le signal date d'APRÈS le clic sur "Se connecter" —
+    // sinon un vieux signal laissé par une session précédente afficherait
+    // faussement un succès immédiat.
+    if (valeur && valeur >= lmmAttenteDepuis) {
+      lmmMasquerAttenteConnexion();
+      var okEl = document.getElementById('aide-config-success');
+      if (okEl) okEl.style.display = 'block';
+      document.removeEventListener('visibilitychange', lmmVerifierEnvoiTermine);
+    }
   }
 
   // L'envoi effectif de la demande se produit dans l'AUTRE onglet (une fois
-  // connecté là-bas, voir plus bas + header.liquid). localStorage est
-  // partagé entre onglets du même site, donc dès que cet autre onglet
-  // marque la demande comme envoyée, l'événement "storage" se déclenche ICI
-  // (dans cet onglet original) et on peut afficher le succès sans jamais
-  // recharger ni quitter cette page.
+  // connecté là-bas, voir plus bas + header.liquid) — c'est le chemin
+  // rapide quand le navigateur livre bien l'événement ; lmmVerifierEnvoiTermine
+  // (sondage) est le filet de sécurité si jamais il ne se déclenche pas.
   window.addEventListener('storage', function (e) {
     if (e.key !== 'lmm_aide_config_done') return;
-    var waiting = document.getElementById('aide-config-waiting');
-    var okEl = document.getElementById('aide-config-success');
-    if (waiting) waiting.hidden = true;
-    if (okEl) okEl.style.display = 'block';
+    lmmVerifierEnvoiTermine();
   });
 
   function lmmSoumettreAideConfig() {
