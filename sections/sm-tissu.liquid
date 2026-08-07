@@ -222,6 +222,7 @@
       <div class="lmm-sm-tissu__card"
            data-val="{{ entry.nom.value | escape }}"
            data-prix="{{ entry.prix_base.value | default: 0 }}"
+           data-prix-3pieces="{{ entry.prix_addon_3_pieces.value | default: 0 }}"
            data-photo="{{ photo_preview_url | escape }}"
            data-livre="{{ entry.livre.value | escape }}"
            data-couleur="{{ entry.couleur.value | escape }}"
@@ -278,6 +279,10 @@
     if (btn) btn.classList.add('active');
     _p.set('tissu', selected);
     _p.set('tissu_prix', selectedPrix);
+    // Supplément "3 pièces" (gilet) : dépend du tissu, appliqué seulement
+    // si le client a choisi "3 pièces" à l'étape précédente — voir la
+    // décision finale dans sm-recap.liquid.
+    _p.set('tissu_prix_3pieces', parseFloat(el.dataset.prix3pieces) || 0);
     if (el.dataset.photo) _p.set('tissu_photo', el.dataset.photo);
     history.replaceState(null, '', '?' + _p.toString());
     var imgEl = document.getElementById('lmm-prev-tissu-img');

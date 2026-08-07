@@ -31,6 +31,7 @@
   .lmm-pieces__card-body { padding: 14px 18px 18px; flex-shrink: 0; }
   .lmm-pieces__name { font-family: Georgia, serif; font-size: 17px; font-weight: 400; color: var(--lmm-text); margin-bottom: 8px; }
   .lmm-pieces__desc { font-size: 12px; color: var(--lmm-muted); line-height: 1.6; margin-bottom: 0; }
+  .lmm-pieces__prix { font-size: 13px; color: var(--lmm-text); font-weight: 500; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--lmm-border); }
   .lmm-pieces__nav { display: flex; justify-content: center; flex-shrink: 0; }
   #pieces-next { opacity: 0.4; pointer-events: none; }
   #pieces-next.active { opacity: 1; pointer-events: auto; }
@@ -57,6 +58,7 @@
       <div class="lmm-pieces__card-body">
         <h2 class="lmm-pieces__name">2 pièces</h2>
         <p class="lmm-pieces__desc">Veston et pantalon. Une silhouette classique et polyvalente.</p>
+        <p class="lmm-pieces__prix">Inclus</p>
       </div>
     </div>
 
@@ -67,6 +69,7 @@
       <div class="lmm-pieces__card-body">
         <h2 class="lmm-pieces__name">3 pièces</h2>
         <p class="lmm-pieces__desc">Veston, gilet et pantalon. Pour une allure plus formelle et raffinée.</p>
+        <p class="lmm-pieces__prix" id="prix-3pieces"></p>
       </div>
     </div>
 
@@ -89,6 +92,18 @@
   window.addEventListener('resize', ajusterHauteur);
 
   var selected = null;
+
+  // Supplément "3 pièces" (gilet) — vient du metafield produit
+  // custom.supplement_3_pieces (passé par product.liquid en "p3pieces"),
+  // même format que les suppléments de construction ("-150", "+150").
+  (function () {
+    var raw = new URLSearchParams(window.location.search).get('p3pieces');
+    var el = document.getElementById('prix-3pieces');
+    if (!el) return;
+    if (!raw) { el.textContent = ''; return; }
+    var n = parseFloat(raw);
+    el.textContent = (isNaN(n) || n === 0) ? 'Inclus' : ('+$' + Math.abs(n).toLocaleString('fr-CA'));
+  })();
 
   var savedPieces = new URLSearchParams(window.location.search).get('pieces');
   if (savedPieces) {

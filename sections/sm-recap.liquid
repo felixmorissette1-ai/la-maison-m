@@ -88,6 +88,9 @@
   var liningPrix = parseFloat(params.get('lining_prix') || '0');
   var boutonPrix = parseFloat(params.get('bouton_prix') || '0');
   var constPrix = parseFloat(params.get('construction_prix') || '0');
+  // Le supplément 3 pièces (gilet) dépend du tissu choisi — appliqué
+  // seulement si "3 pièces" est sélectionné, voir sm-tissu.liquid.
+  var piecesPrix = params.get('pieces') === '3 pièces' ? parseFloat(params.get('tissu_prix_3pieces') || '0') : 0;
 
   var monogramme = params.get('monogramme') || '';
   var prixMonogramme = {{ section.settings.prix_monogramme | default: 0 }} / 100;
@@ -96,7 +99,7 @@
     document.getElementById('r-mono').textContent = monogramme + (prixMonogramme ? ' (+$' + prixMonogramme.toLocaleString('fr-CA', { minimumFractionDigits: 2 }) + ')' : '');
   }
 
-  var total = tissuPrix + liningPrix + boutonPrix + constPrix + (monogramme ? prixMonogramme : 0);
+  var total = tissuPrix + liningPrix + boutonPrix + constPrix + piecesPrix + (monogramme ? prixMonogramme : 0);
   document.getElementById('r-total').textContent = total > 0 ? '$' + total.toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
 
   // Récap = toujours actionnable : le bouton partagé du panneau preview

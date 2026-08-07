@@ -49,11 +49,10 @@
 
 <script>
   var params = new URLSearchParams(window.location.search);
-  var canvaLabels = { c1: params.get('p1') || 'Thermocollé', c2: params.get('p2') || 'Mi-entoilé', c3: params.get('p3') || 'Pleine entoilure' };
   var canvaChoisi = params.get('canva');
 
   document.getElementById('r-modele').textContent = params.get('modele') || '—';
-  document.getElementById('r-canva').textContent = canvaChoisi ? (canvaLabels[canvaChoisi] || canvaChoisi) : '—';
+  document.getElementById('r-canva').textContent = params.get('canva_nom') || '—';
   document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
   document.getElementById('r-bas').textContent = params.get('bas') || '—';
   document.getElementById('r-hauteur').textContent = params.get('hauteur') || '—';
@@ -65,35 +64,65 @@
     document.getElementById('r-mono').textContent = monogramme + (prixMonogrammeCents ? ' (+$' + (prixMonogrammeCents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2 }) + ')' : '');
   }
 
-  var prixCents = parseInt(params.get('prix') || '0') + (monogramme ? prixMonogrammeCents : 0);
+  // Supplément 3 pièces (gilet) — dépend du produit (metafield
+  // custom.supplement_3_pieces, en dollars), appliqué seulement si "3
+  // pièces" est choisi. Pour l'aperçu seulement — le vrai montant facturé
+  // est recalculé côté serveur dans handleCollectionCheckout.
+  var pieces3PiecesCents = params.get('pieces') === '3 pièces'
+    ? Math.round((parseFloat(params.get('p3pieces')) || 0) * 100)
+    : 0;
+
+  var prixCents = parseInt(params.get('prix') || '0') + pieces3PiecesCents + (monogramme ? prixMonogrammeCents : 0);
   var prixFormate = prixCents ? '$' + (prixCents / 100).toLocaleString('fr-CA', { minimumFractionDigits: 2 }) : '—';
   document.getElementById('r-prix').textContent = prixFormate;
 
+  // Le prix affiché tient compte du supplément de construction choisi
+  // (voir page-canva.liquid), mais aucune variante Shopify réelle n'existe
+  // pour ce prix ajusté (chaque produit n'a qu'une seule variante, au prix
+  // de la construction recommandée) — le serveur recalcule le vrai total à
+  // partir du produit réel et de ses metafields de supplément (jamais le
+  // prix envoyé par le navigateur), voir handleCollectionCheckout dans
+  // couturiere-actions.js.
   function ajouterAuPanier() {
-    var variantId = parseInt(params.get('variant') || '0');
-    if (!variantId) {
-      alert('Variant introuvable. Recommencez depuis la page produit.');
-      return;
-    }
-    var props = {
-      'Modèle': params.get('modele') || '',
-      'Construction': document.getElementById('r-canva').textContent,
-      'Pièces': params.get('pieces') || '',
-      'Bas de pantalon': params.get('bas') || '',
-      'Hauteur du pantalon': params.get('hauteur') || ''
-    };
-    if (monogramme) props['Monogramme (nom brodé à l\'intérieur du veston)'] = monogramme;
-    fetch('/cart/add.js', {
+    var btn = document.querySelector('.lmm-recap__btn-add');
+    var original = btn.textContent;
+    btn.textContent = 'Ajout au panier…';
+    btn.disabled = true;
+    document.getElementById('recap-erreur').style.display = 'none';
+
+    fetch('https://lmm-backend.vercel.app/api/couturiere-actions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: variantId, quantity: 1, properties: props })
+      body: JSON.stringify({
+        action: 'collection-checkout',
+        modele: params.get('modele') || '',
+        canva: canvaChoisi || '',
+        canva_nom: params.get('canva_nom') || '',
+        pieces: params.get('pieces') || '',
+        bas: params.get('bas') || '',
+        hauteur: params.get('hauteur') || '',
+        monogramme: monogramme,
+        monogramme_prix: prixMonogrammeCents
+      })
     })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.id) { window.location.href = '/cart'; }
-      else { document.getElementById('recap-erreur').style.display = 'block'; }
+    .then(function(res) { return res.json().then(function(d) { return { ok: res.ok, d: d }; }); })
+    .then(function(res) {
+      if (!res.ok) throw new Error(res.d.error || 'Erreur');
+      return fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: res.d.variant_id, quantity: res.d.quantity, properties: res.d.properties })
+      });
     })
-    .catch(function() { document.getElementById('recap-erreur').style.display = 'block'; });
+    .then(function(cartRes) {
+      if (!cartRes.ok) throw new Error('Échec de l\'ajout au panier');
+      window.location.href = '/cart';
+    })
+    .catch(function() {
+      document.getElementById('recap-erreur').style.display = 'block';
+      btn.textContent = original;
+      btn.disabled = false;
+    });
   }
 </script>
 

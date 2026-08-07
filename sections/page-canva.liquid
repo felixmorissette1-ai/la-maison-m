@@ -179,12 +179,31 @@
 
   var _p = new URLSearchParams(window.location.search);
 
-  // Afficher les prix depuis les metafields produit (p1, p2, p3)
+  // Formate un supplément brut ("-150", "+150", "0", "") en texte lisible —
+  // réutilisé pour la construction ici et pour "3 pièces" ailleurs
+  // (collection-pieces.liquid) avec la même logique.
+  function formaterSupplement(raw) {
+    if (raw === '' || raw == null) return '';
+    var n = parseFloat(raw);
+    if (isNaN(n) || n === 0) return 'Inclus';
+    var signe = n > 0 ? '+' : '−';
+    return signe + '$' + Math.abs(n).toLocaleString('fr-CA');
+  }
+
+  // Afficher les prix depuis les metafields produit (p1, p2, p3) — des
+  // suppléments en dollars (ex: "-150", "+150") relatifs au prix du produit
+  // (qui correspond à la construction recommandée). "prix" reste le prix
+  // AFFICHÉ à l'étape suivante (en cents, comme product.price) — on garde
+  // le prix d'origine à part dans "prix_base" pour ne jamais cumuler les
+  // suppléments si le client change d'avis et revient sur cette étape.
   var prix = { 'c1': _p.get('p1') || '', 'c2': _p.get('p2') || '', 'c3': _p.get('p3') || '' };
   ['c1','c2','c3'].forEach(function(k) {
     var el = document.getElementById('prix-' + k);
-    if (el && prix[k]) el.textContent = prix[k];
+    if (el && prix[k]) el.textContent = formaterSupplement(prix[k]);
   });
+
+  var prixBaseCents = parseInt(_p.get('prix_base') || _p.get('prix') || '0', 10) || 0;
+  _p.set('prix_base', prixBaseCents);
 
   // Appliquer le badge "Recommandé" depuis ?rec=NomConstruction
   var rec = _p.get('rec');
@@ -213,6 +232,9 @@
     selectedCanva = type;
     document.getElementById('canva-next').classList.add('active');
     _p.set('canva', type);
+    _p.set('canva_nom', el.getAttribute('data-label') || '');
+    var deltaDollars = parseFloat(prix[type]) || 0;
+    _p.set('prix', prixBaseCents + Math.round(deltaDollars * 100));
     history.replaceState(null, '', '?' + _p.toString());
   }
   function goNext() {
