@@ -25,7 +25,7 @@
     </div>
     {% if customer %}
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
-      <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma demande</button>
+      <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma requête</button>
     {% else %}
       <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" onclick="lmmSauvegarderAideConfig()">Se connecter et envoyer ma demande</a>
     {% endif %}
@@ -102,19 +102,19 @@
         errEl.textContent = res.d.error || 'Une erreur est survenue. Réessayez.';
         errEl.style.display = 'block';
         btn.disabled = false;
-        btn.textContent = 'Envoyer ma demande';
+        btn.textContent = 'Envoyer ma requête';
         return;
       }
       document.getElementById('aide-config-form').reset();
       okEl.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = 'Envoyer ma demande';
+      btn.textContent = 'Envoyer ma requête';
     })
     .catch(function() {
       errEl.textContent = 'Erreur réseau. Réessayez.';
       errEl.style.display = 'block';
       btn.disabled = false;
-      btn.textContent = 'Envoyer ma demande';
+      btn.textContent = 'Envoyer ma requête';
     });
   }
 
