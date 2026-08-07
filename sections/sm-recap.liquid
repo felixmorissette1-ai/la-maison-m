@@ -108,6 +108,8 @@
   var lmmSharedBtn = document.getElementById('lmm-prev-btn-next');
   if (lmmSharedBtn) {
     lmmSharedBtn.classList.add('active');
+    lmmSharedBtn.classList.remove('lmm-btn-outline');
+    lmmSharedBtn.classList.add('lmm-btn-fill');
     lmmSharedBtn.childNodes[0].textContent = 'Ajouter au panier';
   }
   function goNext() { confirmer(); }

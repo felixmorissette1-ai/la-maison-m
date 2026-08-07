@@ -113,24 +113,23 @@
           {% if product.type == 'Chemise' %}
             {% form 'product', product %}
               <input type="hidden" name="id" id="chemise-selected-variant" value="{{ product.selected_or_first_available_variant.id }}">
-              <button type="submit" class="lmm-product__cta-primary" {% unless product.available %}disabled{% endunless %}>
+              <button type="submit" class="lmm-btn lmm-btn-fill lmm-product__cta-primary" {% unless product.available %}disabled{% endunless %}>
                 <span>{% if product.available %}Ajouter au panier{% else %}Épuisé{% endif %}</span>
               </button>
             {% endform %}
           {% else %}
-            <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}&p3pieces={{ product.metafields.custom.supplement_3_pieces.value | url_encode }}" class="lmm-product__cta-primary">
+            <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}&p3pieces={{ product.metafields.custom.supplement_3_pieces.value | url_encode }}" class="lmm-btn lmm-btn-fill lmm-product__cta-primary">
               <span>Commander ce complet</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
             {% assign style_entry = product.metafields.custom.style.value %}
             {% if style_entry %}
               {% assign style_nom = style_entry.nom.value %}
               {% assign style_photo = style_entry.photo.value | image_url: width: 800 %}
-              <a href="/pages/sur-mesure-pieces?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-product__cta-secondary">
+              <a href="/pages/sur-mesure-pieces?style={{ style_nom | url_encode }}&style_photo={{ style_photo | url_encode }}" class="lmm-btn lmm-btn-outline lmm-product__cta-secondary">
                 Personnaliser ce complet
               </a>
             {% else %}
-              <a href="/pages/sur-mesure-pieces" class="lmm-product__cta-secondary">
+              <a href="/pages/sur-mesure-pieces" class="lmm-btn lmm-btn-outline lmm-product__cta-secondary">
                 Personnaliser ce complet
               </a>
             {% endif %}
@@ -224,7 +223,7 @@
   .lmm-product__visual { position: sticky; top: 100px; }
 
   .lmm-product__photo {
-    background: var(--lmm-surface);
+    background: var(--lmm-ivoire-deep);
     border: 1px solid rgba(var(--lmm-text-rgb),0.08);
     padding: 48px;
     display: flex;
@@ -319,7 +318,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--lmm-surface);
+    background: var(--lmm-ivoire-deep);
   }
 
   .lmm-photo-placeholder--swatch-lg span {
@@ -398,7 +397,7 @@
   }
 
   .lmm-product__variant-swatch--selected {
-    border: 2px solid var(--lmm-text);
+    border: 2px solid var(--lmm-bordeaux);
   }
 
   .lmm-product__variant-swatch--disabled {
@@ -414,58 +413,10 @@
     margin-bottom: 28px;
   }
 
-  .lmm-product__cta-primary {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    width: 100%;
-    background: var(--lmm-text);
-    color: var(--lmm-white);
-    text-decoration: none;
-    padding: 20px 36px;
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: background 0.25s, gap 0.25s;
-    box-sizing: border-box;
-  }
-
-  .lmm-product__cta-primary:hover {
-    background: var(--lmm-bordeaux);
-    color: var(--lmm-text);
-    gap: 18px;
-  }
-
-  .lmm-product__cta-primary svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-  .lmm-product__cta-primary[disabled] {
-    opacity: 0.5;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
+  .lmm-product__cta-primary,
   .lmm-product__cta-secondary {
-    display: block;
     width: 100%;
-    text-align: center;
-    background: transparent;
-    color: var(--lmm-muted);
-    text-decoration: none;
-    padding: 14px 36px;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: 1px solid rgba(var(--lmm-text-rgb),0.15);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    transition: border-color 0.2s, color 0.2s;
     box-sizing: border-box;
-  }
-
-  .lmm-product__cta-secondary:hover {
-    border-color: var(--lmm-text);
-    color: var(--lmm-text);
   }
 
   .lmm-related {
@@ -493,7 +444,7 @@
     display: flex;
     gap: 16px;
     align-items: center;
-    background: var(--lmm-white);
+    background: var(--lmm-ivoire-pale);
     padding: 20px;
     border: 1px solid rgba(var(--lmm-text-rgb),0.06);
   }
@@ -503,7 +454,7 @@
     height: 80px;
     flex-shrink: 0;
     overflow: hidden;
-    background: var(--lmm-surface);
+    background: var(--lmm-ivoire-deep);
     display: flex;
     align-items: center;
     justify-content: center;
