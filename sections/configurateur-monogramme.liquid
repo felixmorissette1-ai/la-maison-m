@@ -19,8 +19,11 @@
   .lmm-mono__count { font-size: 10px; color: var(--lmm-muted); text-align: right; margin: 6px 0 0; }
   .lmm-mono__prix { font-size: 11px; color: var(--lmm-muted); text-align: center; margin: 16px 0 0; letter-spacing: 0.04em; }
   .lmm-mono__nav { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px; }
-  .lmm-mono__skip { background: none; border: none; color: var(--lmm-muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; padding: 6px; }
-  .lmm-mono__skip:hover { color: var(--lmm-text); }
+  .lmm-mono__checkbox-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; }
+  .lmm-mono__checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--lmm-bordeaux); cursor: pointer; }
+  .lmm-mono__checkbox-row label { font-size: 12px; letter-spacing: 0.04em; color: var(--lmm-muted); cursor: pointer; }
+  #mono-next { opacity: 0.4; pointer-events: none; }
+  #mono-next.active { opacity: 1; pointer-events: auto; }
 </style>
 
 <div class="lmm-mono-wrap">
@@ -37,37 +40,55 @@
     <p class="lmm-mono__prix">+ {{ section.settings.prix_monogramme | money }} si un nom est brodé</p>
   {% endif %}
 
+  <div class="lmm-mono__checkbox-row">
+    <input type="checkbox" id="mono-skip-checkbox">
+    <label for="mono-skip-checkbox">Ne rien broder</label>
+  </div>
+
   <div class="lmm-mono__nav">
-    <button class="lmm-btn-primary" id="mono-next" onclick="goNext()">Continuer →</button>
-    <button class="lmm-mono__skip" onclick="goSkip()">Passer cette étape</button>
+    <button class="lmm-btn lmm-btn-fill" id="mono-next" onclick="goNext()">Continuer</button>
   </div>
 </div>
 
 <script>
   var monoInput = document.getElementById('mono-input');
   var monoCount = document.getElementById('mono-count');
+  var monoSkip = document.getElementById('mono-skip-checkbox');
+  var monoNextBtn = document.getElementById('mono-next');
+
+  // "Continuer" reste désactivé tant qu'il n'y a ni texte ni case "Ne rien
+  // broder" cochée — le client doit faire un choix explicite, pas juste
+  // passer à travers sans y penser.
+  function updateNextState() {
+    var hasText = monoInput.value.trim().length > 0;
+    monoNextBtn.classList.toggle('active', hasText || monoSkip.checked);
+  }
 
   var savedMono = new URLSearchParams(window.location.search).get('monogramme');
   if (savedMono) {
     monoInput.value = savedMono;
     monoCount.textContent = savedMono.length;
   }
+  updateNextState();
 
   monoInput.addEventListener('input', function() {
     monoCount.textContent = monoInput.value.length;
+    updateNextState();
+  });
+
+  monoSkip.addEventListener('change', function() {
+    monoInput.disabled = monoSkip.checked;
+    if (monoSkip.checked) {
+      monoInput.value = '';
+      monoCount.textContent = '0';
+    }
+    updateNextState();
   });
 
   function goNext() {
     var p = new URLSearchParams(window.location.search);
-    var val = monoInput.value.trim();
+    var val = monoSkip.checked ? '' : monoInput.value.trim();
     if (val) { p.set('monogramme', val); } else { p.delete('monogramme'); }
-    p.set('mono_vu', '1');
-    window.location.href = '/pages/configurateur-recap?' + p.toString();
-  }
-
-  function goSkip() {
-    var p = new URLSearchParams(window.location.search);
-    p.delete('monogramme');
     p.set('mono_vu', '1');
     window.location.href = '/pages/configurateur-recap?' + p.toString();
   }
