@@ -42,8 +42,8 @@
      déclenche un vrai rechargement de page. -->
 <div id="aide-config-overlay" class="aide-config-overlay" hidden>
   <div class="aide-config-overlay__box">
-    <p class="aide-config-overlay__text">Une fois connecté(e) dans l'autre onglet, cliquez ici pour continuer votre demande.</p>
-    <button type="button" class="aide-config-overlay__btn" onclick="lmmContinuerEtEnvoyer()">Continuer ma demande</button>
+    <p class="aide-config-overlay__text">Une fois connecté(e) dans l'autre onglet, cliquez ici pour envoyer votre demande.</p>
+    <button type="button" class="aide-config-overlay__btn" onclick="lmmEnvoyerDemande()">Envoyer ma demande</button>
     <button type="button" class="aide-config-overlay__cancel" onclick="lmmModifierDemande()">Modifier ma demande</button>
   </div>
 </div>
@@ -180,12 +180,12 @@
     if (overlay) overlay.hidden = false;
   }
 
-  // Le client clique "Continuer ma demande" une fois connecté dans l'autre
+  // Le client clique "Envoyer ma demande" une fois connecté dans l'autre
   // onglet : on marque qu'il faudra envoyer automatiquement après le
   // rechargement (un seul clic suffit, pas besoin de confirmer une 2e
   // fois avec "Envoyer ma requête"), puis on recharge pour obtenir le
   // rendu exact côté serveur (voir le bloc de restauration plus bas).
-  function lmmContinuerEtEnvoyer() {
+  function lmmEnvoyerDemande() {
     try {
       localStorage.setItem('lmm_aide_config_auto_envoi', '1');
     } catch (e) {}
@@ -242,35 +242,42 @@
     });
   }
 
-  {% if customer %}
-    // De retour de /account/login, maintenant connecté : restaure ce que le
-    // client avait tapé avant de partir dans les champs. Envoi automatique
-    // seulement si le client a cliqué "Continuer ma demande" dans l'écran
-    // d'attente (voir lmmContinuerEtEnvoyer) — sinon (ex: arrivée directe
-    // sur la page déjà connecté) on restaure sans envoyer, le client clique
-    // lui-même "Envoyer ma requête".
-    (function () {
-      var pending;
-      try {
-        pending = JSON.parse(localStorage.getItem('lmm_aide_config_pending') || 'null');
-      } catch (e) {
-        pending = null;
-      }
-      if (!pending) return;
-      localStorage.removeItem('lmm_aide_config_pending');
-      if (pending.prenom) document.getElementById('ac-prenom').value = pending.prenom;
-      if (pending.nom) document.getElementById('ac-nom').value = pending.nom;
-      document.getElementById('ac-evenement').value = pending.evenement || '';
-      document.getElementById('ac-note').value = pending.note || '';
+  // Restaure ce que le client avait tapé avant de partir — que le retour
+  // se fasse connecté ou non, pour ne jamais donner l'impression que la
+  // demande a disparu. Envoi automatique seulement si connecté ET que le
+  // client a cliqué "Envoyer ma demande" dans l'écran d'attente (voir
+  // lmmEnvoyerDemande) ; si pas connecté, la demande reste en mémoire et
+  // un message avertit le client au lieu de tenter quoi que ce soit.
+  (function () {
+    var pending;
+    try {
+      pending = JSON.parse(localStorage.getItem('lmm_aide_config_pending') || 'null');
+    } catch (e) {
+      pending = null;
+    }
+    if (!pending) return;
 
+    if (pending.prenom) document.getElementById('ac-prenom').value = pending.prenom;
+    if (pending.nom) document.getElementById('ac-nom').value = pending.nom;
+    document.getElementById('ac-evenement').value = pending.evenement || '';
+    document.getElementById('ac-note').value = pending.note || '';
+
+    {% if customer %}
+      localStorage.removeItem('lmm_aide_config_pending');
       var autoEnvoi = false;
       try {
         autoEnvoi = localStorage.getItem('lmm_aide_config_auto_envoi') === '1';
         localStorage.removeItem('lmm_aide_config_auto_envoi');
       } catch (e) {}
       if (autoEnvoi) lmmSoumettreAideConfig();
-    })();
-  {% endif %}
+    {% else %}
+      var errEl = document.getElementById('aide-config-error');
+      if (errEl) {
+        errEl.textContent = 'Vous n’êtes pas connecté(e). Cliquez sur « Se connecter et envoyer ma demande » ci-dessus pour terminer l’envoi — votre demande est conservée.';
+        errEl.style.display = 'block';
+      }
+    {% endif %}
+  })();
 </script>
 
 {% schema %}
