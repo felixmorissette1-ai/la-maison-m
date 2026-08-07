@@ -109,6 +109,7 @@
   var lmmAttentePollTimer = null;
   var lmmAttenteAuthPollTimer = null;
   var lmmAttenteMaxTimer = null;
+  var lmmAttenteAbandonTimer = null;
   var lmmAttenteDepuis = 0;
 
   function lmmAfficherAttenteConnexion() {
@@ -146,6 +147,15 @@
       if (cancelBtn) cancelBtn.style.display = 'inline-block';
     }, 8000);
 
+    // Filet de sécurité DUR : si le client ferme l'onglet mentalement (n'y
+    // revient jamais) sans jamais cliquer "Annuler", les deux sondages
+    // ci-dessus tourneraient sinon indéfiniment tant que cet onglet reste
+    // ouvert quelque part en arrière-plan — 4 requêtes/seconde à vie. Après
+    // 10 minutes, on arrête tout d'office, peu importe ce que fait le
+    // client.
+    clearTimeout(lmmAttenteAbandonTimer);
+    lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
+
     // Les navigateurs peuvent ralentir/mettre en pause les timers d'un
     // onglet en arrière-plan — on revérifie donc aussi dès que ce
     // premier onglet redevient visible (l'utilisateur y revient).
@@ -158,6 +168,8 @@
     clearInterval(lmmAttentePollTimer);
     clearInterval(lmmAttenteAuthPollTimer);
     clearTimeout(lmmAttenteMaxTimer);
+    clearTimeout(lmmAttenteAbandonTimer);
+    document.removeEventListener('visibilitychange', lmmVerifierEnvoiTermine);
   }
 
   function lmmVerifierEnvoiTermine() {
