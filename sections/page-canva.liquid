@@ -205,23 +205,41 @@
   var prixBaseCents = parseInt(_p.get('prix_base') || _p.get('prix') || '0', 10) || 0;
   _p.set('prix_base', prixBaseCents);
 
-  // Appliquer le badge "Recommandé" depuis ?rec=NomConstruction
-  var rec = _p.get('rec');
-  if (rec) {
+  // Détermine la construction recommandée. ?rec=NomConstruction (metafield
+  // cava_recommande) est essayé en premier, mais c'est un texte libre que
+  // Felix retape par produit — un simple espace ou une majuscule différente
+  // et ça ne correspond plus à aucune carte (ex: "Demi canva" vs
+  // "Mi-entoilé"), donc le badge disparaît silencieusement. En repli
+  // fiable : la construction recommandée est par définition celle à
+  // supplément nul (p1/p2/p3 — c'est justement pour ça qu'elle est à 0$),
+  // donc si le texte ne correspond à rien, on prend celle-là à la place.
+  var rec = (_p.get('rec') || '').trim().toLowerCase();
+  var recKey = null;
+  ['c1','c2','c3'].forEach(function(k) {
+    var card = document.getElementById('card-' + k);
+    if (card && (card.getAttribute('data-label') || '').trim().toLowerCase() === rec) recKey = k;
+  });
+  if (!recKey) {
     ['c1','c2','c3'].forEach(function(k) {
-      var card = document.getElementById('card-' + k);
-      if (card && card.getAttribute('data-label') === rec) {
-        card.classList.add('lmm-canva__card--recommended');
-        document.getElementById('badge-' + k).style.display = '';
-      }
+      if (recKey) return;
+      var n = parseFloat(prix[k]);
+      if (prix[k] !== '' && !isNaN(n) && n === 0) recKey = k;
     });
   }
+  if (recKey) {
+    document.getElementById('card-' + recKey).classList.add('lmm-canva__card--recommended');
+    document.getElementById('badge-' + recKey).style.display = '';
+  }
 
-  // Restaurer la sélection si on revient en arrière
+  // Restaurer la sélection si on revient en arrière — sinon, présélectionne
+  // la construction recommandée par défaut (le client peut toujours
+  // changer, mais n'a pas à cliquer pour garder le choix suggéré).
   var savedCanvaParam = _p.get('canva');
   if (savedCanvaParam) {
     var savedCard = document.getElementById('card-' + savedCanvaParam);
     if (savedCard) selectCanva(savedCard, savedCanvaParam);
+  } else if (recKey) {
+    selectCanva(document.getElementById('card-' + recKey), recKey);
   }
 
   function selectCanva(el, type) {
