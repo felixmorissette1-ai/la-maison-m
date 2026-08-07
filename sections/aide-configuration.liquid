@@ -27,7 +27,8 @@
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma requête</button>
     {% else %}
-      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" onclick="lmmSauvegarderAideConfig()">Se connecter et envoyer ma demande</a>
+      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherAttenteConnexion();">Se connecter et envoyer ma demande</a>
+      <p class="lmm-partenaire__waiting" id="aide-config-waiting" hidden>Une nouvelle fenêtre s'est ouverte pour vous connecter. Votre demande s'enverra automatiquement dès que ce sera fait — vous pouvez ensuite fermer cette fenêtre-là et revenir ici.</p>
     {% endif %}
     <p class="lmm-partenaire__error" id="aide-config-error"></p>
     <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
@@ -56,6 +57,7 @@
   .lmm-partenaire__field textarea:focus { outline: none; border-color: var(--lmm-bordeaux); }
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
+  .lmm-partenaire__waiting { color: var(--lmm-muted); font-size: 13px; line-height: 1.6; margin-top: 14px; }
 </style>
 
 <script>
@@ -75,6 +77,32 @@
       }));
     } catch (e) {}
   }
+
+  // Le lien de connexion s'ouvre maintenant dans un nouvel onglet (voir
+  // target="_blank") plutôt que de quitter cette page — l'onglet original
+  // reste donc affiché avec le formulaire intact pendant que le client se
+  // connecte/s'inscrit ailleurs. On remplace le lien par ce message
+  // d'attente le temps que ça se termine.
+  function lmmAfficherAttenteConnexion() {
+    var link = document.getElementById('aide-config-login-link');
+    var waiting = document.getElementById('aide-config-waiting');
+    if (link) link.style.display = 'none';
+    if (waiting) waiting.hidden = false;
+  }
+
+  // L'envoi effectif de la demande se produit dans l'AUTRE onglet (une fois
+  // connecté là-bas, voir plus bas + header.liquid). localStorage est
+  // partagé entre onglets du même site, donc dès que cet autre onglet
+  // marque la demande comme envoyée, l'événement "storage" se déclenche ICI
+  // (dans cet onglet original) et on peut afficher le succès sans jamais
+  // recharger ni quitter cette page.
+  window.addEventListener('storage', function (e) {
+    if (e.key !== 'lmm_aide_config_done') return;
+    var waiting = document.getElementById('aide-config-waiting');
+    var okEl = document.getElementById('aide-config-success');
+    if (waiting) waiting.hidden = true;
+    if (okEl) okEl.style.display = 'block';
+  });
 
   function lmmSoumettreAideConfig() {
     var btn = document.getElementById('aide-config-submit-btn');
@@ -109,6 +137,9 @@
       okEl.style.display = 'block';
       btn.disabled = false;
       btn.textContent = 'Envoyer ma requête';
+      // Signale aux AUTRES onglets du même site (voir l'écouteur "storage"
+      // plus haut) que la demande vient d'être envoyée avec succès.
+      try { localStorage.setItem('lmm_aide_config_done', String(Date.now())); } catch (e) {}
     })
     .catch(function() {
       errEl.textContent = 'Erreur réseau. Réessayez.';
