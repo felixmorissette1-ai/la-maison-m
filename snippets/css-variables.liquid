@@ -91,4 +91,100 @@
     cursor: not-allowed;
     pointer-events: none;
   }
+
+  /* ============================================================
+     Système de design partagé — sur-mesure, collection, conseils
+     stylistiques, panier, prise de rendez-vous. NE TOUCHE PAS à
+     .lmm-btn-primary ci-dessus ni aux classes de home-hero.liquid
+     (.lmm-hero__cta, .lmm-hero__cta-secondary) — la home page garde
+     ses styles actuels tels quels. Les couleurs ci-dessous sont
+     reprises telles quelles de ces boutons du hero (déjà approuvés),
+     seul le rayon des coins diffère (0 partout ici, contre 8px sur
+     le hero) et la taille est celle des boutons utilitaires du site
+     (pas le grand format serif du hero).
+     ============================================================ */
+
+  .lmm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 40px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: inherit;
+    border-radius: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .lmm-btn:disabled,
+  .lmm-btn[disabled],
+  .lmm-btn.is-disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Principal — même palette que .lmm-hero__cta (bordeaux/ivoire). */
+  .lmm-btn-fill {
+    background: var(--lmm-bordeaux);
+    color: var(--lmm-ivoire-pale);
+    border: none;
+  }
+  .lmm-btn-fill:hover { opacity: 0.85; }
+
+  /* Secondaire — même palette que .lmm-hero__cta-secondary (contour
+     foncé, se remplit au survol). */
+  .lmm-btn-outline {
+    background: transparent;
+    color: var(--lmm-text);
+    border: 1.5px solid var(--lmm-text);
+  }
+  .lmm-btn-outline:hover {
+    background: var(--lmm-text);
+    color: var(--lmm-ivoire);
+  }
+
+  /* Discret — actions mineures (retirer, annuler, modifier) : jamais
+     l'action principale d'un écran, pas de fond ni de contour. */
+  .lmm-btn-quiet {
+    background: none;
+    border: none;
+    padding: 6px 0;
+    color: var(--lmm-muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .lmm-btn-quiet:hover { color: var(--lmm-text); }
+
+  /* Typographie partagée — reprend les mêmes tailles/tons déjà utilisés
+     partout (chaque section les redéfinissait individuellement avec un
+     nom différent), pour que "titre", "étiquette", "corps de texte"
+     restent identiques peu importe la page. */
+  .lmm-eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--lmm-bordeaux);
+  }
+  .lmm-heading {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 400;
+    color: var(--lmm-text);
+    margin: 0;
+  }
+  .lmm-body-text {
+    font-size: var(--lmm-fs-body);
+    color: var(--lmm-muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .lmm-field-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lmm-muted);
+  }
 {% endstyle %}
