@@ -34,13 +34,21 @@
   </form>
 </div>
 
+<!-- Marqueur lu par lmmVerifierConnexionEnArrierePlan() (voir <script>) — un
+     fetch en arrière-plan de cette même page relit cet attribut pour savoir
+     si le client est maintenant connecté, sans jamais recharger visiblement
+     la page tant que ce n'est pas le cas. -->
+<div id="lmm-customer-flag" data-lmm-customer-status="{% if customer %}1{% else %}0{% endif %}" hidden></div>
+
 <!-- Bloque la page pendant l'attente du retour du nouvel onglet — même
      traitement visuel que #lmm-booking-overlay (prise de rendez-vous, voir
      header.liquid), ID différent pour ne pas entrer en conflit avec lui. -->
 <div id="aide-config-overlay" style="display:none; position:fixed; inset:0; background:var(--lmm-text); z-index:99999; flex-direction:column; align-items:center; justify-content:center; gap:20px; text-align:center; padding:24px;">
   <p style="font-family:Georgia,serif; font-size:22px; color:var(--lmm-white); letter-spacing:0.04em; margin:0;">En attente de votre connexion…</p>
   <p style="font-size:13px; color:var(--lmm-ivoire-pale); line-height:1.7; margin:0; max-width:340px;">Une fois connecté dans l'autre onglet, si vous arrivez sur la page de votre compte, cliquez sur le logo « La Maison M » là-bas pour revenir sur notre site — votre demande s'enverra alors automatiquement ici.</p>
-  <div style="width:40px; height:2px; background:var(--lmm-bordeaux); animation:lmm-aide-config-pulse 1.4s ease-in-out infinite;"></div>
+  <div style="width:120px; height:2px; background:rgba(var(--lmm-ivoire-rgb),0.2); position:relative; overflow:hidden;">
+    <div style="position:absolute; top:0; width:40px; height:2px; background:var(--lmm-bordeaux); animation:lmm-aide-config-slide 1.2s ease-in-out infinite;"></div>
+  </div>
   <button type="button" id="aide-config-overlay-cancel" style="display:none; background:none; border:none; color:var(--lmm-border); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; margin-top:12px;" onclick="lmmMasquerAttenteConnexion()">Annuler l'attente</button>
 </div>
 
@@ -67,9 +75,9 @@
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
 
-  @keyframes lmm-aide-config-pulse {
-    0%, 100% { opacity: 0.3; transform: scaleX(0.4); }
-    50% { opacity: 1; transform: scaleX(1); }
+  @keyframes lmm-aide-config-slide {
+    0% { left: -40px; }
+    100% { left: 120px; }
   }
 </style>
 
@@ -99,6 +107,7 @@
   // rendez-vous) plutôt que de la laisser "retouchable" dans un état
   // périmé — voir #aide-config-overlay plus haut.
   var lmmAttentePollTimer = null;
+  var lmmAttenteAuthPollTimer = null;
   var lmmAttenteMaxTimer = null;
   var lmmAttenteDepuis = 0;
 
@@ -119,6 +128,17 @@
     clearInterval(lmmAttentePollTimer);
     lmmAttentePollTimer = setInterval(lmmVerifierEnvoiTermine, 500);
 
+    // Deuxième filet, complémentaire : le cookie de session Shopify est
+    // partagé entre onglets du même navigateur, donc CET onglet peut lui
+    // aussi devenir "connecté" dès que la connexion se termine dans l'autre
+    // onglet — même si celui-ci n'a jamais rechargé une page de notre site.
+    // On revérifie ça en arrière-plan (un fetch, jamais un rechargement
+    // visible) toutes les 500ms ; dès que c'est détecté, LÀ on recharge
+    // réellement pour de vrai, ce qui déclenche le remplissage + l'envoi
+    // automatique déjà en place plus bas.
+    clearInterval(lmmAttenteAuthPollTimer);
+    lmmAttenteAuthPollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 500);
+
     // Après 8s, offrir un moyen de sortir plutôt que de bloquer
     // indéfiniment si le client abandonne la connexion dans l'autre onglet.
     clearTimeout(lmmAttenteMaxTimer);
@@ -136,6 +156,7 @@
     var overlay = document.getElementById('aide-config-overlay');
     if (overlay) overlay.style.display = 'none';
     clearInterval(lmmAttentePollTimer);
+    clearInterval(lmmAttenteAuthPollTimer);
     clearTimeout(lmmAttenteMaxTimer);
   }
 
@@ -156,6 +177,23 @@
       if (okEl) okEl.style.display = 'block';
       document.removeEventListener('visibilitychange', lmmVerifierEnvoiTermine);
     }
+  }
+
+  function lmmVerifierConnexionEnArrierePlan() {
+    if (document.visibilityState === 'hidden') return;
+    fetch(window.location.pathname + window.location.search, { credentials: 'same-origin', cache: 'no-store' })
+      .then(function (r) { return r.text(); })
+      .then(function (html) {
+        if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
+        clearInterval(lmmAttenteAuthPollTimer);
+        // Un vrai rechargement ici (pas juste une mise à jour du DOM) pour
+        // que le rendu du bloc "client connecté" se refasse correctement
+        // côté serveur (courriel du compte, bouton, etc.) et que le code
+        // qui restaure + envoie automatiquement la demande en attente
+        // s'exécute.
+        window.location.reload();
+      })
+      .catch(function () {});
   }
 
   // L'envoi effectif de la demande se produit dans l'AUTRE onglet (une fois
