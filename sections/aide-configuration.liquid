@@ -43,8 +43,8 @@
 <div id="aide-config-overlay" class="aide-config-overlay" hidden>
   <div class="aide-config-overlay__box">
     <p class="aide-config-overlay__text">Une fois connecté(e) dans l'autre onglet, cliquez ici pour continuer votre demande.</p>
-    <button type="button" class="aide-config-overlay__btn" onclick="window.location.reload()">Continuer ma demande</button>
-    <button type="button" class="aide-config-overlay__cancel" onclick="lmmAnnulerAttenteConnexion()">Annuler ma demande</button>
+    <button type="button" class="aide-config-overlay__btn" onclick="lmmContinuerEtEnvoyer()">Continuer ma demande</button>
+    <button type="button" class="aide-config-overlay__cancel" onclick="lmmModifierDemande()">Modifier ma demande</button>
   </div>
 </div>
 
@@ -180,12 +180,22 @@
     if (overlay) overlay.hidden = false;
   }
 
-  // Retire la demande en attente (le client change d'avis) et referme
-  // l'écran d'attente pour revenir au site normal, sans recharger la page.
-  function lmmAnnulerAttenteConnexion() {
+  // Le client clique "Continuer ma demande" une fois connecté dans l'autre
+  // onglet : on marque qu'il faudra envoyer automatiquement après le
+  // rechargement (un seul clic suffit, pas besoin de confirmer une 2e
+  // fois avec "Envoyer ma requête"), puis on recharge pour obtenir le
+  // rendu exact côté serveur (voir le bloc de restauration plus bas).
+  function lmmContinuerEtEnvoyer() {
     try {
-      localStorage.removeItem('lmm_aide_config_pending');
+      localStorage.setItem('lmm_aide_config_auto_envoi', '1');
     } catch (e) {}
+    window.location.reload();
+  }
+
+  // Le client veut retoucher sa demande avant de l'envoyer : referme
+  // l'écran d'attente sans rien envoyer ni marquer d'envoi automatique —
+  // le formulaire reste tel quel, à modifier et envoyer manuellement.
+  function lmmModifierDemande() {
     var overlay = document.getElementById('aide-config-overlay');
     if (overlay) overlay.hidden = true;
   }
@@ -234,8 +244,11 @@
 
   {% if customer %}
     // De retour de /account/login, maintenant connecté : restaure ce que le
-    // client avait tapé avant de partir dans les champs — mais ne l'envoie
-    // PAS automatiquement, le client clique lui-même "Envoyer ma requête".
+    // client avait tapé avant de partir dans les champs. Envoi automatique
+    // seulement si le client a cliqué "Continuer ma demande" dans l'écran
+    // d'attente (voir lmmContinuerEtEnvoyer) — sinon (ex: arrivée directe
+    // sur la page déjà connecté) on restaure sans envoyer, le client clique
+    // lui-même "Envoyer ma requête".
     (function () {
       var pending;
       try {
@@ -249,6 +262,13 @@
       if (pending.nom) document.getElementById('ac-nom').value = pending.nom;
       document.getElementById('ac-evenement').value = pending.evenement || '';
       document.getElementById('ac-note').value = pending.note || '';
+
+      var autoEnvoi = false;
+      try {
+        autoEnvoi = localStorage.getItem('lmm_aide_config_auto_envoi') === '1';
+        localStorage.removeItem('lmm_aide_config_auto_envoi');
+      } catch (e) {}
+      if (autoEnvoi) lmmSoumettreAideConfig();
     })();
   {% endif %}
 </script>
