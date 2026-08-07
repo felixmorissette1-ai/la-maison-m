@@ -251,6 +251,32 @@
 </div>
 
 <script>
+  // === Retour forcé vers le formulaire de conseils stylistiques ===
+  // Le return_url passé à /account/login n'est pas fiable pour la
+  // CRÉATION de compte sur le nouveau système de comptes Shopify
+  // (hébergé sur un domaine externe) — Shopify peut ramener le client
+  // n'importe où sur le shop plutôt que sur la page d'où il est parti,
+  // ce qui faisait perdre sa demande déjà remplie. Comme header.liquid
+  // se charge sur TOUTES les pages, on vérifie ici, dès qu'on arrive
+  // n'importe où sur le site connecté avec une demande en attente
+  // (déposée uniquement par le bouton "Se connecter et envoyer ma
+  // demande" — voir aide-configuration.liquid), et on redirige de force
+  // vers la page du formulaire, qui se charge alors de la remplir et de
+  // l'envoyer automatiquement.
+  {% if customer %}
+    (function () {
+      var pending;
+      try {
+        pending = localStorage.getItem('lmm_aide_config_pending');
+      } catch (e) {
+        pending = null;
+      }
+      if (pending && window.location.pathname.indexOf('aide-configuration') === -1) {
+        window.location.href = '/pages/aide-configuration';
+      }
+    })();
+  {% endif %}
+
   // === Menu mobile ===
   function toggleMobileNav() {
     var nav = document.getElementById('lmm-mobile-nav');
