@@ -1,104 +1,143 @@
-{% comment %} Paramètre: etape_active (1-5) {% endcomment %}
+{% comment %} Paramètre: etape_active (1-6) {% endcomment %}
 <style>
-  .lmm-fil { background: var(--lmm-surface); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 5%; overflow-x: auto; }
-  .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; min-width: max-content; }
+  .lmm-fil { background: var(--lmm-ivoire-pale); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 5%; }
+  .lmm-fil__inner { display: flex; align-items: stretch; height: 52px; gap: 0; }
+  .lmm-fil__track { display: flex; align-items: stretch; gap: 0; overflow: hidden; flex: 1; min-width: 0; }
   .lmm-fil__step {
     display: flex; align-items: center; gap: 10px; padding: 0 20px;
     text-decoration: none; color: var(--lmm-border); font-size: 11px; letter-spacing: 0.1em;
     text-transform: uppercase; border-bottom: 2px solid transparent;
     cursor: default; white-space: nowrap;
   }
-  .lmm-fil__step:first-child { padding-left: 0; }
+  .lmm-fil__group:first-child .lmm-fil__step { padding-left: 0; }
   .lmm-fil__step--active { color: var(--lmm-text); border-bottom-color: var(--lmm-bordeaux); }
   .lmm-fil__step--done { color: var(--lmm-muted); cursor: pointer; text-decoration: none; }
   .lmm-fil__step--done:hover { color: var(--lmm-text); }
   .lmm-fil__num {
     width: 20px; height: 20px; border-radius: 50%;
-    background: var(--lmm-surface); color: var(--lmm-muted); font-size: 10px;
+    background: var(--lmm-ivoire-deep); color: var(--lmm-text); font-size: 10px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; font-weight: 600;
   }
-  .lmm-fil__step--active .lmm-fil__num { background: var(--lmm-bordeaux); color: var(--lmm-white); }
-  .lmm-fil__step--done .lmm-fil__num { background: var(--lmm-text); color: var(--lmm-white); }
-  .lmm-fil__sep { color: var(--lmm-border); font-size: 14px; display: flex; align-items: center; }
+  .lmm-fil__step--active .lmm-fil__num { background: var(--lmm-bordeaux); color: var(--lmm-ivoire-pale); }
+  .lmm-fil__step--done .lmm-fil__num { background: var(--lmm-text); color: var(--lmm-ivoire-pale); }
+  .lmm-fil__sep { color: var(--lmm-border); font-size: 14px; display: flex; align-items: center; padding: 0 2px; }
+  .lmm-fil__group { display: flex; align-items: stretch; flex-shrink: 0; }
+  .lmm-fil__group[hidden] { display: none; }
+  .lmm-fil__ellipsis { display: flex; align-items: center; color: var(--lmm-border); font-size: 12px; padding: 0 4px; flex-shrink: 0; }
+  .lmm-fil__ellipsis[hidden] { display: none; }
+  .lmm-fil__nav-btn {
+    display: flex; align-items: center; justify-content: center;
+    width: 32px; flex-shrink: 0; background: none; border: none;
+    color: var(--lmm-muted); cursor: pointer; font-size: 14px;
+  }
+  .lmm-fil__nav-btn:hover { color: var(--lmm-text); }
+  .lmm-fil__nav-btn[hidden] { visibility: hidden; }
 </style>
 <nav class="lmm-fil">
   <div class="lmm-fil__inner">
-    {% if etape_active > 1 %}
-      <a href="/pages/configurateur" class="lmm-fil__step lmm-fil__step--done">
-        <span class="lmm-fil__num">✓</span>Construction
-      </a>
-    {% else %}
-      <span class="lmm-fil__step lmm-fil__step--active">
-        <span class="lmm-fil__num">1</span>Construction
-      </span>
-    {% endif %}
-    <span class="lmm-fil__sep">›</span>
-    {% if etape_active > 2 %}
-      <a href="/pages/configurateur-pieces" class="lmm-fil__step lmm-fil__step--done" id="fil-step-2">
-        <span class="lmm-fil__num">✓</span>Pièces
-      </a>
-    {% elsif etape_active == 2 %}
-      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-2">
-        <span class="lmm-fil__num">2</span>Pièces
-      </span>
-    {% else %}
-      <span class="lmm-fil__step" id="fil-step-2">
-        <span class="lmm-fil__num">2</span>Pièces
-      </span>
-    {% endif %}
-    <span class="lmm-fil__sep">›</span>
-    {% if etape_active > 3 %}
-      <a href="/pages/configurateur-pantalon" class="lmm-fil__step lmm-fil__step--done" id="fil-step-3">
-        <span class="lmm-fil__num">✓</span>Pantalon
-      </a>
-    {% elsif etape_active == 3 %}
-      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-3">
-        <span class="lmm-fil__num">3</span>Pantalon
-      </span>
-    {% else %}
-      <span class="lmm-fil__step" id="fil-step-3">
-        <span class="lmm-fil__num">3</span>Pantalon
-      </span>
-    {% endif %}
-    <span class="lmm-fil__sep">›</span>
-    {% if etape_active > 4 %}
-      <a href="/pages/configurateur-ourlet" class="lmm-fil__step lmm-fil__step--done" id="fil-step-4">
-        <span class="lmm-fil__num">✓</span>Ourlet
-      </a>
-    {% elsif etape_active == 4 %}
-      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-4">
-        <span class="lmm-fil__num">4</span>Ourlet
-      </span>
-    {% else %}
-      <span class="lmm-fil__step" id="fil-step-4">
-        <span class="lmm-fil__num">4</span>Ourlet
-      </span>
-    {% endif %}
-    <span class="lmm-fil__sep">›</span>
-    {% if etape_active > 5 %}
-      <a href="/pages/configurateur-monogramme" class="lmm-fil__step lmm-fil__step--done" id="fil-step-5">
-        <span class="lmm-fil__num">✓</span>Monogramme
-      </a>
-    {% elsif etape_active == 5 %}
-      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-5">
-        <span class="lmm-fil__num">5</span>Monogramme
-      </span>
-    {% else %}
-      <span class="lmm-fil__step" id="fil-step-5">
-        <span class="lmm-fil__num">5</span>Monogramme
-      </span>
-    {% endif %}
-    <span class="lmm-fil__sep">›</span>
-    {% if etape_active == 6 %}
-      <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-6">
-        <span class="lmm-fil__num">6</span>Récapitulatif
-      </span>
-    {% else %}
-      <span class="lmm-fil__step" id="fil-step-6">
-        <span class="lmm-fil__num">6</span>Récapitulatif
-      </span>
-    {% endif %}
+    <button type="button" class="lmm-fil__nav-btn" id="fil-prev" aria-label="Étapes précédentes" hidden>‹</button>
+    <div class="lmm-fil__track" id="fil-track">
+
+    <div class="lmm-fil__group" data-step="1">
+      {% if etape_active > 1 %}
+        <a href="/pages/configurateur" class="lmm-fil__step lmm-fil__step--done" id="fil-step-1">
+          <span class="lmm-fil__num">✓</span>Construction
+        </a>
+      {% else %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-1">
+          <span class="lmm-fil__num">1</span>Construction
+        </span>
+      {% endif %}
+      <span class="lmm-fil__sep">›</span>
+    </div>
+
+    <span class="lmm-fil__ellipsis" id="fil-ellipsis-start" hidden>…</span>
+
+    <div class="lmm-fil__group" data-step="2">
+      {% if etape_active > 2 %}
+        <a href="/pages/configurateur-pieces" class="lmm-fil__step lmm-fil__step--done" id="fil-step-2">
+          <span class="lmm-fil__num">✓</span>Pièces
+        </a>
+      {% elsif etape_active == 2 %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-2">
+          <span class="lmm-fil__num">2</span>Pièces
+        </span>
+      {% else %}
+        <span class="lmm-fil__step" id="fil-step-2">
+          <span class="lmm-fil__num">2</span>Pièces
+        </span>
+      {% endif %}
+      <span class="lmm-fil__sep">›</span>
+    </div>
+
+    <div class="lmm-fil__group" data-step="3">
+      {% if etape_active > 3 %}
+        <a href="/pages/configurateur-pantalon" class="lmm-fil__step lmm-fil__step--done" id="fil-step-3">
+          <span class="lmm-fil__num">✓</span>Pantalon
+        </a>
+      {% elsif etape_active == 3 %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-3">
+          <span class="lmm-fil__num">3</span>Pantalon
+        </span>
+      {% else %}
+        <span class="lmm-fil__step" id="fil-step-3">
+          <span class="lmm-fil__num">3</span>Pantalon
+        </span>
+      {% endif %}
+      <span class="lmm-fil__sep">›</span>
+    </div>
+
+    <div class="lmm-fil__group" data-step="4">
+      {% if etape_active > 4 %}
+        <a href="/pages/configurateur-ourlet" class="lmm-fil__step lmm-fil__step--done" id="fil-step-4">
+          <span class="lmm-fil__num">✓</span>Ourlet
+        </a>
+      {% elsif etape_active == 4 %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-4">
+          <span class="lmm-fil__num">4</span>Ourlet
+        </span>
+      {% else %}
+        <span class="lmm-fil__step" id="fil-step-4">
+          <span class="lmm-fil__num">4</span>Ourlet
+        </span>
+      {% endif %}
+      <span class="lmm-fil__sep">›</span>
+    </div>
+
+    <div class="lmm-fil__group" data-step="5">
+      {% if etape_active > 5 %}
+        <a href="/pages/configurateur-monogramme" class="lmm-fil__step lmm-fil__step--done" id="fil-step-5">
+          <span class="lmm-fil__num">✓</span>Monogramme
+        </a>
+      {% elsif etape_active == 5 %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-5">
+          <span class="lmm-fil__num">5</span>Monogramme
+        </span>
+      {% else %}
+        <span class="lmm-fil__step" id="fil-step-5">
+          <span class="lmm-fil__num">5</span>Monogramme
+        </span>
+      {% endif %}
+      <span class="lmm-fil__sep">›</span>
+    </div>
+
+    <span class="lmm-fil__ellipsis" id="fil-ellipsis-end" hidden>…</span>
+
+    <div class="lmm-fil__group" data-step="6">
+      {% if etape_active == 6 %}
+        <span class="lmm-fil__step lmm-fil__step--active" id="fil-step-6">
+          <span class="lmm-fil__num">6</span>Récapitulatif
+        </span>
+      {% else %}
+        <span class="lmm-fil__step" id="fil-step-6">
+          <span class="lmm-fil__num">6</span>Récapitulatif
+        </span>
+      {% endif %}
+    </div>
+
+    </div>
+    <button type="button" class="lmm-fil__nav-btn" id="fil-next" aria-label="Étapes suivantes" hidden>›</button>
   </div>
 </nav>
 <script>
@@ -125,5 +164,40 @@
     document.querySelectorAll('.lmm-fil__step--done[href]').forEach(function(link) {
       link.setAttribute('href', link.getAttribute('href').split('?')[0] + window.location.search);
     });
+
+    // Fil d'ariane condensé — même mécanisme que fil-ariane-custom.liquid
+    // (1re et dernière étape toujours visibles + fenêtre de 2 autour de
+    // l'étape courante, "…" et petites flèches pour le reste).
+    var TOTAL = 6;
+    var active = {{ etape_active }};
+    var center = active;
+
+    function renderWindow() {
+      var visible = {};
+      visible[1] = true;
+      visible[TOTAL] = true;
+      for (var i = center - 2; i <= center + 2; i++) {
+        if (i >= 1 && i <= TOTAL) visible[i] = true;
+      }
+      for (var s = 1; s <= TOTAL; s++) {
+        var group = document.querySelector('.lmm-fil__group[data-step="' + s + '"]');
+        if (group) group.hidden = !visible[s];
+      }
+      document.getElementById('fil-ellipsis-start').hidden = visible[2];
+      document.getElementById('fil-ellipsis-end').hidden = visible[TOTAL - 1];
+      document.getElementById('fil-prev').hidden = center <= 3;
+      document.getElementById('fil-next').hidden = center >= TOTAL - 2;
+    }
+
+    document.getElementById('fil-prev').addEventListener('click', function() {
+      center = Math.max(3, center - 3);
+      renderWindow();
+    });
+    document.getElementById('fil-next').addEventListener('click', function() {
+      center = Math.min(TOTAL - 2, center + 3);
+      renderWindow();
+    });
+
+    renderWindow();
   })();
 </script>
