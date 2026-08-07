@@ -20,9 +20,9 @@
   .lmm-smono__input:focus { outline: none; border-color: var(--lmm-bordeaux); }
   .lmm-smono__count { font-size: 10px; color: var(--lmm-muted); text-align: right; margin: 6px 0 0; }
   .lmm-smono__prix { font-size: 11px; color: var(--lmm-muted); text-align: center; margin: 16px 0 0; letter-spacing: 0.04em; }
-  .lmm-smono__nav { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 36px; }
-  .lmm-smono__skip { background: none; border: none; color: var(--lmm-muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; font-family: inherit; padding: 6px; }
-  .lmm-smono__skip:hover { color: var(--lmm-text); }
+  .lmm-smono__checkbox-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 20px; }
+  .lmm-smono__checkbox-row input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--lmm-bordeaux); cursor: pointer; }
+  .lmm-smono__checkbox-row label { font-size: 12px; letter-spacing: 0.04em; color: var(--lmm-muted); cursor: pointer; }
 </style>
 
 <div class="lmm-smono-wrap lmm-sm-main">
@@ -39,18 +39,23 @@
     <p class="lmm-smono__prix">+ {{ section.settings.prix_monogramme | money }} si un nom est brodé</p>
   {% endif %}
 
-  <div class="lmm-smono__nav">
-    <button class="lmm-smono__skip" onclick="goSkip()">Passer cette étape</button>
+  <div class="lmm-smono__checkbox-row">
+    <input type="checkbox" id="mono-skip-checkbox">
+    <label for="mono-skip-checkbox">Ne rien broder</label>
   </div>
 </div>
 
 <script>
   var monoInput = document.getElementById('mono-input');
   var monoCount = document.getElementById('mono-count');
+  var monoSkip = document.getElementById('mono-skip-checkbox');
 
   // Étape toujours optionnelle — le bouton "Continuer" partagé du panneau
   // preview (sm-preview.liquid) est actif dès l'arrivée sur la page, comme
-  // sur les autres étapes une fois leur sélection complète.
+  // sur les autres étapes une fois leur sélection complète. "Ne rien
+  // broder" ne fait qu'effacer/désactiver le champ — le client doit
+  // quand même cliquer "Continuer" pour poursuivre (pas de navigation
+  // automatique au clic de la case).
   var lmmSharedNext = document.getElementById('lmm-prev-btn-next');
   if (lmmSharedNext) lmmSharedNext.classList.add('active');
 
@@ -64,17 +69,18 @@
     monoCount.textContent = monoInput.value.length;
   });
 
+  monoSkip.addEventListener('change', function() {
+    monoInput.disabled = monoSkip.checked;
+    if (monoSkip.checked) {
+      monoInput.value = '';
+      monoCount.textContent = '0';
+    }
+  });
+
   function goNext() {
     var p = new URLSearchParams(window.location.search);
-    var val = monoInput.value.trim();
+    var val = monoSkip.checked ? '' : monoInput.value.trim();
     if (val) { p.set('monogramme', val); } else { p.delete('monogramme'); }
-    p.set('mono_vu', '1');
-    window.location.href = '/pages/sur-mesure-recap?' + p.toString();
-  }
-
-  function goSkip() {
-    var p = new URLSearchParams(window.location.search);
-    p.delete('monogramme');
     p.set('mono_vu', '1');
     window.location.href = '/pages/sur-mesure-recap?' + p.toString();
   }
