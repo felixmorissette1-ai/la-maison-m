@@ -27,12 +27,24 @@
       <input type="hidden" id="ac-email" value="{{ customer.email | escape }}">
       <button type="submit" class="lmm-btn-primary" id="aide-config-submit-btn">Envoyer ma requête</button>
     {% else %}
-      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherBoutonRetour();">Se connecter et envoyer ma demande</a>
-      <button type="button" id="aide-config-retour-btn" class="lmm-partenaire__btn-secondaire" hidden onclick="window.location.reload()">J'ai terminé ma connexion — actualiser</button>
+      <a href="/account/login?return_url={{ request.path | url_encode }}" class="lmm-btn-primary" id="aide-config-login-link" target="_blank" rel="noopener" onclick="lmmSauvegarderAideConfig(); lmmAfficherAttenteConnexion();">Se connecter et envoyer ma demande</a>
     {% endif %}
     <p class="lmm-partenaire__error" id="aide-config-error"></p>
     <p class="lmm-partenaire__success" id="aide-config-success">Merci ! Votre demande a bien été envoyée — nous vous répondrons sous peu.</p>
   </form>
+</div>
+
+<!-- Écran d'attente pendant la connexion dans l'autre onglet — floute le
+     reste de la page plutôt que de la cacher complètement, pour montrer
+     clairement que le formulaire est toujours là en dessous. Pas de
+     détection automatique (testée et prouvée peu fiable, voir historique
+     de ce fichier) : le client clique lui-même une fois de retour, ce qui
+     déclenche un vrai rechargement de page. -->
+<div id="aide-config-overlay" class="aide-config-overlay" hidden>
+  <div class="aide-config-overlay__box">
+    <p class="aide-config-overlay__text">Une fois connecté(e) dans l'autre onglet, cliquez ici pour continuer votre demande.</p>
+    <button type="button" class="lmm-btn-primary" onclick="window.location.reload()">Continuer ma demande</button>
+  </div>
 </div>
 
 <style>
@@ -58,31 +70,39 @@
   .lmm-partenaire__error { color: var(--lmm-error); font-size: 13px; margin-top: 14px; display: none; }
   .lmm-partenaire__success { color: var(--lmm-success); font-size: 13px; margin-top: 14px; display: none; }
 
-  /* Bouton secondaire (contour, pas plein) pour rester subordonné au CTA
-     principal — mêmes couleurs de marque que le reste de la page, pas le
-     fond sombre emprunté à l'overlay de prise de rendez-vous. */
-  .lmm-partenaire__btn-secondaire {
-    display: inline-flex;
+  /* Écran d'attente : floute l'arrière-plan (couleurs claires de cette
+     page, pas le fond sombre emprunté à l'overlay de prise de
+     rendez-vous) plutôt que de le cacher, pour rassurer que le
+     formulaire est toujours intact en dessous. */
+  .aide-config-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 12px;
-    background: none;
-    border: 1px solid var(--lmm-border);
-    color: var(--lmm-text);
-    padding: 14px 32px;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-family: inherit;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
+    padding: 24px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
-  .lmm-partenaire__btn-secondaire:hover {
-    border-color: var(--lmm-bordeaux);
-    color: var(--lmm-bordeaux);
-  }
-  .lmm-partenaire__btn-secondaire[hidden] {
+  .aide-config-overlay[hidden] {
     display: none;
+  }
+  .aide-config-overlay__box {
+    background: var(--lmm-white);
+    border: 1px solid var(--lmm-border);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    max-width: 380px;
+    width: 100%;
+    padding: 40px 36px;
+    text-align: center;
+  }
+  .aide-config-overlay__text {
+    font-size: 15px;
+    color: var(--lmm-text);
+    line-height: 1.7;
+    margin: 0 0 24px;
   }
 </style>
 
@@ -108,9 +128,9 @@
     } catch (e) {}
   }
 
-  function lmmAfficherBoutonRetour() {
-    var btn = document.getElementById('aide-config-retour-btn');
-    if (btn) btn.hidden = false;
+  function lmmAfficherAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    if (overlay) overlay.hidden = false;
   }
 
   function lmmSoumettreAideConfig() {
