@@ -34,22 +34,29 @@
   </form>
 </div>
 
-<!-- Marqueur lu par lmmVerifierConnexionEnArrierePlan() (voir <script>) — un
-     fetch en arrière-plan de cette même page relit cet attribut pour savoir
-     si le client est maintenant connecté, sans jamais recharger visiblement
-     la page tant que ce n'est pas le cas. -->
+<!-- Ancien marqueur, plus utilisé (voir ANCIENNE VERSION dans <script> —
+     le fetch en arrière-plan qui le lisait s'est avéré peu fiable : le CDN
+     de Shopify sert parfois une réponse mise en cache incohérente pour ce
+     genre de requête, prouvé en direct — deux fetch consécutifs avec des
+     paramètres anti-cache différents ont donné des résultats différents).
 <div id="lmm-customer-flag" data-lmm-customer-status="{% if customer %}1{% else %}0{% endif %}" hidden></div>
+-->
 
 <!-- Bloque la page pendant l'attente du retour du nouvel onglet — même
      traitement visuel que #lmm-booking-overlay (prise de rendez-vous, voir
-     header.liquid), ID différent pour ne pas entrer en conflit avec lui. -->
+     header.liquid), ID différent pour ne pas entrer en conflit avec lui.
+     Pas de détection automatique (voir <script> pour pourquoi) — un bouton
+     que le client clique lui-même une fois de retour, qui déclenche un
+     VRAI rechargement de page (fiable, contrairement au fetch en
+     arrière-plan) plutôt qu'un sondage répété. -->
 <div id="aide-config-overlay" style="display:none; position:fixed; inset:0; background:var(--lmm-text); z-index:99999; flex-direction:column; align-items:center; justify-content:center; gap:20px; text-align:center; padding:24px;">
   <p style="font-family:Georgia,serif; font-size:22px; color:var(--lmm-white); letter-spacing:0.04em; margin:0;">En attente de votre connexion…</p>
-  <p style="font-size:13px; color:var(--lmm-ivoire-pale); line-height:1.7; margin:0; max-width:340px;">Une fois connecté dans l'autre onglet, si vous arrivez sur la page de votre compte, cliquez sur le logo « La Maison M » là-bas pour revenir sur notre site — votre demande s'enverra alors automatiquement ici.</p>
+  <p style="font-size:13px; color:var(--lmm-ivoire-pale); line-height:1.7; margin:0; max-width:340px;">Une fois la connexion terminée dans l'autre onglet (au besoin, cliquez sur le logo « La Maison M » là-bas pour revenir sur notre site), cliquez ci-dessous.</p>
   <div style="width:120px; height:2px; background:rgba(var(--lmm-ivoire-rgb),0.2); position:relative; overflow:hidden;">
     <div style="position:absolute; top:0; width:40px; height:2px; background:var(--lmm-bordeaux); animation:lmm-aide-config-slide 1.2s ease-in-out infinite;"></div>
   </div>
-  <button type="button" id="aide-config-overlay-cancel" style="display:none; background:none; border:none; color:var(--lmm-border); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; margin-top:12px;" onclick="lmmMasquerAttenteConnexion()">Annuler l'attente</button>
+  <button type="button" id="aide-config-overlay-done" class="lmm-btn-primary" onclick="window.location.reload()">J'ai terminé — envoyer ma demande</button>
+  <button type="button" id="aide-config-overlay-cancel" style="background:none; border:none; color:var(--lmm-border); font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit; margin-top:4px;" onclick="lmmMasquerAttenteConnexion()">Annuler</button>
 </div>
 
 <style>
@@ -186,13 +193,21 @@
     lmmVerifierEnvoiTermine();
   });
 
-  === FIN ANCIENNE VERSION === */
+  === FIN ANCIENNE VERSION (2e passe, sondage/localStorage) === */
 
-  // === NOUVELLE VERSION — une seule source de vérité : l'état de connexion
-  // RÉEL renvoyé par le serveur (pas de signal intermédiaire type
-  // localStorage, qui pouvait déclencher un faux "connecté"). Sondage en
-  // arrière-plan de cette page, 1 fois par seconde, avec un paramètre
-  // anti-cache pour ne jamais lire une réponse mise en cache par erreur.
+  /* === 2e ANCIENNE VERSION — commentée aussi : fetch en arrière-plan pour
+     détecter la connexion sans action du client. Testée en direct et
+     PROUVÉE peu fiable : deux fetch consécutifs vers la même page, avec
+     des paramètres anti-cache DIFFÉRENTS à chaque fois, ont renvoyé des
+     résultats différents (un coup "connecté", un coup "pas connecté") —
+     le CDN de Shopify sert par moments une réponse mise en cache
+     incohérente pour ce type de requête, peu importe ce qu'on fait côté
+     client pour le contourner. Remplacée par un bouton manuel : plus
+     lent d'un clic, mais fiable à 100 % (un vrai rechargement de page
+     obtient toujours le rendu Liquid exact, pas une copie en cache).
+     (Le marqueur data-lmm-customer-status qu'utilisait ce fetch a aussi
+     été retiré du HTML plus haut.)
+
   var lmmAttentePollTimer = null;
   var lmmAttenteAbandonTimer = null;
 
@@ -205,14 +220,10 @@
     clearInterval(lmmAttentePollTimer);
     lmmAttentePollTimer = setInterval(lmmVerifierConnexionEnArrierePlan, 1000);
 
-    // Après 8s, offrir un moyen de sortir plutôt que de bloquer
-    // indéfiniment si le client abandonne la connexion dans l'autre onglet.
     setTimeout(function () {
       if (cancelBtn) cancelBtn.style.display = 'inline-block';
     }, 8000);
 
-    // Filet de sécurité dur : arrête tout après 10 minutes peu importe ce
-    // que fait le client, pour ne jamais sonder indéfiniment en arrière-plan.
     clearTimeout(lmmAttenteAbandonTimer);
     lmmAttenteAbandonTimer = setTimeout(lmmMasquerAttenteConnexion, 10 * 60 * 1000);
   }
@@ -226,10 +237,6 @@
 
   function lmmVerifierConnexionEnArrierePlan() {
     if (document.visibilityState === 'hidden') return;
-    // Paramètre anti-cache unique à chaque appel — sans ça, une réponse
-    // mise en cache (CDN ou navigateur) pourrait montrer "connecté" à tort
-    // même sans connexion réelle, ce qui est probablement ce qui vient de
-    // se produire avec l'ancienne version.
     var url = window.location.pathname + '?lmm_check=' + Date.now();
     fetch(url, { credentials: 'same-origin', cache: 'no-store' })
       .then(function (r) { return r.text(); })
@@ -237,13 +244,28 @@
         if (html.indexOf('data-lmm-customer-status="1"') === -1) return;
         clearInterval(lmmAttentePollTimer);
         clearTimeout(lmmAttenteAbandonTimer);
-        // Vrai rechargement (pas juste une mise à jour du DOM) — le rendu
-        // Liquid se refait correctement côté serveur (courriel du compte,
-        // bouton, etc.) et le code qui restaure + envoie automatiquement
-        // la demande en attente s'exécute.
         window.location.reload();
       })
       .catch(function () {});
+  }
+
+  === FIN 2e ANCIENNE VERSION === */
+
+  // === VERSION ACTUELLE — pas de sondage automatique du tout (prouvé peu
+  // fiable ci-dessus, à cause du cache CDN de Shopify). Le client clique
+  // lui-même un bouton une fois de retour ; ça déclenche un VRAI
+  // rechargement de la page, qui obtient toujours le rendu Liquid exact
+  // côté serveur (jamais une copie en cache) — le code qui restaure et
+  // envoie automatiquement la demande (plus bas) prend le relais à partir
+  // de là. Zéro requête en arrière-plan tant que le client n'a pas cliqué.
+  function lmmAfficherAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    if (overlay) overlay.style.display = 'flex';
+  }
+
+  function lmmMasquerAttenteConnexion() {
+    var overlay = document.getElementById('aide-config-overlay');
+    if (overlay) overlay.style.display = 'none';
   }
 
   function lmmSoumettreAideConfig() {
