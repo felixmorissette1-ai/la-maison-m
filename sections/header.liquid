@@ -105,9 +105,9 @@
         <span style="display:block; font-size:13px; letter-spacing:0.02em;">Rendez-vous mensurations</span>
         <span style="display:block; font-size:11px; font-weight:300; opacity:0.8; margin-top:4px;">Prise de vos mesures et retouches.</span>
       </button>
-      <button onclick="choisirTypeRdv('tissus')" style="background:none; border:1px solid var(--lmm-border); color:var(--lmm-text); padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
+      <button onclick="choisirTypeRdv('tissus')" style="background:var(--lmm-ivoire-deep); color:var(--lmm-text); border:none; padding:16px 20px; text-align:left; cursor:pointer; font-family:inherit;">
         <span style="display:block; font-size:13px; letter-spacing:0.02em;">Voir les tissus et conseils vestimentaires</span>
-        <span style="display:block; font-size:11px; font-weight:300; color:var(--lmm-muted); margin-top:4px;">Touchez les tissus et soyez conseillé avant de commander.</span>
+        <span style="display:block; font-size:11px; font-weight:300; opacity:0.8; margin-top:4px;">Touchez les tissus et soyez conseillé avant de commander.</span>
       </button>
     </div>
 
@@ -130,16 +130,16 @@
     </div>
 
     <div id="lmm-loc-resultat" style="display:none; flex-direction:column; gap:0; flex:1; min-height:0;">
-      <div id="lmm-map" style="width:100%; height:200px; background:var(--lmm-white); flex-shrink:0;"></div>
+      <div id="lmm-map" style="width:100%; height:200px; background:var(--lmm-ivoire-pale); flex-shrink:0;"></div>
 
-      <div id="lmm-vendeuse-legende" style="display:none; flex-shrink:0; border:1px solid var(--lmm-border); border-top:none; padding:16px 18px; flex-direction:column; gap:12px; background:var(--lmm-surface);">
+      <div id="lmm-vendeuse-legende" style="display:none; flex-shrink:0; border:1px solid var(--lmm-border); border-top:none; padding:16px 18px; flex-direction:column; gap:12px; background:var(--lmm-ivoire-pale);">
         <div style="display:flex; flex-direction:column; gap:10px;">
           <span style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--lmm-text);">
-            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;"><circle cx="7" cy="7" r="6" fill="var(--lmm-bordeaux)" stroke="var(--lmm-text)" stroke-width="1"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0;"><circle cx="9" cy="9" r="8" fill="var(--lmm-bordeaux)" stroke="var(--lmm-text)" stroke-width="1"/></svg>
             Mensurations, altérations et visualisation des tissus
           </span>
           <span style="display:flex; align-items:center; gap:10px; font-size:12px; color:var(--lmm-text);">
-            <svg width="14" height="14" viewBox="0 0 14 14" style="flex-shrink:0;"><circle cx="7" cy="7" r="6" fill="var(--lmm-ivoire)" stroke="var(--lmm-text)" stroke-width="1"/></svg>
+            <svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0;"><circle cx="9" cy="9" r="5" fill="var(--lmm-ivoire)" stroke="var(--lmm-text)" stroke-width="1"/></svg>
             Mensurations et altérations
           </span>
         </div>
@@ -425,6 +425,15 @@
   var lmmListeActive = [];
   var lmmOrigine = null;
 
+  // L'API Google Maps ne comprend pas var(--x) — ce ne sont pas de vrais
+  // éléments DOM stylés — donc on résout la valeur RÉELLE de la variable
+  // CSS ici, au moment de l'appel, plutôt que de recopier des hex figés
+  // qui se désynchroniseraient si la palette change dans les réglages du
+  // thème (c'est exactement ce que faisait l'ancienne version).
+  function lmmCssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+
   function chargerGoogleMaps(callback) {
     if (window.google && window.google.maps) { callback(); return; }
     window._lmmMapCallback = callback;
@@ -485,7 +494,7 @@
       var card = document.createElement('div');
       card.id = 'lmm-card-' + i;
       card.setAttribute('onclick', 'selectionnerCouturiere(' + i + ')');
-      card.style.cssText = 'background:var(--lmm-white); border:1px solid var(--lmm-border); padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center;';
+      card.style.cssText = 'background:var(--lmm-white); border:2px solid var(--lmm-border); padding:14px 18px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition:background 0.15s, border-color 0.15s;';
       var typeService = c.vendeuse
         ? '<span style="display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:0.03em; color:var(--lmm-bordeaux); margin-top:4px;"><svg width="10" height="10" viewBox="0 0 10 10" style="flex-shrink:0;"><circle cx="5" cy="5" r="4" fill="var(--lmm-bordeaux)" stroke="var(--lmm-text)" stroke-width="1"/></svg>Mensurations, altérations et visualisation des tissus</span>'
         : '<span style="display:flex; align-items:center; gap:6px; font-size:10px; letter-spacing:0.03em; color:var(--lmm-muted); margin-top:4px;"><svg width="9" height="9" viewBox="0 0 9 9" style="flex-shrink:0;"><circle cx="4.5" cy="4.5" r="3.5" fill="var(--lmm-ivoire)" stroke="var(--lmm-text)" stroke-width="1"/></svg>Mensurations et altérations</span>';
@@ -512,23 +521,17 @@
         zoom: 11,
         disableDefaultUI: true,
         zoomControl: true,
-        // Couleurs littérales dans tout ce bloc Maps : l'API Google Maps ne
-        // résout pas les variables CSS (ce ne sont pas de vrais éléments DOM
-        // stylés) — ces hex sont des copies figées des valeurs actuelles de
-        // la palette (ivoire-pale, ivoire-line, muted, border, text,
-        // bordeaux). Si la palette change dans les réglages du thème, ces
-        // valeurs devront être mises à jour manuellement ici.
         styles: [
-          { elementType: 'geometry', stylers: [{ color: '#EDE3D3' }] },
+          { elementType: 'geometry', stylers: [{ color: lmmCssVar('--lmm-ivoire-pale') }] },
           { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
-          { elementType: 'labels.text.fill', stylers: [{ color: '#888888' }] },
-          { elementType: 'labels.text.stroke', stylers: [{ color: '#ffffff' }] },
-          { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#E3D9C6' }] },
-          { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: '#ffffff' }] },
-          { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#E8E8E8' }] },
+          { elementType: 'labels.text.fill', stylers: [{ color: lmmCssVar('--lmm-muted') }] },
+          { elementType: 'labels.text.stroke', stylers: [{ color: lmmCssVar('--lmm-white') }] },
+          { featureType: 'water', elementType: 'geometry', stylers: [{ color: lmmCssVar('--lmm-ivoire-line') }] },
+          { featureType: 'road', elementType: 'geometry.fill', stylers: [{ color: lmmCssVar('--lmm-white') }] },
+          { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: lmmCssVar('--lmm-border') }] },
           { featureType: 'poi', stylers: [{ visibility: 'off' }] },
           { featureType: 'transit', stylers: [{ visibility: 'off' }] },
-          { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: '#E8E8E8' }] }
+          { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: lmmCssVar('--lmm-border') }] }
         ]
       });
       if (lmmOrigine) {
@@ -549,17 +552,15 @@
       couturieres.forEach(function(c, i) {
         var pos = { lat: c.lat, lng: c.lng };
         var isNearest = i === 0;
-        // Couleurs littérales : l'API Google Maps ne résout pas les variables CSS
-        // — ce ne sont pas de vrais éléments DOM stylés.
         // Le format des tailleurs "tissus" est fixe (pas de variation selon la
         // proximité ou le filtre actif) pour rester cohérent d'une vue à l'autre.
         var icon = c.vendeuse
           ? {
               path: google.maps.SymbolPath.CIRCLE,
               scale: 11,
-              fillColor: '#3A0E16',
+              fillColor: lmmCssVar('--lmm-bordeaux'),
               fillOpacity: 1,
-              strokeColor: '#1C1C1C',
+              strokeColor: lmmCssVar('--lmm-text'),
               strokeWeight: 2
             }
           : {
@@ -567,9 +568,9 @@
               // La proximité reste indiquée par la taille et par le libellé dans la liste.
               path: google.maps.SymbolPath.CIRCLE,
               scale: isNearest ? 10 : 7,
-              fillColor: '#F2E8D6',
+              fillColor: lmmCssVar('--lmm-ivoire-deep'),
               fillOpacity: 1,
-              strokeColor: '#1C1C1C',
+              strokeColor: lmmCssVar('--lmm-text'),
               strokeWeight: 2
             };
         new google.maps.Marker({
@@ -594,7 +595,7 @@
       var btn = document.getElementById('lmm-btn-' + j);
       if (!card || !btn) continue;
       if (j === index) {
-        card.style.background = 'var(--lmm-surface)';
+        card.style.background = 'var(--lmm-ivoire-deep)';
         card.style.borderColor = 'var(--lmm-bordeaux)';
         btn.style.color = 'var(--lmm-bordeaux)';
       } else {
