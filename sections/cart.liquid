@@ -308,7 +308,12 @@
                   {% endunless %}
                 {% endfor %}
               </ul>
-              <a href="{{ item.url_to_remove }}" class="lmm-btn lmm-btn-quiet">Retirer</a>
+              <div style="display:flex; gap:16px;">
+                {% if item.properties['_lmm_sur_mesure'] %}
+                  <button type="button" class="lmm-btn lmm-btn-quiet" onclick="modifierSurMesure('{{ item.key }}', '/pages/sur-mesure-style?style={{ item.properties['Style'] | url_encode }}&pieces={{ item.properties['Pièces'] | url_encode }}&tissu={{ item.properties['Tissu'] | url_encode }}&lining={{ item.properties['Lining'] | url_encode }}&bouton={{ item.properties['Boutons'] | url_encode }}&construction={{ item.properties['Construction'] | url_encode }}&hauteur={{ item.properties['Hauteur du pantalon'] | url_encode }}&bas={{ item.properties['Bas de pantalon'] | url_encode }}&monogramme={{ item.properties["Monogramme (nom brodé à l'intérieur du veston)"] | url_encode }}')">Modifier</button>
+                {% endif %}
+                <a href="{{ item.url_to_remove }}" class="lmm-btn lmm-btn-quiet">Retirer</a>
+              </div>
             </div>
 
             <div class="lmm-cart__item-right">
@@ -422,6 +427,18 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ id: key, quantity: qty })
     }).then(function() { window.location.reload(); });
+  }
+
+  // "Modifier" un article sur-mesure : le retirer du panier avant de
+  // relancer le configurateur pré-rempli, pour éviter de se retrouver
+  // avec deux lignes (l'ancienne + la nouvelle) une fois la commande
+  // reconfigurée.
+  function modifierSurMesure(key, url) {
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: 0 })
+    }).then(function() { window.location.href = url; });
   }
 
   function lmmDemanderReprise() {
