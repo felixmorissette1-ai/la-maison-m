@@ -432,19 +432,10 @@
   }
 
   function choisirTypeRdv(type) {
-    // "Voir les tissus" nécessite un compte — même logique que le
-    // paiement au panier (gate "Se connecter pour continuer") : on ne
-    // laisse pas continuer sans compte, mais on offre toujours l'option
-    // de se présenter directement en succursale sans rendez-vous.
-    if (type === 'tissus') {
-      {% if customer %}
-      {% else %}
-      document.getElementById('lmm-loc-type').style.display = 'none';
-      document.getElementById('lmm-loc-compte-requis').style.display = 'flex';
-      lmmChargerHoraireCal();
-      return;
-      {% endif %}
-    }
+    // Le compte n'est exigé que juste avant d'ouvrir Cal.com (voir
+    // confirmerCouturiereEtOuvrirCal) — le client doit pouvoir chercher
+    // et choisir sa couturière librement avant qu'on lui demande quoi
+    // que ce soit.
     lmmRdvType = type;
     document.getElementById('lmm-loc-type').style.display = 'none';
     demarrerRecherche();
@@ -452,7 +443,7 @@
 
   function retourChoixTypeRdv() {
     document.getElementById('lmm-loc-compte-requis').style.display = 'none';
-    document.getElementById('lmm-loc-type').style.display = 'flex';
+    document.getElementById('lmm-loc-resultat').style.display = 'flex';
   }
 
   // Si on a déjà la localisation en cache (voir IIFE plus haut), on saute
@@ -750,6 +741,20 @@
   }
 
   function confirmerCouturiereEtOuvrirCal() {
+    // "Voir les tissus" nécessite un compte — même logique que le
+    // paiement au panier (gate "Se connecter pour continuer") — mais on
+    // laisse le client chercher et choisir sa couturière librement
+    // d'abord ; le compte n'est exigé qu'à la toute dernière étape,
+    // juste avant l'ouverture du widget de réservation Cal.com.
+    if (lmmRdvType === 'tissus') {
+      {% if customer %}
+      {% else %}
+      document.getElementById('lmm-loc-resultat').style.display = 'none';
+      document.getElementById('lmm-loc-compte-requis').style.display = 'flex';
+      lmmChargerHoraireCal();
+      return;
+      {% endif %}
+    }
     fermerLocalisationModal();
     calCharge = false;
     ouvrirCalModal(lmmLienCalChoisi);
