@@ -67,22 +67,34 @@
   </div>
 
   <div class="lmm-smo-pant__grid" id="pant-grid">
-    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
-      <div class="lmm-smo-pant__card"
-           data-val="{{ entry.nom.value | escape }}"
-           onclick="selectPant(this, '{{ entry.nom.value | escape }}')">
-        <div class="lmm-smo-pant__card-photo">
-          {% if entry.photo.value %}
-            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
-          {% else %}
-            <span class="lmm-smo-pant__card-photo-placeholder">Photo à venir</span>
-          {% endif %}
-        </div>
-        <div class="lmm-smo-pant__card-body">
-          <h2 class="lmm-smo-pant__name">{{ entry.nom.value }}</h2>
-          {% if entry.description.value %}<p class="lmm-smo-pant__desc">{{ entry.description.value }}</p>{% endif %}
-        </div>
-      </div>
+    {% comment %}
+      Le filtre "sort" de Liquid ne trie pas de façon fiable sur un champ
+      metaobject imbriqué (ordre.value) — on force donc l'ordre voulu en
+      cherchant chaque nom explicitement plutôt que de faire confiance à
+      l'ordre natif de shop.metaobjects.hauteur_pantalon.values (qui ne
+      correspond ni à l'ordre de création ni à l'ordre alphabétique).
+    {% endcomment %}
+    {% assign _hauteur_order = "Taille basse,Taille haute,Taille haute pincé" | split: "," %}
+    {% for _nom in _hauteur_order %}
+      {% for entry in shop.metaobjects.hauteur_pantalon.values %}
+        {% if entry.nom.value == _nom %}
+          <div class="lmm-smo-pant__card"
+               data-val="{{ entry.nom.value | escape }}"
+               onclick="selectPant(this, '{{ entry.nom.value | escape }}')">
+            <div class="lmm-smo-pant__card-photo">
+              {% if entry.photo.value %}
+                <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+              {% else %}
+                <span class="lmm-smo-pant__card-photo-placeholder">Photo à venir</span>
+              {% endif %}
+            </div>
+            <div class="lmm-smo-pant__card-body">
+              <h2 class="lmm-smo-pant__name">{{ entry.nom.value }}</h2>
+              {% if entry.description.value %}<p class="lmm-smo-pant__desc">{{ entry.description.value }}</p>{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </div>
 

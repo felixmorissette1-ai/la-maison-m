@@ -37,22 +37,28 @@
   </div>
 
   <div class="lmm-smp__grid" id="smp-grid">
-    {% for entry in shop.metaobjects.hauteur_pantalon.values %}
-      <div class="lmm-smp__card"
-           data-val="{{ entry.nom.value | escape }}"
-           onclick="selectCard(this, '{{ entry.nom.value | escape }}')">
-        <div class="lmm-smp__card-photo">
-          {% if entry.photo.value %}
-            <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
-          {% else %}
-            <span class="lmm-smp__card-photo-placeholder">Photo à venir</span>
-          {% endif %}
-        </div>
-        <div class="lmm-smp__card-body">
-          <h2 class="lmm-smp__name">{{ entry.nom.value }}</h2>
-          {% if entry.description.value %}<p class="lmm-smp__desc">{{ entry.description.value }}</p>{% endif %}
-        </div>
-      </div>
+    {% comment %} Ordre forcé — voir sm-ourlet.liquid pour l'explication. {% endcomment %}
+    {% assign _hauteur_order = "Taille basse,Taille haute,Taille haute pincé" | split: "," %}
+    {% for _nom in _hauteur_order %}
+      {% for entry in shop.metaobjects.hauteur_pantalon.values %}
+        {% if entry.nom.value == _nom %}
+          <div class="lmm-smp__card"
+               data-val="{{ entry.nom.value | escape }}"
+               onclick="selectCard(this, '{{ entry.nom.value | escape }}')">
+            <div class="lmm-smp__card-photo">
+              {% if entry.photo.value %}
+                <img src="{{ entry.photo.value | image_url: width: 600 }}" alt="{{ entry.nom.value }}">
+              {% else %}
+                <span class="lmm-smp__card-photo-placeholder">Photo à venir</span>
+              {% endif %}
+            </div>
+            <div class="lmm-smp__card-body">
+              <h2 class="lmm-smp__name">{{ entry.nom.value }}</h2>
+              {% if entry.description.value %}<p class="lmm-smp__desc">{{ entry.description.value }}</p>{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     {% endfor %}
   </div>
 
