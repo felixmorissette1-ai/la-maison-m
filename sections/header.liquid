@@ -126,7 +126,7 @@
       </div>
       <div style="border-top:1px solid var(--lmm-border); padding-top:16px;">
         <p style="font-size:11px; color:var(--lmm-muted); line-height:1.7; margin:0;">Vous préférez ne pas créer de compte ? Vous pouvez toujours vous présenter directement en succursale, sans rendez-vous, aux heures d'ouverture habituelles de nos couturières :</p>
-        <p style="font-size:12px; color:var(--lmm-text); line-height:1.7; margin:8px 0 0; white-space:pre-line;">{{ section.settings.horaire_couturieres }}</p>
+        <p id="lmm-horaire-couturieres" style="font-size:12px; color:var(--lmm-text); line-height:1.7; margin:8px 0 0; white-space:pre-line;">{{ section.settings.horaire_couturieres }}</p>
       </div>
       <button onclick="retourChoixTypeRdv()" style="background:none; border:none; color:var(--lmm-muted); font-size:11px; letter-spacing:0.06em; text-transform:uppercase; cursor:pointer; font-family:inherit; align-self:center;">
         Retour
@@ -343,6 +343,44 @@
   var tunnelUrl = 'https://lmm-backend.vercel.app';
   var lmmRdvType = null;
 
+  // Horaire d'ouverture affiché quand un client refuse de créer un compte
+  // pour un rdv "tissus" — va chercher l'horaire réel configuré sur
+  // Cal.com (le même qui détermine les créneaux disponibles) plutôt que
+  // de dupliquer une valeur à maintenir à la main. Chargé une seule fois
+  // par session ; en cas d'échec, le texte de réglage du thème (déjà
+  // affiché par défaut) reste en place.
+  var lmmHoraireCharge = false;
+  var lmmJoursFr = { Sunday: 'Dimanche', Monday: 'Lundi', Tuesday: 'Mardi', Wednesday: 'Mercredi', Thursday: 'Jeudi', Friday: 'Vendredi', Saturday: 'Samedi' };
+  var lmmOrdreJours = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  function lmmFormaterHeure(hhmm) {
+    var parts = hhmm.split(':');
+    var h = parseInt(parts[0], 10);
+    var m = parts[1];
+    return m === '00' ? (h + ' h') : (h + ' h ' + m);
+  }
+
+  function lmmFormaterHoraireCal(availability) {
+    return availability.map(function(bloc) {
+      var joursTries = lmmOrdreJours.filter(function(j) { return bloc.days.indexOf(j) !== -1; });
+      var joursLabel = joursTries.length === 7 ? 'Tous les jours' : joursTries.map(function(j) { return lmmJoursFr[j]; }).join(', ');
+      return joursLabel + ', de ' + lmmFormaterHeure(bloc.startTime) + ' à ' + lmmFormaterHeure(bloc.endTime);
+    }).join('\n');
+  }
+
+  function lmmChargerHoraireCal() {
+    if (lmmHoraireCharge) return;
+    lmmHoraireCharge = true;
+    fetch(tunnelUrl + '/api/cal-horaire')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.availability || !data.availability.length) return;
+        var el = document.getElementById('lmm-horaire-couturieres');
+        if (el) el.textContent = lmmFormaterHoraireCal(data.availability);
+      })
+      .catch(function() {});
+  }
+
   // Localisation demandée une seule fois par session, dès l'arrivée sur le
   // site (pas seulement quand le modal de rendez-vous s'ouvre) — pour que le
   // choix du client soit déjà en cache et qu'on n'ait pas à le lui redemander
@@ -403,6 +441,7 @@
       {% else %}
       document.getElementById('lmm-loc-type').style.display = 'none';
       document.getElementById('lmm-loc-compte-requis').style.display = 'flex';
+      lmmChargerHoraireCal();
       return;
       {% endif %}
     }
@@ -1362,8 +1401,8 @@
     {
       "type": "textarea",
       "id": "horaire_couturieres",
-      "label": "Horaire habituel des couturières",
-      "info": "Affiché si un client refuse de créer un compte pour un rdv « tissus ». À CONFIRMER — valeur de départ à vérifier/remplacer, doit correspondre à la disponibilité réelle sur Cal.com.",
+      "label": "Horaire des couturières (texte de secours)",
+      "info": "Affiché brièvement le temps de charger l'horaire réel depuis Cal.com (ou si cet appel échoue) — pour un rdv « tissus » sans compte.",
       "default": "Lundi au vendredi, 10 h à 18 h\nSamedi, 10 h à 16 h"
     }
   ]
