@@ -118,7 +118,7 @@
               </button>
             {% endform %}
           {% else %}
-            <a href="/pages/configurateur?modele={{ product.handle }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}&p3pieces={{ product.metafields.custom.supplement_3_pieces.value | url_encode }}" class="lmm-btn lmm-btn-fill lmm-product__cta-primary">
+            <a href="/pages/configurateur?modele={{ product.handle }}&modele_nom={{ product.title | url_encode }}&prix={{ product.price }}&variant={{ product.variants.first.id }}&p1={{ product.metafields.custom.thermocolle.value | url_encode }}&p2={{ product.metafields.custom.demi_canva.value | url_encode }}&p3={{ product.metafields.custom.plein_canva.value | url_encode }}&rec={{ product.metafields.custom.cava_recommande.value | url_encode }}&p3pieces={{ product.metafields.custom.supplement_3_pieces.value | url_encode }}" class="lmm-btn lmm-btn-fill lmm-product__cta-primary">
               <span>Commander ce complet</span>
             </a>
             {% assign style_entry = product.metafields.custom.style.value %}

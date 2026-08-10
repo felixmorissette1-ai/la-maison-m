@@ -14,6 +14,7 @@
   .lmm-recap__total-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lmm-text); }
   .lmm-recap__total-price { font-family: Georgia, serif; font-size: 32px; color: var(--lmm-text); }
   .lmm-recap__nav { display: flex; gap: 12px; align-items: center; }
+  .lmm-recap__btn-add { padding: 20px 56px; font-size: 13px; }
   .lmm-recap__error { color: var(--lmm-error); font-size: 12px; margin-top: 12px; display: none; }
 </style>
 
@@ -48,7 +49,7 @@
   var params = new URLSearchParams(window.location.search);
   var canvaChoisi = params.get('canva');
 
-  document.getElementById('r-modele').textContent = params.get('modele') || '—';
+  document.getElementById('r-modele').textContent = params.get('modele_nom') || params.get('modele') || '—';
   document.getElementById('r-canva').textContent = params.get('canva_nom') || '—';
   document.getElementById('r-pieces').textContent = params.get('pieces') || '—';
   document.getElementById('r-bas').textContent = params.get('bas') || '—';
