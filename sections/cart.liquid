@@ -355,8 +355,8 @@
           {% assign now_ts = 'now' | date: '%s' %}
           {% assign rdv_ts = customer.metafields.custom.rdv_date_heure | date: '%s' %}
           {% unless customer %}
-            <a href="/account/login" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn">Se connecter pour continuer</a>
-            <a href="/account/register" class="lmm-btn lmm-btn-quiet" style="text-align:center; display:block; align-self:center;">Créer un compte</a>
+            <a href="/account/login" target="_blank" rel="noopener" class="lmm-btn lmm-btn-fill lmm-cart__checkout-btn">Se connecter pour continuer</a>
+            <a href="/account/register" target="_blank" rel="noopener" class="lmm-btn lmm-btn-quiet" style="text-align:center; display:block; align-self:center;">Créer un compte</a>
 
           {% elsif customer.metafields.custom.mensurations %}
             <div style="display:flex; align-items:center; gap:10px; background:var(--lmm-ivoire-pale); padding:10px 14px;">
