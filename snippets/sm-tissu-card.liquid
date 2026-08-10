@@ -1,0 +1,68 @@
+{% comment %}
+  Paramètre: entry (une entrée du metaobject "tissu")
+  Une seule carte de tissu — utilisée depuis chaque rayon (par livre) de
+  sm-tissu.liquid, pour ne pas dupliquer le markup 5-6 fois.
+{% endcomment %}
+{% assign photo_url = entry.photo.value | image_url: width: 1200 %}
+{% assign photo_preview_url = entry.photo.value | image_url: width: 800 %}
+
+{% comment %} Bucket prix — voir les 4 tranches du filtre {% endcomment %}
+{% assign _prix_num = entry.prix_base.value | times: 1 %}
+{% assign _prix_bucket = '' %}
+{% if _prix_num > 0 %}
+  {% if _prix_num < 1800 %}{% assign _prix_bucket = '1' %}
+  {% elsif _prix_num < 2200 %}{% assign _prix_bucket = '2' %}
+  {% elsif _prix_num < 2600 %}{% assign _prix_bucket = '3' %}
+  {% else %}{% assign _prix_bucket = '4' %}
+  {% endif %}
+{% endif %}
+
+{% comment %} Bucket masse — grammage stocké en texte libre ("240g/m2") {% endcomment %}
+{% assign _g_num = entry.grammage.value | remove: 'g/m2' | remove: ' ' | times: 1 %}
+{% assign _masse_bucket = '' %}
+{% if _g_num > 0 %}
+  {% if _g_num <= 220 %}{% assign _masse_bucket = 'leger' %}
+  {% elsif _g_num <= 300 %}{% assign _masse_bucket = 'moyen' %}
+  {% else %}{% assign _masse_bucket = 'lourd' %}
+  {% endif %}
+{% endif %}
+
+<div class="lmm-sm-tissu__card"
+     data-val="{{ entry.nom.value | escape }}"
+     data-prix="{{ entry.prix_base.value | default: 0 }}"
+     data-prix-3pieces="{{ entry.prix_addon_3_pieces.value | default: 0 }}"
+     data-photo="{{ photo_preview_url | escape }}"
+     data-livre="{{ entry.livre.value | escape }}"
+     data-couleur="{{ entry.couleur.value | escape }}"
+     data-pattern="{{ entry.pattern.value | escape }}"
+     data-matiere="{{ entry.matiere.value | escape }}"
+     data-origine="{{ entry.origine.value | escape }}"
+     data-ete="{% if entry.laine_ete.value %}oui{% endif %}"
+     data-prix-bucket="{{ _prix_bucket }}"
+     data-masse-bucket="{{ _masse_bucket }}"
+     onclick="selectTissu(this)">
+  <div class="lmm-sm-tissu__card-photo"{% if entry.photo.value == blank and entry.couleur_hex.value != blank %} style="background:{{ entry.couleur_hex.value }};"{% endif %}>
+    {% if entry.photo.value %}
+      <img src="{{ entry.photo.value | image_url: width: 400 }}" alt="{{ entry.nom.value }}">
+      <button class="lmm-sm-tissu__zoom-btn" onclick="event.stopPropagation(); ouvrirLightbox('{{ photo_url | escape }}', '{{ entry.nom.value | escape }}', false)" title="Agrandir">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+      </button>
+    {% elsif entry.couleur_hex.value != blank %}
+      {% comment %}
+        Photo temporaire en attendant la vraie — dès qu'une Photo est
+        ajoutée à cette entrée dans l'admin, elle prend automatiquement
+        le relais ci-dessus, sans toucher au code.
+      {% endcomment %}
+      <button class="lmm-sm-tissu__zoom-btn" onclick="event.stopPropagation(); ouvrirLightbox('{{ entry.couleur_hex.value | escape }}', '{{ entry.nom.value | escape }}', true)" title="Agrandir">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+      </button>
+    {% else %}
+      <span class="lmm-sm-tissu__card-photo-placeholder">Photo à venir</span>
+    {% endif %}
+  </div>
+  <div class="lmm-sm-tissu__card-body">
+    <p class="lmm-sm-tissu__name">{{ entry.nom.value }}</p>
+    <p class="lmm-sm-tissu__meta">{% if entry.origine.value %}{{ entry.origine.value }}{% endif %}{% if entry.grammage.value %} · {{ entry.grammage.value }}{% endif %}</p>
+    {% if entry.prix_base.value %}<p class="lmm-sm-tissu__prix">${{ entry.prix_base.value }}</p>{% endif %}
+  </div>
+</div>

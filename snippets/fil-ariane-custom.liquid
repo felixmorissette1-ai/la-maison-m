@@ -1,13 +1,28 @@
-{% comment %} Paramètre: etape_active (1-9) — Configurateur Custom {% endcomment %}
+{% comment %}
+  Paramètre: etape_active (1-9) — Configurateur Custom
+
+  v2 — remplace l'ancien mécanisme "fenêtre condensée + flèches qui
+  cachent/révèlent des étapes" (jugé pas assez évident à utiliser) par un
+  simple bandeau défilant horizontal : toutes les étapes sont toujours
+  présentes dans le DOM, on centre l'étape active au chargement, et les
+  flèches ne font qu'un défilement natif (scrollBy) — aucune logique de
+  fenêtre à comprendre, le geste de scroll (tactile, molette, flèches)
+  suffit par lui-même.
+{% endcomment %}
 <style>
-  .lmm-filc { background: var(--lmm-ivoire-pale); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 4%; }
-  .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; }
-  .lmm-filc__track { display: flex; align-items: stretch; gap: 0; overflow: hidden; flex: 1; min-width: 0; }
+  .lmm-filc { background: var(--lmm-ivoire-pale); border-bottom: 1px solid rgba(var(--lmm-text-rgb),0.08); padding: 0 4%; position: relative; }
+  .lmm-filc__inner { display: flex; align-items: stretch; height: 52px; gap: 0; position: relative; }
+  .lmm-filc__track {
+    display: flex; align-items: stretch; gap: 0; flex: 1; min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .lmm-filc__track::-webkit-scrollbar { display: none; }
   .lmm-filc__step {
     display: flex; align-items: center; gap: 8px; padding: 0 10px;
     text-decoration: none; color: var(--lmm-muted); font-size: 10px; letter-spacing: 0.1em;
     text-transform: uppercase; border-bottom: 2px solid transparent;
-    cursor: default; white-space: nowrap;
+    cursor: default; white-space: nowrap; flex-shrink: 0;
   }
   .lmm-filc__group:first-child .lmm-filc__step { padding-left: 0; }
   .lmm-filc__step--active { color: var(--lmm-text); border-bottom-color: var(--lmm-bordeaux); }
@@ -23,20 +38,25 @@
   .lmm-filc__step--done .lmm-filc__num { background: var(--lmm-text); color: var(--lmm-ivoire-pale); }
   .lmm-filc__sep { color: var(--lmm-muted); font-size: 14px; display: flex; align-items: center; flex-shrink: 0; padding: 0 2px; }
   .lmm-filc__group { display: flex; align-items: stretch; flex-shrink: 0; }
-  .lmm-filc__group[hidden] { display: none; }
-  .lmm-filc__ellipsis { display: flex; align-items: center; color: var(--lmm-muted); font-size: 12px; padding: 0 4px; flex-shrink: 0; }
-  .lmm-filc__ellipsis[hidden] { display: none; }
   .lmm-filc__nav-btn {
     display: flex; align-items: center; justify-content: center;
-    width: 32px; flex-shrink: 0; background: none; border: none;
-    color: var(--lmm-muted); cursor: pointer; font-size: 14px;
+    width: 28px; flex-shrink: 0; background: none; border: none;
+    color: var(--lmm-text); cursor: pointer; font-size: 15px;
   }
-  .lmm-filc__nav-btn:hover { color: var(--lmm-text); }
-  .lmm-filc__nav-btn[hidden] { visibility: hidden; }
+  .lmm-filc__nav-btn:hover { color: var(--lmm-bordeaux); }
+
+  /* Indices visuels de défilement — un dégradé qui s'estompe sur les
+     bords, pour signaler qu'il y a davantage à voir de chaque côté,
+     même sans avoir cliqué les flèches. */
+  .lmm-filc__fade { position: absolute; top: 0; bottom: 0; width: 24px; pointer-events: none; z-index: 1; transition: opacity 0.15s; }
+  .lmm-filc__fade--left { left: 28px; background: linear-gradient(to right, var(--lmm-ivoire-pale), transparent); }
+  .lmm-filc__fade--right { right: 28px; background: linear-gradient(to left, var(--lmm-ivoire-pale), transparent); }
+  .lmm-filc__fade[hidden] { opacity: 0; }
 </style>
 <nav class="lmm-filc">
   <div class="lmm-filc__inner">
-    <button type="button" class="lmm-filc__nav-btn" id="filc-prev" aria-label="Étapes précédentes" hidden>‹</button>
+    <button type="button" class="lmm-filc__nav-btn" id="filc-prev" aria-label="Défiler vers les étapes précédentes">‹</button>
+    <span class="lmm-filc__fade lmm-filc__fade--left" id="filc-fade-left" hidden></span>
     <div class="lmm-filc__track" id="filc-track">
 
     <div class="lmm-filc__group" data-step="1">
@@ -53,8 +73,6 @@
       {% endif %}
       <span class="lmm-filc__sep">›</span>
     </div>
-
-    <span class="lmm-filc__ellipsis" id="filc-ellipsis-start" hidden>…</span>
 
     <div class="lmm-filc__group" data-step="2">
       {% if etape_active > 2 %}
@@ -161,8 +179,6 @@
       <span class="lmm-filc__sep">›</span>
     </div>
 
-    <span class="lmm-filc__ellipsis" id="filc-ellipsis-end" hidden>…</span>
-
     <div class="lmm-filc__group" data-step="9">
       {% if etape_active == 9 %}
         <span class="lmm-filc__step lmm-filc__step--active" id="smc-step-9">
@@ -174,7 +190,8 @@
     </div>
 
     </div>
-    <button type="button" class="lmm-filc__nav-btn" id="filc-next" aria-label="Étapes suivantes" hidden>›</button>
+    <span class="lmm-filc__fade lmm-filc__fade--right" id="filc-fade-right" hidden></span>
+    <button type="button" class="lmm-filc__nav-btn" id="filc-next" aria-label="Défiler vers les étapes suivantes">›</button>
   </div>
 </nav>
 <script>
@@ -214,41 +231,44 @@
       link.setAttribute('href', link.getAttribute('href').split('?')[0] + window.location.search);
     });
 
-    // Fil d'ariane condensé : trop d'étapes pour tenir sur une ligne
-    // lisible (9 ici) — on montre seulement la 1re, la dernière (pour que
-    // le nombre total d'étapes reste visible d'un coup d'œil), et 2 étapes
-    // avant/après l'étape courante, avec "…" et de petites flèches pour se
-    // déplacer dans les étapes cachées sans changer de page.
-    var TOTAL = 9;
-    var active = {{ etape_active }};
-    var center = active;
+    // Bandeau défilant : toutes les étapes existent toujours dans le DOM
+    // (plus de fenêtre condensée à comprendre) — on centre juste l'étape
+    // active au chargement, et les flèches ne font qu'un scroll de la
+    // largeur visible, comme n'importe quel carrousel.
+    var track = document.getElementById('filc-track');
+    var activeEl = document.getElementById('smc-step-{{ etape_active }}');
 
-    function renderWindow() {
-      var visible = {};
-      visible[1] = true;
-      visible[TOTAL] = true;
-      for (var i = center - 2; i <= center + 2; i++) {
-        if (i >= 1 && i <= TOTAL) visible[i] = true;
-      }
-      for (var s = 1; s <= TOTAL; s++) {
-        var group = document.querySelector('.lmm-filc__group[data-step="' + s + '"]');
-        if (group) group.hidden = !visible[s];
-      }
-      document.getElementById('filc-ellipsis-start').hidden = visible[2];
-      document.getElementById('filc-ellipsis-end').hidden = visible[TOTAL - 1];
-      document.getElementById('filc-prev').hidden = center <= 3;
-      document.getElementById('filc-next').hidden = center >= TOTAL - 2;
+    function centrerEtapeActive() {
+      if (!track || !activeEl) return;
+      var cible = activeEl.offsetLeft - (track.clientWidth / 2) + (activeEl.offsetWidth / 2);
+      track.scrollLeft = Math.max(0, cible);
+    }
+    centrerEtapeActive();
+    window.addEventListener('resize', centrerEtapeActive);
+
+    function updateFades() {
+      var fadeLeft = document.getElementById('filc-fade-left');
+      var fadeRight = document.getElementById('filc-fade-right');
+      var prevBtn = document.getElementById('filc-prev');
+      var nextBtn = document.getElementById('filc-next');
+      if (!track) return;
+      var atStart = track.scrollLeft <= 2;
+      var atEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
+      if (fadeLeft) fadeLeft.hidden = atStart;
+      if (fadeRight) fadeRight.hidden = atEnd;
+      if (prevBtn) prevBtn.style.opacity = atStart ? '0.3' : '1';
+      if (nextBtn) nextBtn.style.opacity = atEnd ? '0.3' : '1';
+    }
+    if (track) {
+      track.addEventListener('scroll', updateFades);
+      updateFades();
     }
 
     document.getElementById('filc-prev').addEventListener('click', function() {
-      center = Math.max(3, center - 3);
-      renderWindow();
+      if (track) track.scrollLeft -= 160;
     });
     document.getElementById('filc-next').addEventListener('click', function() {
-      center = Math.min(TOTAL - 2, center + 3);
-      renderWindow();
+      if (track) track.scrollLeft += 160;
     });
-
-    renderWindow();
   })();
 </script>

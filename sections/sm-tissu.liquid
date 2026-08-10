@@ -18,7 +18,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
   .lmm-sm-tissu__filter-toggle {
     display: inline-flex;
@@ -103,18 +103,26 @@
   .lmm-sm-tissu__pill:hover { border-color: var(--lmm-text); color: var(--lmm-text); }
   .lmm-sm-tissu__pill.active { background: var(--lmm-bordeaux); border-color: var(--lmm-bordeaux); color: var(--lmm-ivoire-pale); }
 
-  /* Grille — cases plus petites pour en montrer davantage à la fois
-     (le catalogue réel comptera 100+ tissus) ; auto-fill garde le
-     grid responsive peu importe le nombre total de cartes. */
-  .lmm-sm-tissu__grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px;
+  /* Rayons — un livre = une rangée qui se scroll horizontalement, plutôt
+     qu'une seule grande grille. Le vrai catalogue sera organisé ainsi
+     (Nobility Fashion, Nobility Flannel, Cavani Four Seasons, Summer
+     Romance by Canavi, Drago Vantage 3). */
+  .lmm-sm-tissu__shelves { display: flex; flex-direction: column; gap: 20px; }
+  .lmm-sm-tissu__shelf[hidden] { display: none; }
+  .lmm-sm-tissu__shelf-title { font-family: Georgia, serif; font-size: 15px; color: var(--lmm-text); margin: 0 0 8px; }
+  .lmm-sm-tissu__shelf-row {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;
+    scrollbar-width: thin;
   }
+
   .lmm-sm-tissu__card {
     background: var(--lmm-ivoire-pale); border: 1px solid rgba(var(--lmm-text-rgb),0.1);
     border-radius: 8px;
     cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s;
     display: flex; flex-direction: column; overflow: hidden;
+    width: 130px; flex-shrink: 0;
   }
+  .lmm-sm-tissu__card[hidden] { display: none; }
   .lmm-sm-tissu__card:hover { border-color: rgba(var(--lmm-text-rgb),0.3); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
   .lmm-sm-tissu__card--selected { border: 2px solid var(--lmm-bordeaux) !important; }
   .lmm-sm-tissu__card-photo {
@@ -135,7 +143,6 @@
   .lmm-sm-tissu__zoom-btn:hover { background: rgba(var(--lmm-text-rgb),0.9); }
   .lmm-sm-tissu__card-body { padding: 7px 8px 9px; }
   .lmm-sm-tissu__name { font-family: Georgia, serif; font-size: 12px; font-weight: 400; color: var(--lmm-text); margin-bottom: 2px; line-height: 1.3; }
-  .lmm-sm-tissu__livre { font-size: 9px; color: var(--lmm-bordeaux); letter-spacing: 0.04em; margin-bottom: 2px; }
   .lmm-sm-tissu__meta { font-size: 9px; color: var(--lmm-muted); margin-bottom: 3px; line-height: 1.4; }
   .lmm-sm-tissu__prix { font-size: 11px; color: var(--lmm-text); font-weight: 500; }
   .lmm-sm-tissu__no-results { display: none; padding: 40px 0; text-align: center; font-size: 12px; color: var(--lmm-muted); letter-spacing: 0.06em; }
@@ -155,25 +162,18 @@
 </style>
 
 {% comment %} Valeurs uniques pour filtres (texte libre) {% endcomment %}
-{% assign _livres_raw = '' %}{% assign _couleurs_raw = '' %}{% assign _patterns_raw = '' %}{% assign _matieres_raw = '' %}{% assign _origines_raw = '' %}
+{% assign _couleurs_raw = '' %}{% assign _patterns_raw = '' %}{% assign _matieres_raw = '' %}{% assign _origines_raw = '' %}
 {% for entry in shop.metaobjects.tissu.values %}
-  {% if entry.livre.value != blank %}{% assign _livres_raw = _livres_raw | append: entry.livre.value | append: '|||' %}{% endif %}
   {% if entry.couleur.value != blank %}{% assign _couleurs_raw = _couleurs_raw | append: entry.couleur.value | append: '|||' %}{% endif %}
   {% if entry.pattern.value != blank %}{% assign _patterns_raw = _patterns_raw | append: entry.pattern.value | append: '|||' %}{% endif %}
   {% if entry.matiere.value != blank %}{% assign _matieres_raw = _matieres_raw | append: entry.matiere.value | append: '|||' %}{% endif %}
   {% if entry.origine.value != blank %}{% assign _origines_raw = _origines_raw | append: entry.origine.value | append: '|||' %}{% endif %}
 {% endfor %}
-{% assign _livres = _livres_raw | split: '|||' | uniq %}
 {% assign _couleurs = _couleurs_raw | split: '|||' | uniq %}
 {% assign _patterns = _patterns_raw | split: '|||' | uniq %}
 {% assign _matieres = _matieres_raw | split: '|||' | uniq %}
 {% assign _origines = _origines_raw | split: '|||' | uniq %}
-{% assign _has_filters = false %}
-{% for v in _livres %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
-{% for v in _couleurs %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
-{% for v in _patterns %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
-{% for v in _matieres %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
-{% for v in _origines %}{% if v != '' %}{% assign _has_filters = true %}{% endif %}{% endfor %}
+{% assign _has_filters = true %}
 
 <div class="lmm-sm-tissu-wrap lmm-sm-main">
   <div class="lmm-sm-tissu__header">
@@ -182,7 +182,6 @@
     <p class="lmm-sm-tissu__sub">{{ section.settings.sous_titre }}</p>
   </div>
 
-  {% if _has_filters %}
   <div class="lmm-sm-tissu__filter-bar">
     <button class="lmm-sm-tissu__filter-toggle" id="tissu-filter-toggle" onclick="toggleFilters()">
       Filtres
@@ -227,16 +226,6 @@
       </div>
     </div>
     {% endif %}
-    {% assign _livres_exist = false %}{% for v in _livres %}{% if v != '' %}{% assign _livres_exist = true %}{% endif %}{% endfor %}
-    {% if _livres_exist %}
-    <div class="lmm-sm-tissu__filter-row">
-      <span class="lmm-sm-tissu__filter-key">Livre</span>
-      <div class="lmm-sm-tissu__filter-pills" data-filter="livre">
-        <button class="lmm-sm-tissu__pill active" data-val="">Tous</button>
-        {% for v in _livres %}{% if v != '' %}<button class="lmm-sm-tissu__pill" data-val="{{ v | escape }}">{{ v }}</button>{% endif %}{% endfor %}
-      </div>
-    </div>
-    {% endif %}
     {% assign _couleurs_exist = false %}{% for v in _couleurs %}{% if v != '' %}{% assign _couleurs_exist = true %}{% endif %}{% endfor %}
     {% if _couleurs_exist %}
     <div class="lmm-sm-tissu__filter-row">
@@ -268,75 +257,55 @@
     </div>
     {% endif %}
   </div>
-  {% endif %}
 
-  <div class="lmm-sm-tissu__grid" id="tissu-grid">
-    {% for entry in shop.metaobjects.tissu.values %}
-      {% assign photo_url = entry.photo.value | image_url: width: 1200 %}
-      {% assign photo_preview_url = entry.photo.value | image_url: width: 800 %}
-
-      {% comment %} Bucket prix — voir les 4 tranches du filtre ci-dessus {% endcomment %}
-      {% assign _prix_num = entry.prix_base.value | times: 1 %}
-      {% assign _prix_bucket = '' %}
-      {% if _prix_num > 0 %}
-        {% if _prix_num < 1800 %}{% assign _prix_bucket = '1' %}
-        {% elsif _prix_num < 2200 %}{% assign _prix_bucket = '2' %}
-        {% elsif _prix_num < 2600 %}{% assign _prix_bucket = '3' %}
-        {% else %}{% assign _prix_bucket = '4' %}
-        {% endif %}
-      {% endif %}
-
-      {% comment %} Bucket masse — grammage stocké en texte libre ("240g/m2") {% endcomment %}
-      {% assign _g_num = entry.grammage.value | remove: 'g/m2' | remove: ' ' | times: 1 %}
-      {% assign _masse_bucket = '' %}
-      {% if _g_num > 0 %}
-        {% if _g_num <= 220 %}{% assign _masse_bucket = 'leger' %}
-        {% elsif _g_num <= 300 %}{% assign _masse_bucket = 'moyen' %}
-        {% else %}{% assign _masse_bucket = 'lourd' %}
-        {% endif %}
-      {% endif %}
-
-      <div class="lmm-sm-tissu__card"
-           data-val="{{ entry.nom.value | escape }}"
-           data-prix="{{ entry.prix_base.value | default: 0 }}"
-           data-prix-3pieces="{{ entry.prix_addon_3_pieces.value | default: 0 }}"
-           data-photo="{{ photo_preview_url | escape }}"
-           data-livre="{{ entry.livre.value | escape }}"
-           data-couleur="{{ entry.couleur.value | escape }}"
-           data-pattern="{{ entry.pattern.value | escape }}"
-           data-matiere="{{ entry.matiere.value | escape }}"
-           data-origine="{{ entry.origine.value | escape }}"
-           data-ete="{% if entry.laine_ete.value %}oui{% endif %}"
-           data-prix-bucket="{{ _prix_bucket }}"
-           data-masse-bucket="{{ _masse_bucket }}"
-           onclick="selectTissu(this)">
-        <div class="lmm-sm-tissu__card-photo"{% if entry.photo.value == blank and entry.couleur_hex.value != blank %} style="background:{{ entry.couleur_hex.value }};"{% endif %}>
-          {% if entry.photo.value %}
-            <img src="{{ entry.photo.value | image_url: width: 400 }}" alt="{{ entry.nom.value }}">
-            <button class="lmm-sm-tissu__zoom-btn" onclick="event.stopPropagation(); ouvrirLightbox('{{ photo_url | escape }}', '{{ entry.nom.value | escape }}', false)" title="Agrandir">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-            </button>
-          {% elsif entry.couleur_hex.value != blank %}
-            {% comment %}
-              Photo temporaire en attendant la vraie — dès qu'une Photo est
-              ajoutée à cette entrée dans l'admin, elle prend automatiquement
-              le relais ci-dessus, sans toucher au code.
-            {% endcomment %}
-            <button class="lmm-sm-tissu__zoom-btn" onclick="event.stopPropagation(); ouvrirLightbox('{{ entry.couleur_hex.value | escape }}', '{{ entry.nom.value | escape }}', true)" title="Agrandir">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
-            </button>
-          {% else %}
-            <span class="lmm-sm-tissu__card-photo-placeholder">Photo à venir</span>
-          {% endif %}
+  {% comment %}
+    Un rayon par livre, dans cet ordre précis — puis un rayon "Autres
+    tissus" pour tout ce qui n'a pas (encore) de livre assigné. Le "where"
+    de Liquid ne fonctionne pas de façon fiable sur un champ metaobject
+    imbriqué (entry.livre.value) — même approche explicite que pour
+    l'ordre des tailles de pantalon (sm-ourlet.liquid).
+  {% endcomment %}
+  {% assign _livres_ordre = "Nobility Fashion,Nobility Flannel,Cavani Four Seasons,Summer Romance by Canavi,Drago Vantage 3" | split: "," %}
+  <div class="lmm-sm-tissu__shelves" id="tissu-shelves">
+    {% for _livre_nom in _livres_ordre %}
+      {% assign _shelf_count = 0 %}
+      {% for entry in shop.metaobjects.tissu.values %}
+        {% if entry.livre.value == _livre_nom %}{% assign _shelf_count = _shelf_count | plus: 1 %}{% endif %}
+      {% endfor %}
+      {% if _shelf_count > 0 %}
+        <div class="lmm-sm-tissu__shelf" data-livre="{{ _livre_nom | escape }}">
+          <p class="lmm-sm-tissu__shelf-title">{{ _livre_nom }}</p>
+          <div class="lmm-sm-tissu__shelf-row">
+            {% for entry in shop.metaobjects.tissu.values %}
+              {% if entry.livre.value == _livre_nom %}
+                {% render 'sm-tissu-card', entry: entry %}
+              {% endif %}
+            {% endfor %}
+          </div>
         </div>
-        <div class="lmm-sm-tissu__card-body">
-          <p class="lmm-sm-tissu__name">{{ entry.nom.value }}</p>
-          {% if entry.livre.value %}<p class="lmm-sm-tissu__livre">{{ entry.livre.value }}</p>{% endif %}
-          <p class="lmm-sm-tissu__meta">{% if entry.origine.value %}{{ entry.origine.value }}{% endif %}{% if entry.grammage.value %} · {{ entry.grammage.value }}{% endif %}</p>
-          {% if entry.prix_base.value %}<p class="lmm-sm-tissu__prix">${{ entry.prix_base.value }}</p>{% endif %}
+      {% endif %}
+    {% endfor %}
+
+    {% assign _autres_count = 0 %}
+    {% for entry in shop.metaobjects.tissu.values %}
+      {% assign _dans_un_livre = false %}
+      {% for _livre_nom in _livres_ordre %}{% if entry.livre.value == _livre_nom %}{% assign _dans_un_livre = true %}{% endif %}{% endfor %}
+      {% unless _dans_un_livre %}{% assign _autres_count = _autres_count | plus: 1 %}{% endunless %}
+    {% endfor %}
+    {% if _autres_count > 0 %}
+      <div class="lmm-sm-tissu__shelf" data-livre="">
+        <p class="lmm-sm-tissu__shelf-title">Autres tissus</p>
+        <div class="lmm-sm-tissu__shelf-row">
+          {% for entry in shop.metaobjects.tissu.values %}
+            {% assign _dans_un_livre = false %}
+            {% for _livre_nom in _livres_ordre %}{% if entry.livre.value == _livre_nom %}{% assign _dans_un_livre = true %}{% endif %}{% endfor %}
+            {% unless _dans_un_livre %}
+              {% render 'sm-tissu-card', entry: entry %}
+            {% endunless %}
+          {% endfor %}
         </div>
       </div>
-    {% endfor %}
+    {% endif %}
   </div>
   <p class="lmm-sm-tissu__no-results" id="tissu-no-results">Aucun tissu ne correspond à ces filtres.</p>
 </div>
@@ -358,12 +327,12 @@
 
   var savedTissu = _p.get('tissu');
   if (savedTissu) {
-    var savedCard = document.querySelector('#tissu-grid [data-val="' + savedTissu + '"]');
+    var savedCard = document.querySelector('#tissu-shelves [data-val="' + savedTissu + '"]');
     if (savedCard) selectTissu(savedCard);
   }
 
   function selectTissu(el) {
-    document.querySelectorAll('#tissu-grid .lmm-sm-tissu__card').forEach(function(c) { c.classList.remove('lmm-sm-tissu__card--selected'); });
+    document.querySelectorAll('#tissu-shelves .lmm-sm-tissu__card').forEach(function(c) { c.classList.remove('lmm-sm-tissu__card--selected'); });
     el.classList.add('lmm-sm-tissu__card--selected');
     selected = el.dataset.val;
     selectedPrix = parseFloat(el.dataset.prix) || 0;
@@ -426,11 +395,10 @@
   }
 
   function filterTissus() {
-    var cards = document.querySelectorAll('#tissu-grid .lmm-sm-tissu__card');
+    var cards = document.querySelectorAll('#tissu-shelves .lmm-sm-tissu__card');
     var visible = 0;
     cards.forEach(function(card) {
       var show = true;
-      if (activeFilters.livre && card.dataset.livre !== activeFilters.livre) show = false;
       if (activeFilters.couleur && card.dataset.couleur !== activeFilters.couleur) show = false;
       if (activeFilters.pattern && card.dataset.pattern !== activeFilters.pattern) show = false;
       if (activeFilters.matiere && card.dataset.matiere !== activeFilters.matiere) show = false;
@@ -438,8 +406,13 @@
       if (activeFilters.ete && card.dataset.ete !== activeFilters.ete) show = false;
       if (activeFilters.masse && card.dataset.masseBucket !== activeFilters.masse) show = false;
       if (activeFilters.prix && card.dataset.prixBucket !== activeFilters.prix) show = false;
-      card.style.display = show ? '' : 'none';
+      card.hidden = !show;
       if (show) visible++;
+    });
+    // Un rayon sans carte visible se cache entièrement (pas de titre "Livre" flottant sans rien dessous).
+    document.querySelectorAll('#tissu-shelves .lmm-sm-tissu__shelf').forEach(function(shelf) {
+      var hasVisible = shelf.querySelector('.lmm-sm-tissu__card:not([hidden])');
+      shelf.hidden = !hasVisible;
     });
     var noResults = document.getElementById('tissu-no-results');
     if (noResults) noResults.style.display = visible === 0 ? 'block' : 'none';

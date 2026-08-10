@@ -310,7 +310,7 @@
               </ul>
               <div style="display:flex; gap:16px;">
                 {% if item.properties['_lmm_sur_mesure'] %}
-                  <button type="button" class="lmm-btn lmm-btn-quiet" onclick="modifierSurMesure('{{ item.key }}', '/pages/sur-mesure-style?style={{ item.properties['Style'] | url_encode }}&pieces={{ item.properties['Pièces'] | url_encode }}&tissu={{ item.properties['Tissu'] | url_encode }}&lining={{ item.properties['Lining'] | url_encode }}&bouton={{ item.properties['Boutons'] | url_encode }}&construction={{ item.properties['Construction'] | url_encode }}&hauteur={{ item.properties['Hauteur du pantalon'] | url_encode }}&bas={{ item.properties['Bas de pantalon'] | url_encode }}&monogramme={{ item.properties["Monogramme (nom brodé à l'intérieur du veston)"] | url_encode }}')">Modifier</button>
+                  <button type="button" class="lmm-btn lmm-btn-quiet" onclick="modifierSurMesure('{{ item.key }}', '/pages/sur-mesure?style={{ item.properties['Style'] | url_encode }}&pieces={{ item.properties['Pièces'] | url_encode }}&tissu={{ item.properties['Tissu'] | url_encode }}&lining={{ item.properties['Lining'] | url_encode }}&bouton={{ item.properties['Boutons'] | url_encode }}&construction={{ item.properties['Construction'] | url_encode }}&hauteur={{ item.properties['Hauteur du pantalon'] | url_encode }}&bas={{ item.properties['Bas de pantalon'] | url_encode }}&monogramme={{ item.properties["Monogramme (nom brodé à l'intérieur du veston)"] | url_encode }}')">Modifier</button>
                 {% endif %}
                 <a href="{{ item.url_to_remove }}" class="lmm-btn lmm-btn-quiet">Retirer</a>
               </div>
