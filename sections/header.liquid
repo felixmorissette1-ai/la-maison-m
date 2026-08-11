@@ -157,7 +157,7 @@
         <p id="lmm-horaire-inline" style="display:none; font-size:11px; color:var(--lmm-muted); line-height:1.6; margin:0; text-align:center;">
           Vous préférez ne pas créer de compte ? Présentez-vous directement en succursale, sans rendez-vous, aux heures habituelles : <span id="lmm-horaire-couturieres" style="color:var(--lmm-text);">{{ section.settings.horaire_couturieres }}</span>
         </p>
-        <button onclick="afficherLocAuto()" style="background:none; border:1px solid var(--lmm-border); border-radius:8px; color:var(--lmm-muted); padding:12px; font-size:11px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; font-family:inherit;">
+        <button onclick="afficherLocAuto()" class="lmm-btn lmm-btn-outline" style="padding:12px; width:100%;">
           Changer de localisation
         </button>
       </div>
@@ -1318,7 +1318,7 @@
     display: inline-block;
     width: 30px;
     height: 17px;
-    background: var(--lmm-border);
+    background: var(--lmm-muted);
     border-radius: 0;
     flex-shrink: 0;
     transition: background 0.2s ease;
