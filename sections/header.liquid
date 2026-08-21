@@ -43,7 +43,7 @@
             (réglage "Logo" ci-dessous), ce bloc n'est qu'un repère visuel
             en attendant.
           {% endcomment %}
-          <img src="{{ 'logo-lamaisonm.svg' | asset_url }}" alt="{{ shop.name }} — Tailleur sur mesure" class="lmm-header__logo-img" style="height: 44px;">
+          <img src="{{ 'logo-lamaisonm.svg' | asset_url }}" alt="{{ shop.name }} — Tailleur sur mesure" class="lmm-header__logo-img lmm-header__logo-img--fallback">
         {% endif %}
       </a>
     </div>
@@ -991,6 +991,16 @@
   .lmm-header__logo-img {
     display: block;
     width: auto;
+  }
+
+  /* Grandeur fluide plutôt que fixe : un logo dimensionné pour un
+     laptop paraît minuscule sur une TV/grand écran, et un logo
+     dimensionné pour une TV déborderait sur mobile. clamp() fait
+     grandir la hauteur avec la largeur de l'écran (borné des deux
+     côtés) tout en gardant le même bloc image, donc la disposition
+     interne (titre/sous-titre) ne bouge jamais. */
+  .lmm-header__logo-img--fallback {
+    height: clamp(40px, 4vw, 72px);
   }
 
 
