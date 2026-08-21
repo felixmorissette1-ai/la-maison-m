@@ -34,9 +34,17 @@
         {% if section.settings.logo_image %}
           <img src="{{ section.settings.logo_image | image_url: width: 400 }}" alt="{{ shop.name }}" class="lmm-header__logo-img" style="height: {{ section.settings.logo_height | default: 32 }}px;">
         {% else %}
-          <span class="lmm-logo-main">La Maison M.</span>
+          {% comment %}
+            Bloc image plutôt que du texte vivant : la disposition (taille
+            relative du titre vs du sous-titre, centrage) reste identique
+            sur tous les appareils, au lieu de deux éléments texte
+            indépendants qui peuvent se recomposer différemment selon la
+            largeur d'écran. À remplacer par le vrai logo dès qu'il existe
+            (réglage "Logo" ci-dessous), ce bloc n'est qu'un repère visuel
+            en attendant.
+          {% endcomment %}
+          <img src="{{ 'logo-lamaisonm.svg' | asset_url }}" alt="{{ shop.name }} — Tailleur sur mesure" class="lmm-header__logo-img" style="height: 44px;">
         {% endif %}
-        <span class="lmm-logo-sub">Tailleur sur mesure</span>
       </a>
     </div>
 
@@ -985,21 +993,6 @@
     width: auto;
   }
 
-  .lmm-logo-main {
-    font-family: Georgia, 'Times New Roman', serif;
-    font-size: 26px;
-    font-weight: 400;
-    color: var(--lmm-ivoire-pale);
-    letter-spacing: 0.04em;
-  }
-
-  .lmm-logo-sub {
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--lmm-bordeaux-pale);
-    margin-top: 3px;
-  }
 
   .lmm-nav-link {
     text-decoration: none;
