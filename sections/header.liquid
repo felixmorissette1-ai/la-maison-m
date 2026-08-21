@@ -13,7 +13,7 @@
       <a href="/pages/sur-mesure" class="lmm-nav-link lmm-nav-link--cta{% if request.path contains 'sur-mesure' %} lmm-nav-link--active{% endif %}">Configurez votre complet</a>
     </div>
     <div class="lmm-header__cell lmm-header__cell--nav lmm-header__cell--dropdown">
-      <a href="/collections/collection" class="lmm-nav-link{% if request.path contains '/collections/collection' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collection</a>
+      <a href="/collections/collection" class="lmm-nav-link{% if request.path contains '/collections/collection' or request.path contains '/collections/chemises' %} lmm-nav-link--active{% endif %}">Collections</a>
       <div class="lmm-header__dropdown">
         <a href="/collections/collection" class="lmm-header__dropdown-link">Complets</a>
         <a href="/collections/chemises" class="lmm-header__dropdown-link">Chemises</a>
@@ -1000,7 +1000,7 @@
      côtés) tout en gardant le même bloc image, donc la disposition
      interne (titre/sous-titre) ne bouge jamais. */
   .lmm-header__logo-img--fallback {
-    height: clamp(40px, 4vw, 72px);
+    height: clamp(40px, calc(34.5px + 2vw), 76px);
   }
 
 

@@ -60,7 +60,7 @@
             {% for line in step1_lines %}
               {% if line != blank %}<li>{{ line }}</li>{% endif %}
             {% endfor %}
-            <li><span>Voir et toucher les tissus par <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">rendez-vous</a></span></li>
+            <li><span>Voir et palper les tissus par <a href="#" class="lmm-plan__link" onclick="event.preventDefault(); ouvrirLocalisationModal('tissus')">rendez-vous</a></span></li>
             {% if section.settings.step1_style_advice_label != blank %}
               <li><span><a href="{{ section.settings.step1_style_advice_url | default: '/pages/aide-configuration' }}" class="lmm-plan__link">{{ section.settings.step1_style_advice_label }}</a> disponibles en ligne</span></li>
             {% endif %}
@@ -159,6 +159,42 @@
         })
         .catch(function () {});
     }, function () {}, { timeout: 8000 });
+  })();
+
+  // Les 3 titres d'étape (.lmm-plan__step-head) doivent TOUJOURS faire la
+  // même hauteur, peu importe la largeur d'écran — sinon le titre le plus
+  // court laisse plus de place à sa carte en dessous (flex:1), et les 3
+  // cartes n'ont plus la même hauteur malgré .lmm-plan__row qui étire déjà
+  // les 3 .lmm-plan__step (pas les cartes directement). Le min-height:63px
+  // en CSS supposait un titre sur 2 lignes max, mais un écran plus étroit
+  // (ex. laptop 13") peut faire passer un titre plus long sur 3 lignes —
+  // on mesure donc la vraie hauteur du plus grand des 3 et on l'applique
+  // aux trois, plutôt que de deviner un nombre de lignes fixe.
+  (function () {
+    var stepHeads = document.querySelectorAll('.lmm-plan__step-head');
+    if (!stepHeads.length) return;
+
+    function equalizeStepHeads() {
+      stepHeads.forEach(function (el) { el.style.minHeight = ''; });
+      var maxHeight = 0;
+      stepHeads.forEach(function (el) {
+        var h = el.getBoundingClientRect().height;
+        if (h > maxHeight) maxHeight = h;
+      });
+      stepHeads.forEach(function (el) { el.style.minHeight = maxHeight + 'px'; });
+    }
+
+    equalizeStepHeads();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(equalizeStepHeads);
+    }
+    window.addEventListener('load', equalizeStepHeads);
+
+    var resizeTimerHeads;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimerHeads);
+      resizeTimerHeads = setTimeout(equalizeStepHeads, 120);
+    });
   })();
 
   // Hauteur du hero calculée à partir des vraies mesures du DOM (pas de
@@ -786,7 +822,7 @@
   "settings": [
     { "type": "image_picker", "id": "hero_photo", "label": "Photo de fond (laisser vide pour fond ivoire uni)" },
     { "type": "text", "id": "title", "label": "Slogan", "default": "Parce que la première impression compte" },
-    { "type": "text", "id": "tissus_link_label", "label": "Lien sous le bouton — voir les tissus", "default": "Voir les tissus en personne" },
+    { "type": "text", "id": "tissus_link_label", "label": "Lien sous le bouton — voir les tissus", "default": "Voir et palper les tissus en personne" },
 
     { "type": "header", "content": "Plan d'action" },
     { "type": "text", "id": "plan_title", "label": "Titre du plan", "default": "Comment procéder" },
@@ -810,7 +846,7 @@
     { "type": "textarea", "id": "step3_bullets", "label": "Étape 3 — points (un par ligne)", "default": "Livraison à domicile\nRetouches incluses au besoin" },
     { "type": "text", "id": "step3_btn_label", "label": "Étape 3 — texte du bouton (dans la carte)", "default": "Configurez votre complet" },
 
-    { "type": "text", "id": "learnmore_label", "label": "Sous les 3 étapes — texte avant le lien", "default": "Envie de comprendre le processus en détail ?" },
+    { "type": "text", "id": "learnmore_label", "label": "Sous les 3 étapes — texte avant le lien", "default": "Souhaitez-vous comprendre le processus détaillé ?" },
     { "type": "text", "id": "learnmore_link_label", "label": "Sous les 3 étapes — texte du lien", "default": "En savoir plus" },
     { "type": "url", "id": "learnmore_url", "label": "Sous les 3 étapes — lien (vide = /pages/comment-ca-fonctionne)" }
   ],
